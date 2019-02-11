@@ -7,6 +7,7 @@ import Leases from './components/Leases.vue'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -15,15 +16,18 @@ export default new Router({
     },
     {
       path: '/settings',
-      name: Settings
+      name: 'settings',
+      component: Settings
     },
     {
       path: '/about',
-      name: About
+      name: 'about',
+      component: About
     },
     {
       path: '/leases',
-      name: Leases
+      name: 'leases',
+      component: Leases
     }
   ]
 })
