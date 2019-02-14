@@ -1,11 +1,32 @@
 <template>
   <div>
-     <p>Leases</p>
+    <h1>Leases</h1>
+    <v-container>
+      <v-layout row>
+        <v-flex xs12 md6>
+          <v-btn outline block>button</v-btn>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </div>
 </template>
 
 <script>
-export default {}
+import EventService from '@/services/EventService.js'
+export default {
+  data() {
+    return {
+      event: null,
+      events: []
+    }
+  },
+  created() {
+    this.event = EventService.getEvent(1)
+    console.log(this.event)
+    this.events = EventService.getEventsUnpaginated()
+    console.log(this.events)
+  }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

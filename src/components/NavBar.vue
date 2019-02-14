@@ -17,6 +17,7 @@
     <v-navigation-drawer v-model="drawer" app>
       <v-list>
         <v-list-tile
+          class="ma-1"
           v-for="link in links"
           :key="link.title"
           router
