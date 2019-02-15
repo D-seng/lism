@@ -5,6 +5,9 @@
       <v-layout row>
         <v-flex xs12 md6>
           <v-btn outline block>button</v-btn>
+          <draggable v-model="events" @start="drag=true" @end="drag=false">
+            <v-card v-for="ls in events" :key="ls.id" @drop="renumber(ls)">{{ls.title}}</v-card>
+          </draggable>
         </v-flex>
       </v-layout>
     </v-container>
@@ -13,18 +16,28 @@
 
 <script>
 import EventService from '@/services/EventService.js'
+import draggable from 'vuedraggable'
+
 export default {
+  components: {
+    draggable
+  },
   data() {
     return {
       event: null,
       events: []
     }
   },
+  methods: {
+    renumber(ls) {
+      console.log('renumber me' + ls.id)
+    }
+  },
   created() {
-    this.event = EventService.getEvent(1)
-    console.log(this.event)
-    this.events = EventService.getEventsUnpaginated()
-    console.log(this.events)
+    EventService.getEventsUnpaginated().then(response => {
+      console.log(response.data)
+      this.events = response.data
+    })
   }
 }
 </script>
