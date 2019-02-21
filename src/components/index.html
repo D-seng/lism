@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Run</title>
+
+    <button onclick="items_with_numbering()">run</button>
+  </head>
+
+  <body>
+    Tester
+  </body>
+</html>
+
+<script>
+  var items = [
+    {
+      id: 1,
+      num: null,
+      name: 'Applications :',
+      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+      children: [
+        {
+          id: 2,
+          num: null,
+          name: 'Calendar',
+          text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+        },
+        {
+          id: 3,
+          num: null,
+          name: 'Chrome',
+          text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+        },
+        {
+          id: 4,
+          num: null,
+          name: 'Webstorm',
+          text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+        }
+      ]
+    },
+    {
+      id: 5,
+      num: null,
+      name: 'Documents :',
+      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+      children: [
+        {
+          id: 6,
+          num: null,
+          name: 'vuetify : ',
+          text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+          children: [
+            {
+              id: 7,
+              num: null,
+              name: 'src :',
+              text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+              children: [
+                {
+                  id: 8,
+                  num: null,
+                  name: 'index : ts :',
+                  text:
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+                },
+                {
+                  id: 9,
+                  num: null,
+                  name: 'bootstrap : ts : ',
+                  text:
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+
+  function items_with_numbering() {
+    const result = []
+    let lev1 = 0
+    let lev2 = 0
+    let lev3 = 0
+    let objI
+    let itemI
+
+    for (let i = 0; i < items.length; i++) {
+      // use the for loop that uses an index
+      // if (item.children) {
+      // }
+      lev1 += 1
+      objI = {
+        id: items[i].id,
+        name: items[i].name,
+        test: items[i].text,
+        num: lev1 + '.0'
+      }
+      result.push(objI)
+
+      itemI = items[i]
+      if (itemI.hasOwnProperty('children')) {
+        lev2 = 0
+        //push onto nested array; do the same down to lev3
+        for (let j = 0; j < items[i].children.length; j++) {
+          lev2 += 1
+
+          objI = {
+            id: items[i].children[j].id,
+            name: items[i].children[j].name,
+            test: items[i].children[j].text,
+            num: lev1 + '.' + lev2
+          }
+          // console.log(objI)
+          result.push(objI)
+
+          if (items[i].children[j].hasOwnProperty('children')) {
+            lev3 = 0
+
+            for (let k = 0; k < items[i].children[j].children.length; k++) {
+              lev3 += 1
+              // console.log('lev 3: ' + lev3)
+              objI = {
+                id: items[i].children[j].children[k].id,
+                name: items[i].children[j].children[k].name,
+                test: items[i].children[j].children[k].text,
+                num: lev1 + '.' + lev2 + '.' + lev3
+              }
+              // console.log(objI)
+              result.push(objI)
+            }
+          }
+        }
+      }
+    }
+    result.sort(function(a, b) {
+      return a.num - b.num
+    })
+    console.log(result)
+  }
+</script>
