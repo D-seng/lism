@@ -25,7 +25,7 @@
     >
       <v-expansion-panel-content
         class="draggableitem"
-        v-for="item in items"
+        v-for="item in this.items"
         :key="item.id"
         width="100%"
       >
@@ -66,7 +66,7 @@
     >
       <v-expansion-panel-content
         class="draggableitem"
-        v-for="item in items"
+        v-for="item in this.this.items"
         :key="item.id"
         width="100%"
       >
@@ -108,7 +108,7 @@
       </v-expansion-panel-content> </draggable
     >-->
     <!-- ********************************************* -->
-    <!-- <draggable
+    <draggable
       :options="{ draggable: '.draggableitem' }"
       element="v-expansion-panel"
       dragoverBubble="true"
@@ -118,24 +118,24 @@
     >
       <v-expansion-panel-content
         class="draggableitem"
-        v-for="item in items"
+        v-for="item in items_with_numbering"
         :key="item.id"
         width="100%"
       >
-        <div slot="header">{{ fullItemLevel1 }}. {{ item.name }}</div>
+        <div v-if="item.lev === 1" slot="header">{{item.num }}{{ item.name }} </div>
 
-        <p contenteditable="false">{{ itemLevel1 }}.0 {{ item.text }}</p>
+        <p contenteditable="false">{{ item.text }}</p>
         <draggable
-          v-model="item.children"
           @start="drag = true"
           @end="drag = false"
         >
-          <div v-for="child in item.children" :key="child.id">
+          <div v-else-if"item.lev === 2">
             <p contenteditable="false">
-              {{ fullItemLevel2 }}{{ child.name }}
-              {{ child.text }}
+              {{ item.num }}
+              {{ item.name }}
+              {{ item.text }}
             </p>
-            <draggable
+            <!-- <draggable
               v-model="child.children"
               @start="drag = true"
               @end="drag = false"
@@ -156,11 +156,11 @@
                   </div>
                 </draggable>
               </div>
-            </draggable>
+            </draggable> -->
           </div>
         </draggable>
       </v-expansion-panel-content>
-    </draggable>-->
+    </draggable>
   </div>
 </template>
 
@@ -191,7 +191,25 @@ export default {
               id: 2,
               num: null,
               name: 'Calendar',
-              text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+              text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+              children: [
+                {
+                  id: 10,
+                  num: null,
+                  name: 'rsaa',
+                  text:
+                    'Lorem ipsum dolor adjsasjiopewo sit amet, consectetur adipiscing elit',
+                  children: [
+                    {
+                      id: 11,
+                      num: null,
+                      name: 'gggaa',
+                      text:
+                        'jlejoiqwjeiojqwiopejopieqwiot, consectetur adipiscing elit'
+                    }
+                  ]
+                }
+              ]
             },
             {
               id: 3,
@@ -243,119 +261,6 @@ export default {
                   ]
                 }
               ]
-            },
-            {
-              id: 10,
-              num: null,
-              name: 'material2 :',
-              text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-              children: [
-                {
-                  id: 11,
-                  num: null,
-                  name: 'src :',
-                  text:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-                  children: [
-                    {
-                      id: 12,
-                      num: null,
-                      name: 'v-btn : ts',
-                      text:
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
-                    },
-                    {
-                      id: 13,
-                      num: null,
-                      name: 'v-card : ts',
-                      text:
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
-                    },
-                    {
-                      id: 14,
-                      num: null,
-                      name: 'v-window : ts',
-                      text:
-                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          id: 15,
-          num: null,
-          name: 'Downloads :',
-          text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-          children: [
-            {
-              id: 16,
-              num: null,
-              name: 'October : pdf',
-              text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
-            },
-            {
-              id: 17,
-              num: null,
-              name: 'November : pdf',
-              text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
-            },
-            {
-              id: 18,
-              num: null,
-              name: 'Tutorial : html',
-              text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
-            }
-          ]
-        },
-        {
-          id: 19,
-          num: null,
-          name: 'Videos :',
-          text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-          children: [
-            {
-              id: 20,
-              num: null,
-              name: 'Tutorials :',
-              text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-              children: [
-                {
-                  id: 21,
-                  num: null,
-                  name: 'Basic layouts : mp4',
-                  text:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
-                },
-                {
-                  id: 22,
-                  num: null,
-                  name: 'Advanced techniques : mp4',
-                  text:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
-                },
-                {
-                  id: 23,
-                  num: null,
-                  name: 'All about app : dir',
-                  text:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
-                }
-              ]
-            },
-            {
-              id: 24,
-              num: null,
-              name: 'Intro : mov',
-              text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
-            },
-            {
-              id: 25,
-              num: null,
-              name: 'Conference introduction : avi',
-              text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
             }
           ]
         }
@@ -383,42 +288,99 @@ export default {
       let lev1 = 0
       let lev2 = 0
       let lev3 = 0
+      let lev4 = 0
 
-      console.log(this.items.length)
+      let objI
+      let itemI
 
       for (let i = 0; i < this.items.length; i++) {
         // use the for loop that uses an index
         // if (item.children) {
         // }
-        lev1 += lev1
-        console.log('lev 1: ' + lev1)
-
-        result.push({
+        lev1 += 1
+        objI = {
           id: this.items[i].id,
           name: this.items[i].name,
-          test: this.items[i].text,
-          num: lev1
-        })
-        if (this.items[i].children) {
+          text: this.items[i].text,
+          lev: 1,
+          num: lev1 + '.0'
+        }
+        result.push(objI)
+
+        itemI = this.items[i]
+        if (itemI.hasOwnProperty('children')) {
           lev2 = 0
           //push onto nested array; do the same down to lev3
-          for (let j = 0; j < this.items[i].length; j++) {
-            lev2 += lev2
-            console.log('lev 2: ' + lev2)
+          for (let j = 0; j < this.items[i].children.length; j++) {
+            lev2 += 1
 
-            if (this.items[i].children[j].children) {
+            objI = {
+              id: this.items[i].children[j].id,
+              name: this.items[i].children[j].name,
+              text: this.items[i].children[j].text,
+              lev: 2,
+              num: lev1 + '.' + lev2
+            }
+            // console.log(objI)
+            result.push(objI)
+
+            if (this.items[i].children[j].hasOwnProperty('children')) {
               lev3 = 0
 
-              for (let k = 0; i < this.items[i][j].length; k++) {
-                lev3 += lev3
-                console.log('lev 3: ' + lev3)
+              for (
+                let k = 0;
+                k < this.items[i].children[j].children.length;
+                k++
+              ) {
+                lev3 += 1
+                // console.log('lev 3: ' + lev3)
+                objI = {
+                  id: this.items[i].children[j].children[k].id,
+                  name: this.items[i].children[j].children[k].name,
+                  text: this.items[i].children[j].children[k].text,
+                  lev: 3,
+                  num: lev1 + '.' + lev2 + '.' + lev3
+                }
+                // console.log(objI)
+                result.push(objI)
+
+                if (
+                  this.items[i].children[j].children[k].hasOwnProperty(
+                    'children'
+                  )
+                ) {
+                  lev3 = 0
+
+                  for (
+                    let l = 0;
+                    l < this.items[i].children[j].children[k].children.length;
+                    l++
+                  ) {
+                    lev4 += 1
+                    // console.log('lev 3: ' + lev3)
+                    objI = {
+                      id: this.items[i].children[j].children[k].children[l].id,
+                      name: this.items[i].children[j].children[k].children[l]
+                        .name,
+                      text: this.items[i].children[j].children[k].children[l]
+                        .text,
+                      lev: 4,
+                      num: lev1 + '.' + lev2 + '.' + lev3 + '.' + lev4
+                    }
+                    // console.log(objI)
+                    result.push(objI)
+                  }
+                }
               }
             }
           }
         }
       }
-
-      //how do you refer to the set of child elements for element in an array?
+      result.sort(function(a, b) {
+        return a.num - b.num
+      })
+      console.log(result)
+      return result
     }
   },
 
