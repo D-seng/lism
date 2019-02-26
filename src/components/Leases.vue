@@ -170,19 +170,17 @@
       :list="dragTest"
       v-on:change="update"
     >
-      <div v-for="dt in dragTest" :key="dt.num" :data-id="dt.num">
-        {{ dt.num }}. {{ dt.text }}
-      </div>
+      <div v-for="dt in dragTest" :key="dt.num" :data-id="dt.num">{{ dt.num }}. {{ dt.text }}</div>
     </draggable>
 
     <v-divider></v-divider>
     <div style="padding-top: 30px"></div>
 
-    <draggable
+    <nested-draggable
       @start="drag = true"
       @end="drag = false"
       :options="{ animation: 500 }"
-      :list="lseSection_with_numbering"
+      :list="items"
     >
       <!-- <div
         id="lse"
@@ -190,20 +188,19 @@
         :key="item.order"
         :data-id="item.order"
       >-->
-      <LeaseList
-        v-for="lseSection in lseSection_with_numbering"
-        :key="lseSection.id"
-        :lseSection="lseSection"
-      ></LeaseList>
+      <div v-for="item in items3" :key="item.order" :id="item.order">
+        <LeaseList :lseSection="item"></LeaseList>
+      </div>
 
       <!-- </div> -->
-    </draggable>
+    </nested-draggable>
   </div>
 </template>
 
 <script>
 import EventService from '@/services/EventService.js'
 import draggable from 'vuedraggable'
+import nested-draggable from 'nested-vuedraggable'
 import LeaseList from '@/components/LeaseList.vue'
 // import Sortable from 'sortable'
 
@@ -212,12 +209,10 @@ export default {
     draggable,
     LeaseList
   },
-
   data() {
     return {
       event: null,
       events: [],
-
       i: 0,
       j: -1,
       k: -1,
@@ -230,78 +225,6 @@ export default {
         { text: 'item 5', num: '5' }
       ],
       // create an array for rendering, a la https://codepen.io/anon/pen/ZwVJrg?editors=1010,
-      items2: [
-        {
-          id: 1,
-          name: 'Applications :',
-          children: [
-            { id: 2, name: 'Calendar : app' },
-            { id: 3, name: 'Chrome : app' },
-            { id: 4, name: 'Webstorm : app' }
-          ]
-        },
-        {
-          id: 5,
-          name: 'Documents :',
-          children: [
-            {
-              id: 6,
-              name: 'vuetify :',
-              children: [
-                {
-                  id: 7,
-                  name: 'src :',
-                  children: [
-                    { id: 8, name: 'index : ts' },
-                    { id: 9, name: 'bootstrap : ts' }
-                  ]
-                }
-              ]
-            },
-            {
-              id: 10,
-              name: 'material2 :',
-              children: [
-                {
-                  id: 11,
-                  name: 'src :',
-                  children: [
-                    { id: 12, name: 'v-btn : ts' },
-                    { id: 13, name: 'v-card : ts' },
-                    { id: 14, name: 'v-window : ts' }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          id: 15,
-          name: 'Downloads :',
-          children: [
-            { id: 16, name: 'October : pdf' },
-            { id: 17, name: 'November : pdf' },
-            { id: 18, name: 'Tutorial : html' }
-          ]
-        },
-        {
-          id: 19,
-          name: 'Videos :',
-          children: [
-            {
-              id: 20,
-              name: 'Tutorials :',
-              children: [
-                { id: 21, name: 'Basic layouts : mp4' },
-                { id: 22, name: 'Advanced techniques : mp4' },
-                { id: 23, name: 'All about app : dir' }
-              ]
-            },
-            { id: 24, name: 'Intro : mov' },
-            { id: 25, name: 'Conference introduction : avi' }
-          ]
-        }
-      ],
       items: [
         {
           id: 1,
@@ -403,6 +326,99 @@ export default {
             }
           ]
         }
+      ],
+
+      items3: [
+        {
+          id: 1,
+          num: '1.0',
+          order: 1,
+          name: 'Applications :',
+          text: 'Lorem ipsum 1',
+          lev: 1
+        },
+        {
+          id: 2,
+          num: '1.1',
+          order: 2,
+          name: 'Calendar',
+          text: 'Lorem ipsum 2',
+          lev: 2
+        },
+        {
+          id: 10,
+          num: '1.1.1',
+          order: 3,
+          name: 'rsaa',
+          text: 'Lorem ipsum 3',
+          lev: 3
+        },
+        {
+          id: 11,
+          num: '1.1.1.1',
+          order: 4,
+          name: 'gggaa',
+          text: 'Lorem 4',
+          lev: 4
+        },
+        {
+          id: 3,
+          num: '1.2',
+          order: 5,
+          name: 'Chrome',
+          text: 'Lorem ipsum 5',
+          lev: 2
+        },
+        {
+          id: 4,
+          num: '1.3',
+          order: 6,
+          name: 'Webstorm',
+          text: 'Lorem ipsum 6',
+          lev: 2
+        },
+        {
+          id: 5,
+          num: '2.0',
+          order: 7,
+          name: 'Documents :',
+          text: 'Lorem ipsum 7',
+          lev: 1
+        },
+
+        {
+          id: 6,
+          num: '2.1',
+          order: 8,
+          name: 'vuetify : ',
+          text: 'Lorem ipsum 8',
+          lev: 2
+        },
+
+        {
+          id: 7,
+          num: '2.1.1',
+          order: 9,
+          name: 'src :',
+          text: 'Lorem ipsum 9',
+          lev: 3
+        },
+        {
+          id: 8,
+          num: '2.1.1.1',
+          order: 10,
+          name: 'index : ts :',
+          text: 'Lorem ipsum 10',
+          lev: 4
+        },
+        {
+          id: 9,
+          num: '2.1.1.2',
+          order: 11,
+          name: 'bootstrap : ts : ',
+          text: 'Lorem ipsum 11',
+          lev: 4
+        }
       ]
     }
   },
@@ -427,17 +443,21 @@ export default {
       this.dragTest.map((item, index) => {
         item.num = index + 1
       })
-
       for (let i = 0; i < this.dragTest.length; i++) {
         console.log(this.dragTest[i].num + ': ' + this.dragTest[i].text)
       }
     },
     updateComplex() {
-      console.log(this.items_with_numbering)
-      this.items_with_numbering.map((item, index) => {
+      // alert('dropped')
+      console.log(this.items3)
+      this.items3.map((item, index) => {
         item.order = index + 1
       })
-      console.log(this.items_with_numbering)
+      console.log(this.items3)
+    },
+    showParent(event) {
+      var el = event.target
+      alert(el.innerHTML)
     }
     // dropTest(evt) {
     //   console.log(evt.draggedContext.index)

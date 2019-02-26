@@ -1,5 +1,7 @@
 <template>
-  <div>{{ lseSection.num }} {{ lseSection.text }}</div>
+  <div>
+    {{ lseSection.num }} {{ lseSection.text }} -- {{ lseSection.order }}
+  </div>
 </template>
 
 <script>
