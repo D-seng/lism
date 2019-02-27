@@ -45,7 +45,8 @@ export default {
         { title: 'Leases', icon: 'folder', route: '/leases' },
         { title: 'Home', icon: 'home', route: '/' },
         { title: 'Settings', icon: 'settings', route: '/settings' },
-        { title: 'About', icon: 'info', route: '/about' }
+        { title: 'About', icon: 'info', route: '/about' },
+        { title: 'Nested', icon: 'info', route: '/nested' }
       ]
     }
   }

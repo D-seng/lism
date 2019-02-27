@@ -4,6 +4,7 @@ import Home from './components/Home.vue'
 import Settings from './views/Settings.vue'
 import About from './views/About.vue'
 import Leases from './components/Leases.vue'
+import nested from './components/nested.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -29,6 +30,11 @@ export default new Router({
       path: '/leases',
       name: 'leases',
       component: Leases
+    },
+    {
+      path: '/nested',
+      name: 'nested',
+      component: nested
     }
   ]
 })

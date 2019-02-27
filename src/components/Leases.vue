@@ -170,7 +170,9 @@
       :list="dragTest"
       v-on:change="update"
     >
-      <div v-for="dt in dragTest" :key="dt.num" :data-id="dt.num">{{ dt.num }}. {{ dt.text }}</div>
+      <div v-for="dt in dragTest" :key="dt.num" :data-id="dt.num">
+        {{ dt.num }}. {{ dt.text }}
+      </div>
     </draggable>
 
     <v-divider></v-divider>
@@ -200,7 +202,7 @@
 <script>
 import EventService from '@/services/EventService.js'
 import draggable from 'vuedraggable'
-import nested-draggable from 'nested-vuedraggable'
+
 import LeaseList from '@/components/LeaseList.vue'
 // import Sortable from 'sortable'
 
