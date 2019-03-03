@@ -21,5 +21,14 @@ export default {
   },
   postEvent(event) {
     return apiClient.post('/events', event)
+  },
+  getList() {
+    return apiClient.get('/list')
+  },
+  getMenu() {
+    return apiClient.get('/menu')
+  },
+  putList() {
+    return apiClient.put('/list')
   }
 }

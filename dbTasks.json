@@ -1,0 +1,50 @@
+{
+    "list": [
+  {
+    "name": "task 1",
+    "tasks": [
+      {
+        "name": "task 2",
+        "tasks": []
+      }
+    ]
+  },
+  {
+    "name": "task 3",
+    "tasks": [
+      {
+        "name": "task 4",
+        "tasks": []
+      }
+    ]
+  },
+  {
+    "name": "task 5",
+    "tasks": []
+  }
+  ],
+  "menu": [
+  {
+    "name": "menu item 1",
+    "tasks": [
+      {
+        "name": "menu item 2",
+        "tasks": []
+      }
+    ]
+  },
+  {
+    "name": "menu item 3",
+    "tasks": [
+      {
+        "name": "menu item 4",
+        "tasks": []
+      }
+    ]
+  },
+  {
+    "name": "menu item 5",
+    "tasks": []
+  }
+]
+}
