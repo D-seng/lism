@@ -1,5 +1,4 @@
-{
-    "list": [
+[
   {
     "name": "task 1",
     "tasks": [
@@ -22,8 +21,8 @@
     "name": "task 5",
     "tasks": []
   }
-  ],
-  "menu": [
+]
+NestedExample.vue?fc19:39 [
   {
     "name": "menu item 1",
     "tasks": [
@@ -47,4 +46,3 @@
     "tasks": []
   }
 ]
-}

@@ -22,13 +22,19 @@ export default {
   postEvent(event) {
     return apiClient.post('/events', event)
   },
-  getList() {
-    return apiClient.get('/list')
+  getTodos() {
+    return apiClient.get('/todos')
   },
-  getMenu() {
-    return apiClient.get('/menu')
+  getToDonts() {
+    return apiClient.get('/todonts')
   },
-  putList() {
-    return apiClient.put('/list')
+  putTodos(todos) {
+    return apiClient.put('/todos/', todos)
+  },
+  deleteTodos() {
+    return apiClient.delete('/todos/')
+  },
+  postTodos(todos) {
+    return apiClient.post('/todos', todos)
   }
 }

@@ -11,7 +11,9 @@
     </div>
 
     <v-btn @click="stringify">strigify</v-btn>
-    <v-btn @click="save">save</v-btn>
+    <!-- <v-btn @click="put">put</v-btn> -->
+    <v-btn @click="put">put</v-btn>
+    <v-btn @click="post">post</v-btn>
 
     <!-- <rawDisplayer class="col-0" :value="list" title="List" /> -->
   </div>
@@ -20,10 +22,13 @@
 <script>
 import NestedDraggable from '@/components/NestedDraggable'
 import EventService from '@/services/EventService.js'
+import axios from 'axios'
+
 export default {
   name: 'nested-example',
   display: 'Nested',
   order: 19,
+
   components: {
     NestedDraggable
   },
@@ -38,20 +43,41 @@ export default {
       console.log(JSON.stringify(this.list, null, 2))
       console.log(JSON.stringify(this.menu, null, 2))
     },
-    save() {
-      EventService.putList().then(response => {
-        console.log(response.data)
-        this.list = response.data
+    post() {
+      // console.log(JSON.stringify(this.list, null, 2))
+      var list = JSON.stringify(this.list, null, 2)
+      console.log(list)
+      axios({
+        method: 'post',
+        url: 'http://localhost:3000/list',
+        data: list
+      })
+    },
+    put() {
+      var todos = JSON.stringify(this.list, null, 2)
+      console.log(todos)
+      todos = JSON.parse(todos)
+      // console.log(todos)
+      var data = {
+        id: 'l5',
+        name: 'task 5--',
+        tasks: []
+      }
+      EventService.deleteTodos()
+      EventService.postTodos(todos).then(response => {
+        console.log(response.status)
       })
     }
   },
   created() {
-    EventService.getList().then(response => {
+    EventService.getTodos().then(response => {
       this.list = response.data
-    }),
-      EventService.getMenu().then(response => {
-        this.menu = response.data
-      })
+      console.log(response.data)
+    })
+    EventService.getToDonts().then(response => {
+      this.menu = response.data
+      console.log(response.data)
+    })
   }
 }
 </script>
