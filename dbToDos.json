@@ -21,34 +21,5 @@
       "name": "task 5--",
       "tasks": []
     }
-  ],
-  "todonts": [
-    {
-      "id": "m6",
-      "name": "menu item 1",
-      "tasks": [
-        {
-          "id": "m7",
-          "name": "menu item 2",
-          "tasks": []
-        }
-      ]
-    },
-    {
-      "id": "m8",
-      "name": "menu item 3",
-      "tasks": [
-        {
-          "id": "m9",
-          "name": "menu item 4",
-          "tasks": []
-        }
-      ]
-    },
-    {
-      "id": "m10",
-      "name": "menu item 5",
-      "tasks": []
-    }
   ]
 }

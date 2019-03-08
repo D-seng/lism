@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const apiClient = axios.create({
-  baseURL: `http://localhost:3000`,
+  baseURL: `http://localhost:5000/api/posts`,
   withCredentials: false, // This is the default
   headers: {
     Accept: 'application/json',
@@ -23,7 +23,7 @@ export default {
     return apiClient.post('/events', event)
   },
   getTodos() {
-    return apiClient.get('/todos')
+    return apiClient.get('/5c81f77fd72f4b843b8a02a2')
   },
   getToDonts() {
     return apiClient.get('/todonts')

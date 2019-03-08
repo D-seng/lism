@@ -5,10 +5,10 @@
       <NestedDraggable :tasks="list" />
     </div>
 
-    <div class="col-8">
+    <!-- <div class="col-8">
       <h3>Nested draggable tasks--</h3>
       <NestedDraggable :tasks="menu" />
-    </div>
+    </div> -->
 
     <v-btn @click="stringify">strigify</v-btn>
     <!-- <v-btn @click="put">put</v-btn> -->
@@ -49,7 +49,7 @@ export default {
       console.log(list)
       axios({
         method: 'post',
-        url: 'http://localhost:3000/list',
+        url: 'http://localhost:5000/api/posts',
         data: list
       })
     },
@@ -71,13 +71,15 @@ export default {
   },
   created() {
     EventService.getTodos().then(response => {
-      this.list = response.data
-      console.log(response.data)
+      let data = response.data.text
+      this.list = data
+      console.log(data)
     })
-    EventService.getToDonts().then(response => {
-      this.menu = response.data
-      console.log(response.data)
-    })
+    console.log('created')
+    // EventService.getToDonts().then(response => {
+    //   this.menu = response.data
+    //   console.log(response.data)
+    // })
   }
 }
 </script>
