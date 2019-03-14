@@ -13,11 +13,16 @@
     "dev": "nodemon server/index.js"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.15",
+    "@fortawesome/free-solid-svg-icons": "^5.7.2",
+    "@fortawesome/vue-fontawesome": "^0.1.5",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+    "i": "^0.3.6",
     "mongodb": "^3.1.13",
+    "npm": "^6.9.0",
     "sortable": "^2.0.0",
     "vue": "^2.6.6",
     "vue-router": "^3.0.1",
