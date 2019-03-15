@@ -3,7 +3,7 @@
     <div class="col-8">
       <h3>Nested draggable tasks--</h3>
       <!-- <p>{{ list }}</p> -->
-      <NestedDraggable :tasks="list" />
+      <NestedDraggable :tasks="list" @renumber-handler="renumberX" />
       <!-- <ul>
         <li v-for="(item, index) in list">{{ item }}</li>
       </ul> -->
@@ -74,6 +74,7 @@ export default {
       })
     },
     renumberX() {
+      // alert('renumberX')
       var subsequent = false
       var prefix = ''
       this.renumber(this.list, subsequent, prefix)
@@ -84,7 +85,7 @@ export default {
       arr.forEach(function(item) {
         if (subsequent === false) {
           item.section = arr.indexOf(item)
-          console.log(item.section)
+          // console.log(item.section)
         } else {
           item.section = prefix + '' + (arr.indexOf(item) + 1) + ''
         }

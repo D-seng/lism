@@ -10,8 +10,9 @@
       handle=".handle"
       :list="tasks"
       :group="{ name: 'g1' }"
+      @change="renumberHandler"
     >
-      <li v-for="el in tasks" :key="el.section">
+      <li v-for="el in tasks" :key="el.verbiage">
         <font-awesome-icon
           icon="grip-lines"
           class="fas fa-grip-lines fa-lg handle"
@@ -21,7 +22,10 @@
           {{ el.verbiage }}
         </span>
         <!-- <div v-if="el.subsections.length > 0"> -->
-        <NestedDraggable :tasks="el.subsections" />
+        <NestedDraggable
+          :tasks="el.subsections"
+          @renumber-handler="renumberHandler"
+        />
         <!-- </div> -->
       </li>
     </draggable>
@@ -50,6 +54,10 @@ export default {
   methods: {
     toggleActive() {
       this.isActive = !this.isActive
+    },
+    renumberHandler() {
+      // alert('renumber-handler')
+      this.$emit('renumber-handler')
     }
   }
 }
