@@ -35,6 +35,9 @@ export default {
   postEvent(event) {
     return apiClient.post('/events', event)
   },
+  getTodo(id) {
+    return apiClient.get('/' + id)
+  },
   getTodos() {
     return apiClient.get('/5c8525bda12257857384470d')
   },
@@ -50,7 +53,7 @@ export default {
   deleteTodos() {
     return apiClient.delete('/todos/')
   },
-  postTodos(todos) {
-    return apiClient.post('/todos', todos)
+  postTodos(post) {
+    return apiClient.post('/', post)
   }
 }

@@ -16,9 +16,7 @@ export default {
     NavBar
   },
   data() {
-    return {
-      //
-    }
+    return {}
   }
 }
 </script>
