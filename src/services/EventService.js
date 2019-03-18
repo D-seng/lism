@@ -1,7 +1,10 @@
 import axios from 'axios'
-
+var pword = process.env.MLAB
+console.log(process.env.USER)
 var connStringLocal = 'http://localhost:5000/api/posts'
-var connStringMlab = 'mongodb://d-user:minori123@ds161335.mlab.com:61335/lismart'
+//minori123
+var connStringMlab =
+  'mongodb://duser:' + pword + 'ds161335.mlab.com:61335/lismart'
 const apiClient = axios.create({
   baseURL: connStringMlab,
   withCredentials: false, // This is the default
@@ -27,11 +30,14 @@ export default {
   getTodos() {
     return apiClient.get('/5c83011be7179a3e36e447c6')
   },
+  // getTodos() {
+  //   return apiClient.get('/todos')
+  // },
   getToDonts() {
     return apiClient.get('/todonts')
   },
-  putTodos(todos) {
-    return apiClient.put('/todos/', todos)
+  putTodos(post, id) {
+    return apiClient.put('/' + id, post)
   },
   deleteTodos() {
     return apiClient.delete('/todos/')
