@@ -25,10 +25,7 @@ router.get('/:id', async (req, res) => {
 // add
 router.post('/', async (req, res) => {
   const posts = await loadLisCollection()
-  await posts.insertOne({
-    text: req.body.text,
-    createdAt: new Date()
-  })
+  await posts.insertOne({ text: req.body, createdAt: new Date() })
   res.status(201).send()
 })
 

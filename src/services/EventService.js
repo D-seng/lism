@@ -4,7 +4,8 @@ console.log(process.env.USER)
 var connStringLocal = 'http://localhost:5000/api/posts'
 //minori123
 var connStringMlab =
-  'mongodb://duser:' + pword + 'ds161335.mlab.com:61335/lismart'
+'mongodb+srv://darren-user:<password>cluster0-rh3ve.mongodb.net/test?retryWrites=true'
+  //'mongodb://duser:minori123ds161335.mlab.com:61335/lismart'
 const apiClient = axios.create({
   baseURL: connStringMlab,
   withCredentials: false, // This is the default
@@ -27,6 +28,9 @@ export default {
   postEvent(event) {
     return apiClient.post('/events', event)
   },
+  getTodo(id) {
+    return apiClient.get('/' + id)
+  },
   getTodos() {
     return apiClient.get('/5c83011be7179a3e36e447c6')
   },
@@ -42,7 +46,7 @@ export default {
   deleteTodos() {
     return apiClient.delete('/todos/')
   },
-  postTodos(todos) {
-    return apiClient.post('/todos', todos)
+  postTodos(post) {
+    return apiClient.post('/', post)
   }
 }

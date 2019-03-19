@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './components/Home.vue'
 import Settings from './views/Settings.vue'
-import About from './views/About.vue'
+import Editor from './views/Editor.vue'
 import Leases from './components/Leases.vue'
 import NestedExample from './components/NestedExample.vue'
 Vue.use(Router)
@@ -22,9 +22,9 @@ export default new Router({
       component: Settings
     },
     {
-      path: '/about',
-      name: 'about',
-      component: About
+      path: '/editor',
+      name: 'editor',
+      component: Editor
     },
     {
       path: '/leases',
