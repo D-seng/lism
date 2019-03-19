@@ -1,6 +1,6 @@
 const express = require('express')
 const mongodb = require('mongodb')
-
+const cors = require('cors')
 const router = express.Router()
 
 // get
@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
   res.send(await posts.find({}).toArray())
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', cors(), async (req, res) => {
   const posts = await loadLisCollection()
   const post = await posts.findOne({ _id: new mongodb.ObjectID(req.params.id) })
   res.send(post)
@@ -56,7 +56,7 @@ router.put('/:id', async (req, res) => {
 
 async function loadLisCollection() {
   const client = await mongodb.MongoClient.connect(
-    'mongodb://localhost/lismart/',
+    'mongodb://duser:minori123@ds161335.mlab.com:61335/lismart',
     { useNewUrlParser: true }
   )
   return client.db('lismart').collection('posts')

@@ -18,7 +18,6 @@
           <h3>Clause stack</h3>
           <v-btn @click="undo">Undo</v-btn>
           <v-btn @click="redo">Redo</v-btn>
-          <v-btn @click="bullet">bullet</v-btn>
           <!-- <p>{{ list }}</p> -->
           <NestedDraggable
             :list="lease"
@@ -79,6 +78,7 @@ export default {
     },
 
     post() {
+      console.log(process.env.USER)
       // console.log(JSON.stringify(this.list, null, 2))
       var list = JSON.stringify(this.lease, null, 2)
       console.log(list)
@@ -183,26 +183,18 @@ export default {
       }
 
       this.reorder = arr
-    },
-    bullet() {
-      var range = document.getSelection().getRangeAt(0)
-      console.log(range)
-      // var bullet = range.createContextualFragment('abcde')
-      // console.log
-      document.write('bullet here')
-      this.bulletMode = !this.bulletMode
     }
   },
 
   created() {
-    EventService.getTodo('5c8525bda12257857384470d').then(response => {
+    EventService.getTodo('5c904d0ffb6fc0465d48623a').then(response => {
       this.id = response.data._id
       this.lease = response.data.text
       console.log(JSON.stringify(response.data))
       console.log('created')
       this.addToStack()
     })
-    EventService.getTodo('5c8a50b4a12257857384470e').then(response => {
+    EventService.getTodo('5c904bf7fb6fc0465d4861bb').then(response => {
       this.idMenu = response.data._id
       this.feeder = response.data.text
       console.log(JSON.stringify(response.data))

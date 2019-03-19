@@ -1,15 +1,16 @@
 <template>
   <div class="about">
-             <font-awesome-icon
-            icon="grip-lines"     
-            class="fas fa-grip-lines fa-lg handle"
-            @click="edit"
-          />
+    <font-awesome-icon
+      icon="grip-lines"
+      class="fas fa-grip-lines fa-lg handle"
+      @click="edit"
+    />
     <h1>Edit</h1>
 
-
-    <vue-editor v-model="content.text" 
-    :editor-toolbar="customToolbar"></vue-editor>
+    <vue-editor
+      v-model="content.text"
+      :editor-toolbar="customToolbar"
+    ></vue-editor>
 
     <v-btn @click="put">put</v-btn>
     <v-btn @click="post">post</v-btn>
@@ -31,9 +32,17 @@ export default {
       content: {
         text: 'write here...'
       },
-      customToolbar: [[{ 'size': ['small', false, 'large', 'huge'] }], ["bold", "italic"], 
-      [{'align': ''}, {'align': 'center'}, {'align': 'right'}, {'align': 'justify'}],
-      [{list: "ordered"}, {list: "bullet"}]]
+      customToolbar: [
+        [{ size: ['small', false, 'large', 'huge'] }],
+        ['bold', 'italic'],
+        [
+          { align: '' },
+          { align: 'center' },
+          { align: 'right' },
+          { align: 'justify' }
+        ],
+        [{ list: 'ordered' }, { list: 'bullet' }]
+      ]
     }
   },
   methods: {

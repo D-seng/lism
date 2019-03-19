@@ -1,11 +1,12 @@
 import axios from 'axios'
-var pword = process.env.MLAB
-console.log(process.env.USER)
+var DBPASSWORD = process.env.DB_PASSWORD
+var DBUSER = process.env.DB_USER
+// console.log(DBUSER)
 var connStringLocal = 'http://localhost:5000/api/posts'
 //minori123
-var connStringMlab =
-'mongodb+srv://darren-user:<password>cluster0-rh3ve.mongodb.net/test?retryWrites=true'
-  //'mongodb://duser:minori123ds161335.mlab.com:61335/lismart'
+var connStringMlab = `mongodb://${DBUSER}:${DBPASSWORD}@ds161335.mlab.com:61335/lismart`
+// 'mongodb+srv://darren-user:<password>cluster0-rh3ve.mongodb.net/test?retryWrites=true'
+//'mongodb://duser:minori123ds161335.mlab.com:61335/lismart'
 const apiClient = axios.create({
   baseURL: connStringMlab,
   withCredentials: false, // This is the default
