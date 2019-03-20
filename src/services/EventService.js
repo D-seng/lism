@@ -1,10 +1,11 @@
 import axios from 'axios'
-var DBPASSWORD = process.env.DB_PASSWORD
-var DBUSER = process.env.DB_USER
+const USR = process.env.VUE_APP_DBUSER
+const PWD = process.env.VUE_APP_DBPASSWORD
+
 // console.log(DBUSER)
 var connStringLocal = 'http://localhost:5000/api/posts'
 //minori123
-var connStringMlab = `mongodb://${DBUSER}:${DBPASSWORD}@ds161335.mlab.com:61335/lismart`
+var connStringMlab = `mongodb://${USR}:${PWD}@ds161335.mlab.com:61335/lismart`
 // 'mongodb+srv://darren-user:<password>cluster0-rh3ve.mongodb.net/test?retryWrites=true'
 //'mongodb://duser:minori123ds161335.mlab.com:61335/lismart'
 const apiClient = axios.create({

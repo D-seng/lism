@@ -3,6 +3,9 @@ const mongodb = require('mongodb')
 const cors = require('cors')
 const router = express.Router()
 
+const PWD = process.env.VUE_APP_DBPASSWORD
+const USR = process.env.VUE_APP_DBUSER
+
 // get
 router.get('/', async (req, res) => {
   const posts = await loadLisCollection()
@@ -54,9 +57,10 @@ router.put('/:id', async (req, res) => {
   res.status(200).send()
 })
 
+
 async function loadLisCollection() {
   const client = await mongodb.MongoClient.connect(
-    'mongodb://duser:minori123@ds161335.mlab.com:61335/lismart',
+    `mongodb://${USR}:${PWD}@ds161335.mlab.com:61335/lismart`,
     { useNewUrlParser: true }
   )
   return client.db('lismart').collection('posts')

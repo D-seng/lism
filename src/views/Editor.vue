@@ -14,7 +14,7 @@
 
     <v-btn @click="put">put</v-btn>
     <v-btn @click="post">post</v-btn>
-    <v-btn @click="save">save</v-btn>
+    <v-btn @click="processenv">process.env</v-btn>
   </div>
 </template>
 
@@ -49,8 +49,8 @@ export default {
     edit() {
       alert('edit')
     },
-    save() {
-      console.log(this.content)
+    processenv() {
+      console.log(process.env.VUE_APP_DBUSER)
     },
     post() {
       // console.log(JSON.stringify(this.list, null, 2))
