@@ -2,9 +2,11 @@ const express = require('express')
 const mongodb = require('mongodb')
 const cors = require('cors')
 const router = express.Router()
+const app = require('../index')
+const bodyParser = require('body-parser')
 
-const PWD = process.env.VUE_APP_DBPASSWORD
-const USR = process.env.VUE_APP_DBUSER
+app.options('*', cors())
+app.use(bodyParser.json())
 
 // get
 router.get('/', async (req, res) => {
@@ -26,7 +28,7 @@ router.get('/:id', cors(), async (req, res) => {
 // })
 
 // add
-router.post('/', async (req, res) => {
+router.post('/', cors(), async (req, res) => {
   const posts = await loadLisCollection()
   await posts.insertOne({ text: req.body, createdAt: new Date() })
   res.status(201).send()
@@ -57,13 +59,27 @@ router.put('/:id', async (req, res) => {
   res.status(200).send()
 })
 
+const PWD = process.env.VUE_APP_DBPASSWORD
+const USR = process.env.VUE_APP_DBUSER
+const PWDATLAS = process.env.VUE_APP_DBPASSWORDATLAS
+
+const ATLAS = `mongodb+srv://darren-user:${PWDATLAS}@cluster0-rh3ve.mongodb.net/test?retryWrites=true`
+const MLAB = `mongodb://${USR}:${PWD}@ds161335.mlab.com:61335/lismart`
 
 async function loadLisCollection() {
-  const client = await mongodb.MongoClient.connect(
-    `mongodb://${USR}:${PWD}@ds161335.mlab.com:61335/lismart`,
-    { useNewUrlParser: true }
-  )
+  const client = await mongodb.MongoClient.connect(MLAB, {
+    useNewUrlParser: true
+  })
   return client.db('lismart').collection('posts')
 }
+
+// const MongoClient = mongodb.MongoClient
+// // const uri = "mongodb+srv://darren-user:<password>@cluster0-rh3ve.mongodb.net/test?retryWrites=true";
+// const client = new MongoClient(ATLAS, { useNewUrlParser: true })
+// client.connect(err => {
+//   const collection = client.db("test").collection("devices");
+//   // perform actions on the collection object
+//   client.close();
+// });
 
 module.exports = router

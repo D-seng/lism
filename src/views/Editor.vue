@@ -51,6 +51,7 @@ export default {
     },
     processenv() {
       console.log(process.env.VUE_APP_DBUSER)
+      console.log(process.env.VUE_APP_DBPASSWORD)
     },
     post() {
       // console.log(JSON.stringify(this.list, null, 2))

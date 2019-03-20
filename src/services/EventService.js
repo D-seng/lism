@@ -1,15 +1,19 @@
 import axios from 'axios'
 const USR = process.env.VUE_APP_DBUSER
 const PWD = process.env.VUE_APP_DBPASSWORD
+const PWDATLAS = process.env.VUE_APP_DBPASSWORDATLAS
+
+const ATLAS = `mongodb+srv://darren-user:${PWDATLAS}@cluster0-rh3ve.mongodb.net/test?retryWrites=true`
+const MLAB = `mongodb://${USR}:${PWD}@ds161335.mlab.com:61335/lismart`
 
 // console.log(DBUSER)
 var connStringLocal = 'http://localhost:5000/api/posts'
 //minori123
-var connStringMlab = `mongodb://${USR}:${PWD}@ds161335.mlab.com:61335/lismart`
+// var connStringMlab = `mongodb://${USR}:${PWD}@ds161335.mlab.com:61335/lismart`
 // 'mongodb+srv://darren-user:<password>cluster0-rh3ve.mongodb.net/test?retryWrites=true'
 //'mongodb://duser:minori123ds161335.mlab.com:61335/lismart'
 const apiClient = axios.create({
-  baseURL: connStringMlab,
+  baseURL: MLAB,
   withCredentials: false, // This is the default
   headers: {
     Accept: 'application/json',
