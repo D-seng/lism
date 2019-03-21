@@ -7,13 +7,13 @@ const ATLAS = `mongodb+srv://darren-user:${PWDATLAS}@cluster0-rh3ve.mongodb.net/
 const MLAB = `mongodb://${USR}:${PWD}@ds161335.mlab.com:61335/lismart`
 
 // console.log(DBUSER)
-var connStringLocal = 'http://localhost:5000/api/posts'
+const LOCAL = 'http://localhost:5000/api/posts'
 //minori123
 // var connStringMlab = `mongodb://${USR}:${PWD}@ds161335.mlab.com:61335/lismart`
 // 'mongodb+srv://darren-user:<password>cluster0-rh3ve.mongodb.net/test?retryWrites=true'
 //'mongodb://duser:minori123ds161335.mlab.com:61335/lismart'
 const apiClient = axios.create({
-  baseURL: MLAB,
+  baseURL: LOCAL,
   withCredentials: false, // This is the default
   headers: {
     Accept: 'application/json',
