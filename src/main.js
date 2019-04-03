@@ -25,7 +25,7 @@ new Vue({
   router,
   store,
   data: {
-    showModal: false
+    selectedSection: null
   },
   methods: {
     onShowModal() {
