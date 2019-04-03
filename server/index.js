@@ -1,24 +1,26 @@
 const express = require('express')
-const bodyParser = require('body-parser')
-
-const http = require('http')
-
-const hostname = '127.0.0.1'
-
 const cors = require('cors')
-const app = express()
-const mongoose = require('mongoose')
+const bodyParser = require('body-parser')
+const morgan = require('morgan')
+const connectToDb = require('./db')
 
-const server = http.createServer((req, res) => {
-  res.statusCost = 200
-  res.setHeader('Content-Type', 'text/plain')
-  res.end('Hello World\n')
-})
+const app = express()
+
+// const server = http.createServer((req, res) => {
+//   res.statusCost = 200
+//   res.setHeader('Content-Type', 'text/plain')
+//   res.end('Hello World\n')
+// })
 
 // Middleware
-app.use(bodyParser.json())
-app.use(cors())
+
 // app.options('*', cors()) // include before other routes
+connectToDb()
+
+app.use(cors())
+
+app.use(bodyParser.json())
+app.use(morgan('dev'))
 
 // app.use(function(req, res, next) {
 //   res.header('Access-Control-Allow-Origin', '*')
@@ -33,10 +35,12 @@ const posts = require('./routes/api/posts')
 
 app.use('/api/posts', posts)
 
+app.get('/', (req, res) => res.send('hello'))
+
 const port = process.env.PORT || 5000
 
-server.listen(port, hostname, () => {
-  console.log(`Server started on http://${hostname}:${port}/`)
+app.listen(port, () => {
+  console.log(`Server started on ${port}...`)
 })
 
-module.exports = app
+// module.exports = app

@@ -1,36 +1,44 @@
 <template>
   <div class="about">
-    <font-awesome-icon
+    <!-- <font-awesome-icon
       icon="grip-lines"
       class="fas fa-grip-lines fa-lg handle"
       @click="edit"
-    />
-    <h1>Edit</h1>
-
-    <vue-editor
-      v-model="content.text"
-      :editor-toolbar="customToolbar"
-    ></vue-editor>
-
+    /> -->
+    <h3>{{ section }}{{ cText }}</h3>
+    <input type="" />
+    <form @submit.prevent="onSubmit">
+      <VueEditor
+        v-model="content.text"
+        :editor-toolbar="customToolbar"
+        placeholder="cText"
+      ></VueEditor>
+    </form>
     <v-btn @click="put">put</v-btn>
     <v-btn @click="post">post</v-btn>
     <v-btn @click="processenv">process.env</v-btn>
+    <!-- <v-btn @click="onSubmit">Submit</v-btn> -->
   </div>
 </template>
 
 <script>
 import EventService from '@/services/EventService.js'
+import EventServiceAlt from '@/services/EventServiceAlt.js'
 import { VueEditor } from 'vue2-editor'
-import axios from 'axios'
 
 export default {
   components: {
     VueEditor
   },
+  props: {
+    section: String,
+    verbiage: String
+  },
   data() {
     return {
+      sec: this.section,
       content: {
-        text: 'write here...'
+        text: this.verbiage
       },
       customToolbar: [
         [{ size: ['small', false, 'large', 'huge'] }],
@@ -45,9 +53,15 @@ export default {
       ]
     }
   },
+  computed: {
+    cText() {
+      return this.content.text + '   aaaaaaaa'
+    }
+  },
   methods: {
-    edit() {
+    onSubmit() {
       alert('edit')
+      this.$emit()
     },
     processenv() {
       console.log(process.env.VUE_APP_DBUSER)
@@ -56,11 +70,35 @@ export default {
     },
     post() {
       // console.log(JSON.stringify(this.list, null, 2))
+
+      //create new db called 'lx' use new Acosta dev-server
       var submittal = JSON.stringify(this.content)
       console.log(submittal)
-      EventService.postTodos(submittal).then(response => {
+      // fetch('http://localhost:3000' + '/api/user', {
+      //   method: 'POST'
+      // }).then(res => {
+      //   // console.log(res)
+      //   console.log(res.json())
+      // })
+
+      EventServiceAlt.postSnippet({
+        text: submittal,
+        text2: submittal + 'adsfasfd'
+      }).then(response => {
         console.log(response.status)
       })
+      // axios({
+      //   method: 'post',
+      //   data: {
+      //     text: submittal
+      //   },
+      //   url: 'http://localhost:3000/snippets',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   }
+      // }).then(() => {
+      //   console.log('ss')
+      // })
 
       // console.log(this.content)
       // axios({

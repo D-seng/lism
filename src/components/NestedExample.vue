@@ -9,6 +9,7 @@
             :list="feeder"
             @renumber-handler="renumberX(feeder)"
             :ce="false"
+            @show-editor="edit"
           />
           <!-- <ul>
         <li v-for="(item, index) in list">{{ item }}</li>
@@ -18,12 +19,14 @@
           <h3>Clause stack</h3>
           <v-btn @click="undo">Undo</v-btn>
           <v-btn @click="redo">Redo</v-btn>
+
           <!-- <p>{{ list }}</p> -->
           <NestedDraggable
             :list="lease"
             @renumber-handler="renumberX(lease)"
             @add-to-stack="addToStack"
             :ce="true"
+            @show-editor="edit"
           />
           <!-- <ul>
         <li v-for="(item, index) in list">{{ item }}</li>
@@ -41,6 +44,11 @@
     <!-- <v-btn @click="put">put</v-btn> -->
     <v-btn @click="put">put</v-btn>
     <v-btn @click="post">post</v-btn>
+    <p v-if="showDialog">
+      <Editor :section="this.section" :verbiage="this.content"></Editor>
+      <!-- <p v-if="showDialog">showDialog is true</p> -->
+    </p>
+    <p v-else>showDialog is false</p>
 
     <!-- <rawDisplayer class="col-0" :value="list" title="List" /> -->
   </div>
@@ -49,8 +57,10 @@
 <script>
 import NestedDraggable from '@/components/NestedDraggable'
 import EventService from '@/services/EventService.js'
-import axios from 'axios'
+import EventServiceAlt from '@/services/EventServiceAlt.js'
 import cloneDeep from 'lodash.clonedeep'
+
+import Editor from './Editor.vue'
 
 export default {
   name: 'nested-example',
@@ -58,7 +68,8 @@ export default {
   order: 19,
 
   components: {
-    NestedDraggable
+    NestedDraggable,
+    Editor
   },
   data() {
     return {
@@ -68,10 +79,21 @@ export default {
       stepIndex: -1,
       id: null,
       idFeeder: null,
-      bulletMode: null
+      bulletMode: null,
+      showDialog: false,
+      section: null,
+      content: null
     }
   },
   methods: {
+    edit(id, verbiage) {
+      // alert(verbiage)
+
+      this.showDialog = true
+      this.section = id
+      this.content = verbiage
+    },
+
     stringify() {
       console.log(JSON.stringify(this.feeder, null, 2))
       console.log(JSON.stringify(this.lease, null, 2))
@@ -185,28 +207,41 @@ export default {
       this.reorder = arr
     }
   },
+  beforeCreate() {
+    // console.log('beforeCreate')
+    // fetch('http://localhost:3000' + '/api/user', {
+    //   method: 'GET'
+    // }).then(res => {
+    //   // console.log(res)
+    //   console.log(res.json())
+    // })
+  },
 
   created() {
-    EventService.getTodo('5c904d0ffb6fc0465d48623a').then(response => {
+    console.log('created-cc')
+    EventServiceAlt.getSnippet('5c9c4cc308b0d2614e87dfc1').then(response => {
+      console.log('resp.text')
+      console.log(typeof response.data.text)
       this.id = response.data._id
       this.lease = response.data.text
-      console.log(JSON.stringify(response.data))
       console.log('created')
       this.addToStack()
     })
-    EventService.getTodo('5c904bf7fb6fc0465d4861bb').then(response => {
-      this.idMenu = response.data._id
-      this.feeder = response.data.text
-      console.log(JSON.stringify(response.data))
-      console.log('created')
-    })
+    // EventService.getTodo('5c8525bda12257857384470d').then(response => {
+    //   this.idMenu = response.data._id
+    //   this.feeder = response.data.text
+    //   console.log(JSON.stringify(response.data))
+    //   console.log('created')
+    // })
+    // axios
+    //   .get('')
+    //   .then(response => {
+    //     this.lease = response.data
+    //   })
+    //   .catch(error => {
+    //     console.log('There was an error', error.response)
+    //   })
   }
 }
-
-// EventService.getToDonts().then(response => {
-//   this.menu = response.data
-//   console.log(response.data)
-// })
-// }
 </script>
 <style scoped></style>

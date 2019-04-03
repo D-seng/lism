@@ -1,5 +1,6 @@
 const express = require('express')
 const mongodb = require('mongodb')
+const connectToDb = require('../../db')
 
 const router = express.Router()
 
@@ -64,16 +65,12 @@ const PWDATLAS = process.env.VUE_APP_DBPASSWORDATLAS
 
 const ATLAS = `mongodb+srv://darren-user:${PWDATLAS}@cluster0-rh3ve.mongodb.net/test?retryWrites=true`
 const MLAB = `mongodb://${USR}:${PWD}@ds161335.mlab.com:61335/lismart`
-const connStringLocal = 'http://localhost:5000/lismart'
 
 async function loadLisCollection() {
-  const client = await mongodb.MongoClient.connect(connStringLocal, {
-    useNewUrlParser: true
-  }).then(() => {
-    console.log('Mongodb connected...')
-    return client.db('lismart').collection('posts')
-  })
+  const client = await connectToDb()
+  return client.db('lismart').collection('posts')
 }
+//
 
 // const MongoClient = mongodb.MongoClient
 // // const uri = "mongodb+srv://darren-user:<password>@cluster0-rh3ve.mongodb.net/test?retryWrites=true";

@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <div v-if="ce">
       <draggable
         class="dragArea"
@@ -15,13 +14,20 @@
         @change="renumberHandler"
         @end="addToStackHandler"
       >
-        <li v-for="(el, index) in list">
+        <li v-for="el in list" :key="el.section">
           <font-awesome-icon
             icon="grip-lines"
             class="fas fa-grip-lines fa-lg handle"
           />
-     
-          <span class="listSpan"> {{ el.section }}</span>
+          <font-awesome-icon
+            icon="edit"
+            class="fas fa-edit fa-lg"
+            @click="editX(el.section, el.verbiage)"
+          />
+
+          <span @click="edit(el.section)" class="listSpan">
+            {{ el.section }}</span
+          >
           <span contenteditable="true">
             {{ el.verbiage }}
           </span>
@@ -31,6 +37,7 @@
             @renumber-handler="renumberHandler"
             @add-to-stack="addToStackHandler"
             :ce="ce"
+            @show-editor="editX('subsequent', 'subsequent')"
           />
         </li>
       </draggable>
@@ -49,11 +56,16 @@
         :group="{ name: 'clauses', pull: 'clone', put: false }"
         @change="renumberHandler"
       >
-        <li v-for="(el, index) in list">
+        <li v-for="el in list" :key="el.section">
           <font-awesome-icon
             icon="grip-lines"
             class="fas fa-grip-lines fa-lg handle"
             @drop="addToStackHandler"
+          />
+          <font-awesome-icon
+            icon="edit"
+            class="fas fa-edit fa-lg"
+            @click="editX(el.section, el.verbiage)"
           />
           <span class="listSpan"> {{ el.section }}</span>
           <span contenteditable="false">
@@ -65,6 +77,7 @@
             :list="el.subsections"
             @renumber-handler="renumberHandler"
             :ce="false"
+            @show-editor="editX('subsequent')"
           />
           <!-- </div> -->
         </li>
@@ -75,6 +88,8 @@
 <script>
 // v-bind:class="{ active: isActive }"
 import draggable from 'vuedraggable'
+var idLocked = null
+var verbiageLocked = null
 
 export default {
   name: 'NestedDraggable',
@@ -108,8 +123,19 @@ export default {
     addToStackHandler() {
       this.$emit('add-to-stack')
     },
-    edit() {
-      alert('edit')
+    editX(id, verbiage) {
+      // alert('editX ' + verbiage)
+      if (id !== 'subsequent') {
+        idLocked = id
+        verbiageLocked = verbiage
+      }
+      // else {
+      //   id = idLocked
+      //   verbiage = verbiageLocked
+      // }
+      // alert('idLocked ' + id)
+
+      this.$emit('show-editor', idLocked, verbiageLocked)
     }
   }
 }

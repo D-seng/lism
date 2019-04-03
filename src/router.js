@@ -2,14 +2,14 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './components/Home.vue'
 import Settings from './views/Settings.vue'
-import Editor from './views/Editor.vue'
+import Editor from './components/Editor.vue'
 import Leases from './components/Leases.vue'
 import NestedExample from './components/NestedExample.vue'
 Vue.use(Router)
 
 export default new Router({
   mode: 'history',
-  base: process.env.BASE_URL,
+  // base: process.env.BASE_URL,
   routes: [
     {
       path: '/',
