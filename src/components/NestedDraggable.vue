@@ -136,6 +136,7 @@ export default {
       // alert('idLocked ' + id)
 
       this.$emit('show-editor', idLocked, verbiageLocked)
+      this.$emit('force-rerender')
     }
   }
 }

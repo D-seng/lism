@@ -5,25 +5,20 @@
       class="fas fa-grip-lines fa-lg handle"
       @click="edit"
     /> -->
-    <h3>{{ section }}{{ cText }}</h3>
+    <h3>{{ section }}{{ verbiage }}</h3>
     <input type="" />
     <form @submit.prevent="onSubmit">
       <VueEditor
         v-model="content.text"
         :editor-toolbar="customToolbar"
-        placeholder="cText"
       ></VueEditor>
     </form>
-    <v-btn @click="put">put</v-btn>
-    <v-btn @click="post">post</v-btn>
-    <v-btn @click="processenv">process.env</v-btn>
+
     <!-- <v-btn @click="onSubmit">Submit</v-btn> -->
   </div>
 </template>
 
 <script>
-import EventService from '@/services/EventService.js'
-import EventServiceAlt from '@/services/EventServiceAlt.js'
 import { VueEditor } from 'vue2-editor'
 
 export default {
@@ -36,6 +31,7 @@ export default {
   },
   data() {
     return {
+      editorKey: 0,
       sec: this.section,
       content: {
         text: this.verbiage
@@ -53,16 +49,7 @@ export default {
       ]
     }
   },
-  computed: {
-    cText() {
-      return this.content.text + '   aaaaaaaa'
-    }
-  },
   methods: {
-    onSubmit() {
-      alert('edit')
-      this.$emit()
-    },
     processenv() {
       console.log(process.env.VUE_APP_DBUSER)
       console.log(process.env.VUE_APP_DBPASSWORD)
@@ -72,7 +59,7 @@ export default {
       // console.log(JSON.stringify(this.list, null, 2))
 
       //create new db called 'lx' use new Acosta dev-server
-      var submittal = JSON.stringify(this.content)
+      var submittal = JSON.stringify(this.content.text)
       console.log(submittal)
       // fetch('http://localhost:3000' + '/api/user', {
       //   method: 'POST'
@@ -81,12 +68,12 @@ export default {
       //   console.log(res.json())
       // })
 
-      EventServiceAlt.postSnippet({
-        text: submittal,
-        text2: submittal + 'adsfasfd'
-      }).then(response => {
-        console.log(response.status)
-      })
+      // EventServiceAlt.postSnippet({
+      //   text: submittal,
+      //   text2: submittal + 'adsfasfd'
+      // }).then(response => {
+      //   console.log(response.status)
+      // })
       // axios({
       //   method: 'post',
       //   data: {
@@ -110,17 +97,7 @@ export default {
     postX() {
       console.log(this.content)
     },
-    put() {
-      var posts = JSON.stringify(this.lease, null, 2)
-      console.log(posts)
-      EventService.putPosts(posts, this.id).then(response => {
-        console.log(response.data)
-        console.log(response.status)
-        console.log(response.statusText)
-        console.log(response.headers)
-        console.log(response.config)
-      })
-    }
+    put() {}
   }
 }
 </script>

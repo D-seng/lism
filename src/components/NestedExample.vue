@@ -40,12 +40,17 @@
       <NestedDraggable :tasks="menu" />
     </div> -->
 
-    <v-btn @click="stringify">strigify</v-btn>
-    <!-- <v-btn @click="put">put</v-btn> -->
+    <v-btn @click="stringify">stringify</v-btn> -->
     <v-btn @click="put">put</v-btn>
+
     <v-btn @click="post">post</v-btn>
+
     <p v-if="showDialog">
-      <Editor :section="this.section" :verbiage="this.content"></Editor>
+      <Editor
+        :section="this.section"
+        :verbiage="this.content"
+        :key="editorKey"
+      ></Editor>
       <!-- <p v-if="showDialog">showDialog is true</p> -->
     </p>
     <p v-else>showDialog is false</p>
@@ -56,7 +61,7 @@
 
 <script>
 import NestedDraggable from '@/components/NestedDraggable'
-import EventService from '@/services/EventService.js'
+
 import EventServiceAlt from '@/services/EventServiceAlt.js'
 import cloneDeep from 'lodash.clonedeep'
 
@@ -82,16 +87,16 @@ export default {
       bulletMode: null,
       showDialog: false,
       section: null,
-      content: null
+      content: null,
+      editorKey: 0
     }
   },
   methods: {
     edit(id, verbiage) {
-      // alert(verbiage)
-
       this.showDialog = true
       this.section = id
       this.content = verbiage
+      this.editorKey += 1
     },
 
     stringify() {
@@ -107,14 +112,14 @@ export default {
 
       // console.log(JSON.stringify(this.list, null, 2))
 
-      EventService.postTodos(list).then(response => {
+      EventServiceAlt.postTodos(list).then(response => {
         console.log(response.status)
       })
     },
     put() {
-      var posts = JSON.stringify(this.lease, null, 2)
-      console.log(posts)
-      EventService.putTodos(posts, this.id).then(response => {
+      var snippet = JSON.stringify(this.lease, null, 2)
+      console.log(snippet)
+      EventServiceAlt.putSnippet(snippet, this.id).then(response => {
         console.log(response.data)
         console.log(response.status)
         console.log(response.statusText)
