@@ -5,9 +5,9 @@
       class="fas fa-grip-lines fa-lg handle"
       @click="edit"
     /> -->
-    <h3>{{ section }}{{ verbiage }}</h3>
+    <h3>{{ section }}{{ verbiage }} {{ elId }}</h3>
     <input type="" />
-    <form @submit.prevent="onSubmit">
+    <form @submit.prevent="onSubmit" @click.shift="testKeyPresses">
       <VueEditor
         v-model="content.text"
         :editor-toolbar="customToolbar"
@@ -27,7 +27,8 @@ export default {
   },
   props: {
     section: String,
-    verbiage: String
+    verbiage: String,
+    elId: String
   },
   data() {
     return {
@@ -50,6 +51,11 @@ export default {
     }
   },
   methods: {
+    testKeyPresses() {
+      this.$emit('sync-content')
+      var el = document.getElementById(this.elId)
+      el.innerHTML = this.content.text
+    },
     processenv() {
       console.log(process.env.VUE_APP_DBUSER)
       console.log(process.env.VUE_APP_DBPASSWORD)

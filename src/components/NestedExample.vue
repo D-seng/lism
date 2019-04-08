@@ -3,7 +3,7 @@
     <v-container grid-list-md text-xs-left>
       <v-layout row wrap>
         <v-flex xs6>
-          <h3>Clause bucket</h3>
+          <h3>Clause Closet</h3>
           <!-- <p>{{ list }}</p> -->
           <NestedDraggable
             :list="feeder"
@@ -15,8 +15,8 @@
         <li v-for="(item, index) in list">{{ item }}</li>
       </ul> -->
         </v-flex>
-        <v-flex xs6>
-          <h3>Clause stack</h3>
+        <v-flex xs6 :key="listKey">
+          <h3>Lease Stack</h3>
           <v-btn @click="undo">Undo</v-btn>
           <v-btn @click="redo">Redo</v-btn>
 
@@ -42,13 +42,15 @@
 
     <v-btn @click="stringify">stringify</v-btn> -->
     <v-btn @click="put">put</v-btn>
-
     <v-btn @click="post">post</v-btn>
+    <v-btn @click="conLog">console.log(this.lease)</v-btn>
+    <v-btn @click="findWVueFilter()">update</v-btn>
 
     <p v-if="showDialog">
       <Editor
-        :section="this.section"
+        :section="this.section.toString()"
         :verbiage="this.content"
+        :elId="this.elId"
         :key="editorKey"
       ></Editor>
       <!-- <p v-if="showDialog">showDialog is true</p> -->
@@ -61,12 +63,11 @@
 
 <script>
 import NestedDraggable from '@/components/NestedDraggable'
-
 import EventServiceAlt from '@/services/EventServiceAlt.js'
 import cloneDeep from 'lodash.clonedeep'
-
 import Editor from './Editor.vue'
-
+var arrSubsections = []
+var k = 0
 export default {
   name: 'nested-example',
   display: 'Nested',
@@ -84,17 +85,85 @@ export default {
       stepIndex: -1,
       id: null,
       idFeeder: null,
-      bulletMode: null,
       showDialog: false,
       section: null,
       content: null,
-      editorKey: 0
+      editorKey: 0,
+      listKey: 0,
+      elId: '',
+      lev: null
+    }
+  },
+  computed: {
+    bLease() {
+      return this.lease
     }
   },
   methods: {
-    edit(id, verbiage) {
+    schArrXX(arr, elId) {
+      // alert('schArr')
+      this.lev += 1
+      var result = arr.filter(item => item.id === elId)
+      if (result.length == 0) {
+        var ss = arr.filter(item => item.subsections.length > 0)
+        if (ss.length > 0) {
+          // 			console.log('ss: ')
+          // 			console.log(ss)
+          for (var i = 0; i < ss.length; i++) {
+            // 			console.log('ss[i]: ')
+            // 			console.log(ss[i])
+            this.schArr(ss[i].subsections, elId)
+          }
+        }
+      } else {
+        console.log(result)
+        result.verbiage = 'aaaaaa'
+        // console.log(arr.indexOf(result))
+        // console.log(JSON.stringify(result))
+        // // console.log(result)
+        // result.verbiage = 'test string'
+        // console.log(result)
+        console.log(this.lease)
+      }
+    },
+    findWVueFilter() {},
+
+    schArr(arr, elId) {
+      //  this.lev += 1
+      //   for(var i = 0; i < arr.length; i++) {
+      //    if (item.id = elId) {
+      //       return arrIndex
+      //     } elseif(item.subsections.length > 0) {
+      //        arrSubsections.push([item.id, item.subsections])
+      //        this.schArr(arrNextLevelCopy[i][1], subsequent, prefix)
+      //     }
+      //   }
+      // }
+      // var arrNextLevelCopy = Array.from(arrNextLevel)
+      // for (var i = 0; i < arrNextLevelCopy.length; i++) {
+      //   prefix = arrNextLevel[i][0] + '.'
+      //   // alert(prefix)
+      //   k += 1
+      // }
+      // this.reorder = arr
+      // }
+    },
+
+    getArr(aa) {
+      alert(aa)
+      // console.log(this.cList)
+      console.log(this.elId)
+    },
+
+    conLog() {
+      //  this.listKey += 1
+      console.log(this.bLease)
+      console.log(JSON.stringify(this.bLease, null, 2))
+    },
+    edit(id, verbiage, elId) {
       this.showDialog = true
       this.section = id
+      this.elId = elId
       this.content = verbiage
       this.editorKey += 1
     },
@@ -105,16 +174,18 @@ export default {
     },
 
     post() {
-      console.log(process.env.USER)
+      // console.log(process.env.USER)
       // console.log(JSON.stringify(this.list, null, 2))
-      var list = JSON.stringify(this.lease, null, 2)
-      console.log(list)
+      // var ls = JSON.stringify(this.lease, null, 2)
+      // this.listKey += 1
+      console.log(JSON.stringify(this.bLease))
 
       // console.log(JSON.stringify(this.list, null, 2))
 
-      EventServiceAlt.postTodos(list).then(response => {
-        console.log(response.status)
-      })
+      // EventServiceAlt.postSnippet(this.lease).then(response => {
+      //   console.log(response.status)
+      //   console.log(response.data)
+      // })
     },
     put() {
       var snippet = JSON.stringify(this.lease, null, 2)
@@ -139,15 +210,9 @@ export default {
       return output
     },
     addToStack() {
-      // alert('add to stack')
-      // var lse = this.copy(this.lease)
       this.stepIndex += 1
       this.stepper.splice(this.stepIndex, 1, cloneDeep(this.lease))
       console.log(this.stepper[this.stepIndex])
-
-      // console.log()
-      // var last = this.stepBack.length - 1
-      // console.log(JSON.stringify(this.stepBack[last]))
     },
     undo() {
       console.log(this.stepIndex)
@@ -156,14 +221,9 @@ export default {
         this.lease = cloneDeep(this.stepper[this.stepIndex - 1])
         console.log(this.stepper[this.stepIndex])
         this.stepIndex -= 1
-        // console.log(JSON.stringify(this.stepBack[last]))
-        // this.renumberX(this.stepBack[last])
-        // this.stepBack.pop()
       }
     },
     redo() {
-      // var last = this.stepForward.length - 1
-      // console.log(last)
       console.log('stepIndex: ' + this.stepIndex)
       console.log('stepper length: ' + this.stepper.length)
       // debugger
@@ -172,20 +232,17 @@ export default {
         if (this.stepIndex < this.stepper.length - 1) {
           console.log('aaaa')
           this.lease = cloneDeep(this.stepper[this.stepIndex + 1])
-          // console.log(JSON.stringify(this.stepForward[last]))
+
           this.stepIndex += 1
-          // this.renumberX(this.stepBack[last])
-          // this.stepBack.push(this.copy(this.stepForward[last]))
-          // this.stepForward.pop()
         }
       }
     },
     renumberX(reorder) {
-      // alert('renumberX')
-      // this.addToStack()
       var subsequent = false
       var prefix = ''
       this.renumber(reorder, subsequent, prefix)
+      this.editorKey += 1
+      this.listKey += 1
     },
     renumber(arr, subsequent, prefix) {
       var arrNextLevel = []
@@ -224,7 +281,7 @@ export default {
 
   created() {
     console.log('created-cc')
-    EventServiceAlt.getSnippet('5c9c4cc308b0d2614e87dfc1').then(response => {
+    EventServiceAlt.getSnippet('5ca90a1afcc6ec6b2b663a94').then(response => {
       console.log('resp.text')
       console.log(typeof response.data.text)
       this.id = response.data._id
