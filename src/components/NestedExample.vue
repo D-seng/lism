@@ -224,7 +224,7 @@ export default {
 
   created() {
     console.log('created-cc')
-    EventServiceAlt.getSnippet('5c9c4cc308b0d2614e87dfc1').then(response => {
+    EventServiceAlt.getSnippet('5ca7e9039d9adc52ad09ebc6').then(response => {
       console.log('resp.text')
       console.log(typeof response.data.text)
       this.id = response.data._id
