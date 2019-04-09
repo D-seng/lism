@@ -44,16 +44,18 @@
     <v-btn @click="put">put</v-btn>
     <v-btn @click="post">post</v-btn>
     <v-btn @click="conLog">console.log(this.lease)</v-btn>
-    <v-btn @click="findWVueFilter()">update</v-btn>
+    <v-btn @click="schArr(lease, '52611880-5825-11e9-8565-ad52d0bb74d6')"
+      >update</v-btn
+    >
 
     <p v-if="showDialog">
+      showDialog is true
       <Editor
         :section="this.section.toString()"
         :verbiage="this.content"
         :elId="this.elId"
         :key="editorKey"
       ></Editor>
-      <!-- <p v-if="showDialog">showDialog is true</p> -->
     </p>
     <p v-else>showDialog is false</p>
 
@@ -66,7 +68,7 @@ import NestedDraggable from '@/components/NestedDraggable'
 import EventServiceAlt from '@/services/EventServiceAlt.js'
 import cloneDeep from 'lodash.clonedeep'
 import Editor from './Editor.vue'
-var arrSubsections = []
+
 var k = 0
 export default {
   name: 'nested-example',
@@ -100,54 +102,31 @@ export default {
     }
   },
   methods: {
-    schArrXX(arr, elId) {
-      // alert('schArr')
-      this.lev += 1
+    schArr(arr, elId) {
       var result = arr.filter(item => item.id === elId)
       if (result.length == 0) {
         var ss = arr.filter(item => item.subsections.length > 0)
         if (ss.length > 0) {
-          // 			console.log('ss: ')
-          // 			console.log(ss)
           for (var i = 0; i < ss.length; i++) {
-            // 			console.log('ss[i]: ')
-            // 			console.log(ss[i])
             this.schArr(ss[i].subsections, elId)
           }
         }
       } else {
-        console.log(result)
-        result.verbiage = 'aaaaaa'
-        // console.log(arr.indexOf(result))
-        // console.log(JSON.stringify(result))
-        // // console.log(result)
-        // result.verbiage = 'test string'
-        // console.log(result)
-        console.log(this.lease)
+        var sec = result[0].section
+        var arrSec = sec.split('.')
+        var pos = 'testArray[' + arrSec[0] + ']'
+        for (k = 1; k < arrSec.length; k++) {
+          pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
+        }
+        console.log(pos)
+        console.log(eval(pos))
+        var el = eval(pos)
+        console.log(el)
+        el.verbiage = 'mmmmm'
+        console.log(el)
       }
     },
     findWVueFilter() {},
-
-    schArr(arr, elId) {
-      //  this.lev += 1
-      //   for(var i = 0; i < arr.length; i++) {
-      //    if (item.id = elId) {
-      //       return arrIndex
-      //     } elseif(item.subsections.length > 0) {
-      //        arrSubsections.push([item.id, item.subsections])
-      //        this.schArr(arrNextLevelCopy[i][1], subsequent, prefix)
-      //     }
-      //   }
-      // }
-      // var arrNextLevelCopy = Array.from(arrNextLevel)
-      // for (var i = 0; i < arrNextLevelCopy.length; i++) {
-      //   prefix = arrNextLevel[i][0] + '.'
-      //   // alert(prefix)
-      //   k += 1
-      // }
-      // this.reorder = arr
-      // }
-    },
 
     getArr(aa) {
       alert(aa)
