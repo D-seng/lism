@@ -114,7 +114,7 @@ export default {
       } else {
         var sec = result[0].section
         var arrSec = sec.split('.')
-        var pos = 'testArray[' + arrSec[0] + ']'
+        var pos = 'this.bLease[' + arrSec[0] + ']'
         for (k = 1; k < arrSec.length; k++) {
           pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
         }
@@ -122,7 +122,7 @@ export default {
         console.log(eval(pos))
         var el = eval(pos)
         console.log(el)
-        el.verbiage = 'mmmmm'
+        el.verbiage = 'yyyyyyyyyyyyyyyyyyyy'
         console.log(el)
       }
     },
