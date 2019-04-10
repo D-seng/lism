@@ -52,9 +52,10 @@ export default {
   },
   methods: {
     testKeyPresses() {
-      this.$emit('sync-content')
-      var el = document.getElementById(this.elId)
-      el.innerHTML = this.content.text
+      console.log(this.content.text)
+      this.$emit('sync-content', this.content.text)
+      // var el = document.getElementById(this.elId)
+      // el.innerHTML = this.content.text
     },
     processenv() {
       console.log(process.env.VUE_APP_DBUSER)

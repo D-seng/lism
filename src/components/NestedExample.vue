@@ -44,16 +44,18 @@
     <v-btn @click="put">put</v-btn>
     <v-btn @click="post">post</v-btn>
     <v-btn @click="conLog">console.log(this.lease)</v-btn>
-    <v-btn @click="findWVueFilter()">update</v-btn>
+    <!-- <v-btn @click="schArrX()">update</v-btn> -->
 
     <p v-if="showDialog">
+      showDialog is true
       <Editor
         :section="this.section.toString()"
         :verbiage="this.content"
         :elId="this.elId"
         :key="editorKey"
+        @sync-content="syncContent"
+        :newContent="content.text"
       ></Editor>
-      <!-- <p v-if="showDialog">showDialog is true</p> -->
     </p>
     <p v-else>showDialog is false</p>
 
@@ -66,8 +68,6 @@ import NestedDraggable from '@/components/NestedDraggable'
 import EventServiceAlt from '@/services/EventServiceAlt.js'
 import cloneDeep from 'lodash.clonedeep'
 import Editor from './Editor.vue'
-import lodash from 'lodash'
-var arrSubsections = []
 var k = 0
 export default {
   name: 'nested-example',
@@ -92,7 +92,8 @@ export default {
       editorKey: 0,
       listKey: 0,
       elId: '',
-      lev: null
+      lev: null,
+      newContent: ''
     }
   },
   computed: {
@@ -101,74 +102,44 @@ export default {
     }
   },
   methods: {
-    schArrXX(arr, elId) {
-      // alert('schArr')
-      this.lev += 1
+    syncContent(newCont) {
+      // alert(newCont)
+
+      this.newContent = newCont
+      this.schArr(this.lease, this.elId)
+    },
+    schArr(arr, elId) {
+      var pos
       var result = arr.filter(item => item.id === elId)
       if (result.length == 0) {
         var ss = arr.filter(item => item.subsections.length > 0)
         if (ss.length > 0) {
-          // 			console.log('ss: ')
-          // 			console.log(ss)
           for (var i = 0; i < ss.length; i++) {
-            // 			console.log('ss[i]: ')
-            // 			console.log(ss[i])
             this.schArr(ss[i].subsections, elId)
           }
         }
       } else {
-        console.log(result)
-        result.verbiage = 'aaaaaa'
-        // console.log(arr.indexOf(result))
-        // console.log(JSON.stringify(result))
-        // // console.log(result)
-        // result.verbiage = 'test string'
-        // console.log(result)
-        console.log(this.lease)
+        var sec = result[0].section
+        if (sec.length > 0) {
+          var arrSec = sec.split('.')
+          pos = 'this.lease[' + arrSec[0] + ']'
+          for (k = 1; k < arrSec.length; k++) {
+            pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
+          }
+        } else {
+          pos = 'this.lease[' + sec + ']'
+        }
+        console.log(pos)
+        // console.log(eval(pos))
+        var el = eval(pos)
+        console.log(el)
+
+        el.verbiage = this.newContent
+        // var elDom = document.getElementById(elId)
+        // elDom.innerText = this.newContent
+        console.log(el)
       }
-    },
-    findWVueFilter() {
-      var testArr = [{id: 'a1', text: 'a1-textdisp', subsections: []},
-      {id: 'a2', text: 'a2-textdisp', subsections: [
-        {id: 'b1', text: 'b1-textdisp', subsections: []},
-        {id: 'b2', text: 'b2-textdisp', subsections: []},
-      ]}]
-      var result = _.find(testArr, function(item) { return item.id ==='a2'})
-      console.log(result)
-    },
-
-    schArr(arr, elId) {
-      //  this.lev += 1
-      //   for(var i = 0; i < arr.length; i++) {
-      //    if (item.id = elId) {
-      //       return arrIndex
-      //     } elseif(item.subsections.length > 0) {
-      //        arrSubsections.push([item.id, item.subsections])
-      //        this.schArr(arrNextLevelCopy[i][1], subsequent, prefix)
-      //     }
-      //   }
-      // }
-      // var arrNextLevelCopy = Array.from(arrNextLevel)
-      // for (var i = 0; i < arrNextLevelCopy.length; i++) {
-      //   prefix = arrNextLevel[i][0] + '.'
-      //   // alert(prefix)
-      //   k += 1
-      // }
-      // this.reorder = arr
-      // }
-    },
-
-    getArr(aa) {
-      alert(aa)
-      // console.log(this.cList)
-      console.log(this.elId)
-    },
-
-    conLog() {
-      //  this.listKey += 1
-      console.log(this.bLease)
-      console.log(JSON.stringify(this.bLease, null, 2))
-    },
+    },   
     edit(id, verbiage, elId) {
       this.showDialog = true
       this.section = id
@@ -199,13 +170,15 @@ export default {
     put() {
       var snippet = JSON.stringify(this.lease, null, 2)
       console.log(snippet)
-      EventServiceAlt.putSnippet(snippet, this.id).then(response => {
-        console.log(response.data)
-        console.log(response.status)
-        console.log(response.statusText)
-        console.log(response.headers)
-        console.log(response.config)
-      })
+      EventServiceAlt.putSnippet(snippet, '5ca90a1afcc6ec6b2b663a94').then(
+        response => {
+          console.log(response.data)
+          console.log(response.status)
+          console.log(response.statusText)
+          console.log(response.headers)
+          console.log(response.config)
+        }
+      )
     },
     copy(o) {
       var output

@@ -25,12 +25,8 @@
             @click="editX(el.section, el.verbiage, el.id)"
           />
 
-          <span @click="edit(el.section)" class="listSpan">
-            {{ el.section }}</span
-          >
-          <span contenteditable="true" :id="el.id">
-            {{ el.verbiage }}
-          </span>
+          <span @click="edit(el.section)" class="listSpan">{{el.section}}</span>
+          <span v-html="el.verbiage" contenteditable="true" :id="el.id"></span>
 
           <NestedDraggable
             :list="el.subsections"
@@ -118,7 +114,8 @@ export default {
     return {
       isActive: false,
       randomId: null,
-      lse: this.list
+      lse: this.list,
+      htmlContent: "<p><strong>html content goes here</strong></p>"
     }
   },
 
