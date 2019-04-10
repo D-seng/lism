@@ -44,9 +44,7 @@
     <v-btn @click="put">put</v-btn>
     <v-btn @click="post">post</v-btn>
     <v-btn @click="conLog">console.log(this.lease)</v-btn>
-    <v-btn @click="schArr(lease, '52611880-5825-11e9-8565-ad52d0bb74d6')"
-      >update</v-btn
-    >
+    <!-- <v-btn @click="schArrX()">update</v-btn> -->
 
     <p v-if="showDialog">
       showDialog is true
@@ -55,6 +53,8 @@
         :verbiage="this.content"
         :elId="this.elId"
         :key="editorKey"
+        @sync-content="syncContent"
+        :newContent="content.text"
       ></Editor>
     </p>
     <p v-else>showDialog is false</p>
@@ -93,7 +93,8 @@ export default {
       editorKey: 0,
       listKey: 0,
       elId: '',
-      lev: null
+      lev: null,
+      newContent: ''
     }
   },
   computed: {
@@ -102,7 +103,14 @@ export default {
     }
   },
   methods: {
+    syncContent(newCont) {
+      // alert(newCont)
+
+      this.newContent = newCont
+      this.schArr(this.lease, this.elId)
+    },
     schArr(arr, elId) {
+      var pos
       var result = arr.filter(item => item.id === elId)
       if (result.length == 0) {
         var ss = arr.filter(item => item.subsections.length > 0)
@@ -113,16 +121,23 @@ export default {
         }
       } else {
         var sec = result[0].section
-        var arrSec = sec.split('.')
-        var pos = 'this.bLease[' + arrSec[0] + ']'
-        for (k = 1; k < arrSec.length; k++) {
-          pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
+        if (sec.length > 0) {
+          var arrSec = sec.split('.')
+          pos = 'this.lease[' + arrSec[0] + ']'
+          for (k = 1; k < arrSec.length; k++) {
+            pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
+          }
+        } else {
+          pos = 'this.lease[' + sec + ']'
         }
         console.log(pos)
-        console.log(eval(pos))
+        // console.log(eval(pos))
         var el = eval(pos)
         console.log(el)
-        el.verbiage = 'yyyyyyyyyyyyyyyyyyyy'
+
+        el.verbiage = this.newContent
+        // var elDom = document.getElementById(elId)
+        // elDom.innerText = this.newContent
         console.log(el)
       }
     },
@@ -169,13 +184,15 @@ export default {
     put() {
       var snippet = JSON.stringify(this.lease, null, 2)
       console.log(snippet)
-      EventServiceAlt.putSnippet(snippet, this.id).then(response => {
-        console.log(response.data)
-        console.log(response.status)
-        console.log(response.statusText)
-        console.log(response.headers)
-        console.log(response.config)
-      })
+      EventServiceAlt.putSnippet(snippet, '5ca90a1afcc6ec6b2b663a94').then(
+        response => {
+          console.log(response.data)
+          console.log(response.status)
+          console.log(response.statusText)
+          console.log(response.headers)
+          console.log(response.config)
+        }
+      )
     },
     copy(o) {
       var output
