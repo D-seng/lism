@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import './plugins/vuetify'
+import VueFilter from 'vue-filter'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -18,6 +19,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 //   template: '#modal-template'
 // })
 Vue.use(Vuetify)
+Vue.use(VueFilter)
 
 Vue.config.productionTip = false
 

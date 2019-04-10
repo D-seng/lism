@@ -9,7 +9,7 @@
         bubbleScroll="true"
         tag="ul"
         handle=".handle"
-        :list="list"
+        :list="lse"
         :group="{ name: 'clauses' }"
         @change="renumberHandler"
         @end="addToStackHandler"
@@ -22,13 +22,13 @@
           <font-awesome-icon
             icon="edit"
             class="fas fa-edit fa-lg"
-            @click="editX(el.section, el.verbiage)"
+            @click="editX(el.section, el.verbiage, el.id)"
           />
 
           <span @click="edit(el.section)" class="listSpan">
             {{ el.section }}</span
           >
-          <span contenteditable="true">
+          <span contenteditable="true" :id="el.id">
             {{ el.verbiage }}
           </span>
 
@@ -37,7 +37,7 @@
             @renumber-handler="renumberHandler"
             @add-to-stack="addToStackHandler"
             :ce="ce"
-            @show-editor="editX('subsequent', 'subsequent')"
+            @show-editor="editX('subsequent')"
           />
         </li>
       </draggable>
@@ -52,7 +52,7 @@
         bubbleScroll="true"
         tag="ul"
         handle=".handle"
-        :list="list"
+        :list="lse"
         :group="{ name: 'clauses', pull: 'clone', put: false }"
         @change="renumberHandler"
       >
@@ -65,10 +65,10 @@
           <font-awesome-icon
             icon="edit"
             class="fas fa-edit fa-lg"
-            @click="editX(el.section, el.verbiage)"
+            @click="editX(el.section, el.verbiage, el.id)"
           />
           <span class="listSpan"> {{ el.section }}</span>
-          <span contenteditable="false">
+          <span @click="getArr(el.id)" id="el.id" contenteditable="false">
             {{ el.verbiage }}
           </span>
 
@@ -88,8 +88,10 @@
 <script>
 // v-bind:class="{ active: isActive }"
 import draggable from 'vuedraggable'
+const uuidv1 = require('uuid/v1')
 var idLocked = null
 var verbiageLocked = null
+var elIdLocked = null
 
 export default {
   name: 'NestedDraggable',
@@ -106,13 +108,46 @@ export default {
   components: {
     draggable
   },
+  computed: {
+    cList() {
+      return JSON.parse(JSON.stringify(this.list))
+      // return this.list
+    }
+  },
   data() {
     return {
-      isActive: false
+      isActive: false,
+      randomId: null,
+      lse: this.list
     }
   },
 
   methods: {
+    // var ind = this.lse.findIndex(x => x.id === elId)
+    // alert(ind + ' ' + elId)
+    // var matches = []
+    // var needle = elId // what to look for
+
+    // var arrTest = [
+    //   { id: 'a1', text: 'aas', subsections: [{ id: 'b1' }, { text: 'bbs' }] }
+    // ]
+    // needle = 'b1'
+
+    //   this.cList.forEach(function(e) {
+    //     matches = matches.concat(
+    //       e.subsections.filter(function(c) {
+    //         return c.id === needle
+    //       })
+    //     )
+    //   })
+    //   console.log(this.cList)
+    //   console.log(elId)
+    //   console.log(matches[0] || 'Not found')
+    // },
+    genUUID() {
+      var a = uuidv1()
+      console.log(a)
+    },
     toggleActive() {
       this.isActive = !this.isActive
     },
@@ -123,11 +158,11 @@ export default {
     addToStackHandler() {
       this.$emit('add-to-stack')
     },
-    editX(id, verbiage) {
-      // alert('editX ' + verbiage)
+    editX(id, verbiage, elId) {
       if (id !== 'subsequent') {
         idLocked = id
         verbiageLocked = verbiage
+        elIdLocked = elId
       }
       // else {
       //   id = idLocked
@@ -135,7 +170,7 @@ export default {
       // }
       // alert('idLocked ' + id)
 
-      this.$emit('show-editor', idLocked, verbiageLocked)
+      this.$emit('show-editor', idLocked, verbiageLocked, elIdLocked)
       this.$emit('force-rerender')
     }
   }

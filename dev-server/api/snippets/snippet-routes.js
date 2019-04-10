@@ -26,12 +26,19 @@ router.get('/snippets/:id', async (req, res) => {
   res.send(snippet)
 })
 
-router.put('/snippet', (req, res) => {
-  res.send('update a snippet')
+router.put('/snippets/:id', async (req, res) => {
+  const snippet = await Snippet.findByIdAndUpdate(
+    req.params.id,
+    { text: req.body.text },
+    { new: true }
+  )
+  if (!snippet) return res.status(404).send('Snippet not found')
+
+  // res.send('update a snippet')
 })
 
 router.post('/snippets', async (req, res) => {
-  const snippet = new Snippet({ text: req.body.text, text2: req.body.text2 })
+  const snippet = new Snippet({ text: req.body })
   const result = await snippet.save()
   //.insertOne({ text: req.body, createdAt: new Date() })
   // res.status(201).send(snippet)
