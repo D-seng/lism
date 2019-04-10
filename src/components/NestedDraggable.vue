@@ -1,5 +1,7 @@
 <template>
   <div>
+   
+  
     <div v-if="ce">
       <draggable
         class="dragArea"
