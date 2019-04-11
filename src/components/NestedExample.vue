@@ -4,6 +4,7 @@
       <v-layout row wrap>
         <v-flex xs6>
           <h3>Clause Closet</h3>
+          <RetrieveLeases />
           <!-- <p>{{ list }}</p> -->
           <NestedDraggable
             :list="feeder"
@@ -68,6 +69,7 @@ import NestedDraggable from '@/components/NestedDraggable'
 import EventServiceAlt from '@/services/EventServiceAlt.js'
 import cloneDeep from 'lodash.clonedeep'
 import Editor from './Editor.vue'
+import RetrieveLeases from './RetrieveLeases.vue'
 var k = 0
 export default {
   name: 'nested-example',
@@ -76,7 +78,8 @@ export default {
 
   components: {
     NestedDraggable,
-    Editor
+    Editor,
+    RetrieveLeases
   },
   data() {
     return {

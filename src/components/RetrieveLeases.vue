@@ -22,15 +22,15 @@
   </v-combobox>
 </template>
 
-
-
 <script>
   export default {
-    data: () => ({
+    data: {
+        return {
       items: ['Gaming', 'Programming', 'Vue', 'Vuetify'],
       model: ['Vuetify'],
-      search: null
-    }),
+      search: nul
+        }
+    },
 
     watch: {
       model (val) {

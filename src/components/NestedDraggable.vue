@@ -86,6 +86,7 @@
 <script>
 // v-bind:class="{ active: isActive }"
 import draggable from 'vuedraggable'
+
 const uuidv1 = require('uuid/v1')
 var idLocked = null
 var verbiageLocked = null
@@ -116,8 +117,7 @@ export default {
     return {
       isActive: false,
       randomId: null,
-      lse: this.list,
-      htmlContent: "<p><strong>html content goes here</strong></p>"
+      lse: this.list
     }
   },
 
