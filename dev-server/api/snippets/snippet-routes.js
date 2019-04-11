@@ -8,7 +8,7 @@ const { Snippet } = require('../../model/snippet')
 //   res.send('post a snippet')
 // })
 
-router.get('/snippet', async (req, res) => {
+router.get('/snippets', async (req, res) => {
   await Snippet.find({}, (error, snippets) => {
     if (error) {
       return res.status(500).json()
@@ -29,7 +29,12 @@ router.get('/snippets/:id', async (req, res) => {
 router.put('/snippets/:id', async (req, res) => {
   const snippet = await Snippet.findByIdAndUpdate(
     req.params.id,
-    { text: req.body.text },
+    {
+      text: req.body.text,
+      tenant: req.body.tenant,
+      landlord: req.body.landlord,
+      property: req.body.property
+    },
     { new: true }
   )
   if (!snippet) return res.status(404).send('Snippet not found')
@@ -38,7 +43,12 @@ router.put('/snippets/:id', async (req, res) => {
 })
 
 router.post('/snippets', async (req, res) => {
-  const snippet = new Snippet({ text: req.body })
+  const snippet = new Snippet({
+    text: req.body.text,
+    tenant: req.body.tenant,
+    landlord: req.body.landlord,
+    property: req.body.property
+  })
   const result = await snippet.save()
   //.insertOne({ text: req.body, createdAt: new Date() })
   // res.status(201).send(snippet)

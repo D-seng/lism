@@ -44,7 +44,7 @@
     <v-btn @click="stringify">stringify</v-btn> -->
     <v-btn @click="put">put</v-btn>
     <v-btn @click="post">post</v-btn>
-    <v-btn @click="conLog">console.log(this.lease)</v-btn>
+
     <!-- <v-btn @click="schArrX()">update</v-btn> -->
 
     <p v-if="showDialog">
@@ -142,7 +142,7 @@ export default {
         // elDom.innerText = this.newContent
         console.log(el)
       }
-    },   
+    },
     edit(id, verbiage, elId) {
       this.showDialog = true
       this.section = id

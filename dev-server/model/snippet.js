@@ -4,6 +4,18 @@ const snippetSchema = new mongoose.Schema({
   text: {
     type: Array,
     required: true
+  },
+  tenant: {
+    type: String,
+    required: true
+  },
+  landlord: {
+    type: String,
+    required: true
+  },
+  property: {
+    type: String,
+    required: true
   }
 })
 
