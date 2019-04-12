@@ -4,7 +4,7 @@
       <v-layout row wrap>
         <v-flex xs6>
           <h3>Clause Closet</h3>
-          <RetrieveLeases />
+          <RetrieveLeases @get-lease="getLease"></RetrieveLeases>
           <!-- <p>{{ list }}</p> -->
           <NestedDraggable
             :list="feeder"
@@ -96,8 +96,7 @@ export default {
       listKey: 0,
       elId: '',
       lev: null,
-      newContent: '',
-      selectedLeaseId: ''
+      newContent: ''
     }
   },
   computed: {
@@ -106,6 +105,15 @@ export default {
     }
   },
   methods: {
+    getLease(id) {
+      EventServiceAlt.getSnippet(id).then(response => {
+        this.id = response.data._id
+        this.lease = response.data.text
+        console.log(JSON.stringify(response.data))
+
+        this.addToStack()
+      })
+    },
     syncContent(newCont) {
       // alert(newCont)
 
@@ -114,8 +122,9 @@ export default {
     },
     schArr(arr, elId) {
       var pos
+      console.log(elId)
       var result = arr.filter(item => item.id === elId)
-      if (result.length == 0) {
+      if (result.length === 0) {
         var ss = arr.filter(item => item.subsections.length > 0)
         if (ss.length > 0) {
           for (var i = 0; i < ss.length; i++) {
@@ -123,8 +132,10 @@ export default {
           }
         }
       } else {
+        //tinker with the if-else here to handle the section correctly.
         var sec = result[0].section
-        if (sec.length > 0) {
+        console.log(sec)
+        if (sec.length > 1) {
           var arrSec = sec.split('.')
           pos = 'this.lease[' + arrSec[0] + ']'
           for (k = 1; k < arrSec.length; k++) {
@@ -158,31 +169,18 @@ export default {
     },
 
     post() {
-      // console.log(process.env.USER)
-      // console.log(JSON.stringify(this.list, null, 2))
-      // var ls = JSON.stringify(this.lease, null, 2)
-      // this.listKey += 1
       console.log(JSON.stringify(this.bLease))
-
-      // console.log(JSON.stringify(this.list, null, 2))
-
-      // EventServiceAlt.postSnippet(this.lease).then(response => {
-      //   console.log(response.status)
-      //   console.log(response.data)
-      // })
     },
     put() {
       var snippet = JSON.stringify(this.lease, null, 2)
       console.log(snippet)
-      EventServiceAlt.putSnippet(snippet, '5caf4c508ab4406e4bf34de3').then(
-        response => {
-          console.log(response.data)
-          console.log(response.status)
-          console.log(response.statusText)
-          console.log(response.headers)
-          console.log(response.config)
-        }
-      )
+      EventServiceAlt.putSnippet(snippet, this.id).then(response => {
+        console.log(response.data)
+        console.log(response.status)
+        console.log(response.statusText)
+        console.log(response.headers)
+        console.log(response.config)
+      })
     },
     copy(o) {
       var output

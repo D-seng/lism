@@ -23,6 +23,6 @@ export default {
   },
 
   putSnippet(snippet, id) {
-    return apiClient.put('/' + id, snippet)
+    return apiClient.put('/snippets/' + id, snippet)
   }
 }
