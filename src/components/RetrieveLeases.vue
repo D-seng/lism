@@ -1,26 +1,9 @@
 <template>
-  <v-combobox
-    v-model="model"
-    :items="items"
-    :search-input.sync="search"
-    hide-selected
-    hint="Maximum of 5 tags"
-    label="Add some tags"
-    multiple
-    persistent-hint
-    small-chips
-  >
-    <template v-slot:no-data>
-      <v-list-tile>
-        <v-list-tile-content>
-          <v-list-tile-title>
-            No results matching "<strong>{{ search }}</strong
-            >". Press <kbd>enter</kbd> to create a new one
-          </v-list-tile-title>
-        </v-list-tile-content>
-      </v-list-tile>
-    </template>
-  </v-combobox>
+ <v-select
+          :items="items"
+          label="Leases"
+          
+        ></v-select>
 </template>
 
 <script>
@@ -36,18 +19,15 @@ export default {
     }
   },
   created() {
+
     EventServiceAlt.getSnippets().then(response => {
-      // console.log('resp.text')
-      // console.log(typeof response.data.text)
-      // this.id = response.data._id
-      // this.lease = response.data.text
-      // var respText = response
-      console.log('Retrieve leases...')
-      console.log(response.data)
+      
       var arrResp = response.data.snippets
       arrResp.forEach(element => {
         console.log(element._id)
-        this.items.push(element._id)
+        this.itemIds.push(element._id)
+   
+        this.items.push(element.tenant + ' | ' + element.property)
       })
 
       // this.addToStack()

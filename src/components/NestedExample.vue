@@ -96,7 +96,8 @@ export default {
       listKey: 0,
       elId: '',
       lev: null,
-      newContent: ''
+      newContent: '',
+      selectedLeaseId: ''
     }
   },
   computed: {
@@ -173,7 +174,7 @@ export default {
     put() {
       var snippet = JSON.stringify(this.lease, null, 2)
       console.log(snippet)
-      EventServiceAlt.putSnippet(snippet, '5ca90a1afcc6ec6b2b663a94').then(
+      EventServiceAlt.putSnippet(snippet, '5caf4c508ab4406e4bf34de3').then(
         response => {
           console.log(response.data)
           console.log(response.status)
@@ -266,11 +267,13 @@ export default {
 
   created() {
     console.log('created-cc')
-    EventServiceAlt.getSnippet('5ca90a1afcc6ec6b2b663a94').then(response => {
+    EventServiceAlt.getSnippet('5caf4c508ab4406e4bf34de3').then(response => {
       console.log('resp.text')
       console.log(typeof response.data.text)
+      console.log(response.data.text)
       this.id = response.data._id
       this.lease = response.data.text
+      console.log(JSON.stringify(response.data))
       console.log('created')
       this.addToStack()
     })
