@@ -23,6 +23,13 @@ export default {
   },
 
   putSnippet(snippet, id) {
-    return apiClient.put('/snippets/' + id, snippet)
+    console.log('EventServiceAlt')
+    console.log(snippet)
+    console.log(id)
+    return apiClient.put('/snippets/' + id, { text: snippet })
+  },
+
+  getFeeders() {
+    return apiClient.get('/feeders')
   }
 }

@@ -5,7 +5,7 @@ const atlas =
 
 module.exports = function connectToDb() {
   mongoose
-    .connect(atlas, { useNewUrlParser: true })
+    .connect(atlas, { useNewUrlParser: true, useFindAndModify: false })
     .then(() => console.log('Connected to MongoDB...'))
     .catch(err => console.error('Could not connect to MongoDB...', err))
 }

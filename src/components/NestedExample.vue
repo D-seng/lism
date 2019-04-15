@@ -3,21 +3,22 @@
     <v-container grid-list-md text-xs-left>
       <v-layout row wrap>
         <v-flex xs6>
-          <h3>Clause Closet</h3>
-          <RetrieveLeases @get-lease="getLease"></RetrieveLeases>
+          <h3>Feeder</h3>
+
           <!-- <p>{{ list }}</p> -->
           <NestedDraggable
             :list="feeder"
             @renumber-handler="renumberX(feeder)"
             :ce="false"
             @show-editor="edit"
+            group="leaseLanguage"
           />
           <!-- <ul>
         <li v-for="(item, index) in list">{{ item }}</li>
       </ul> -->
         </v-flex>
         <v-flex xs6 :key="listKey">
-          <h3>Lease Stack</h3>
+          <RetrieveLeases @get-lease="getLease"></RetrieveLeases>
           <v-btn @click="undo">Undo</v-btn>
           <v-btn @click="redo">Redo</v-btn>
 
@@ -28,6 +29,8 @@
             @add-to-stack="addToStack"
             :ce="true"
             @show-editor="edit"
+            @update-lse="updateLse"
+            group="leaseLanguage"
           />
           <!-- <ul>
         <li v-for="(item, index) in list">{{ item }}</li>
@@ -83,7 +86,7 @@ export default {
   },
   data() {
     return {
-      feeder: [],
+      feeder: ['a', 'b', 'c'],
       lease: [],
       stepper: [],
       stepIndex: -1,
@@ -114,6 +117,12 @@ export default {
         this.addToStack()
       })
     },
+    updateLse(id, newContent) {
+      alert(newContent)
+      this.newContent = newContent
+      this.elId = id
+      this.schArr(this.lease, this.elId)
+    },
     syncContent(newCont) {
       // alert(newCont)
 
@@ -122,6 +131,7 @@ export default {
     },
     schArr(arr, elId) {
       var pos
+      // debugger
       console.log(elId)
       var result = arr.filter(item => item.id === elId)
       if (result.length === 0) {
@@ -133,7 +143,8 @@ export default {
         }
       } else {
         //tinker with the if-else here to handle the section correctly.
-        var sec = result[0].section
+        // debugger
+        var sec = result[0].section.toString()
         console.log(sec)
         if (sec.length > 1) {
           var arrSec = sec.split('.')
@@ -172,14 +183,20 @@ export default {
       console.log(JSON.stringify(this.bLease))
     },
     put() {
-      var snippet = JSON.stringify(this.lease, null, 2)
-      console.log(snippet)
-      EventServiceAlt.putSnippet(snippet, this.id).then(response => {
+      console.log('put-nested example.vue')
+      // var snippet = JSON.stringify(this.lease, null, 2)
+      // snippet = JSON.parse(snippet)
+      // var lse = {
+      //   text = snippet,
+      // }
+
+      // console.log(this.lease)
+      EventServiceAlt.putSnippet(this.lease, this.id).then(response => {
         console.log(response.data)
-        console.log(response.status)
-        console.log(response.statusText)
-        console.log(response.headers)
-        console.log(response.config)
+        //   console.log(response.status)
+        //   console.log(response.statusText)
+        //   console.log(response.headers)
+        //   console.log(response.config)
       })
     },
     copy(o) {
@@ -265,16 +282,16 @@ export default {
 
   created() {
     console.log('created-cc')
-    EventServiceAlt.getSnippet('5caf4c508ab4406e4bf34de3').then(response => {
-      console.log('resp.text')
-      console.log(typeof response.data.text)
-      console.log(response.data.text)
-      this.id = response.data._id
-      this.lease = response.data.text
-      console.log(JSON.stringify(response.data))
-      console.log('created')
-      this.addToStack()
-    })
+    // EventServiceAlt.getSnippet('5caf4c508ab4406e4bf34de3').then(response => {
+    //   // console.log('resp.text')
+    //   // console.log(typeof response.data.text)
+    //   // console.log(response.data.text)
+    //   this.id = response.data._id
+    //   this.lease = response.data.text
+    //   // console.log(JSON.stringify(response.data))
+    //   // console.log('created')
+    // this.addToStack()
+    // })
     // EventService.getTodo('5c8525bda12257857384470d').then(response => {
     //   this.idMenu = response.data._id
     //   this.feeder = response.data.text

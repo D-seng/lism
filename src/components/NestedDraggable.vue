@@ -1,8 +1,6 @@
 <template>
   <div>
-   
-  
-    <div v-if="ce">
+    <div>
       <draggable
         class="dragArea"
         chosenClass="chosen"
@@ -12,23 +10,32 @@
         tag="ul"
         handle=".handle"
         :list="lse"
-        :group="{ name: 'clauses' }"
+        group="leaseLanguage"
         @change="renumberHandler"
         @end="addToStackHandler"
       >
         <li v-for="el in list" :key="el.section">
-          <font-awesome-icon
-            icon="grip-lines"
-            class="fas fa-grip-lines fa-lg handle"
-          />
-          <font-awesome-icon
-            icon="edit"
-            class="fas fa-edit fa-lg"
-            @click="editX(el.section, el.verbiage, el.id)"
-          />
-
-          <span @click="edit(el.section)" class="listSpan">{{el.section}}</span>
-          <span v-html="el.verbiage" contenteditable="true" :id="el.id"></span>
+          <v-card class="handle">
+            <font-awesome-icon
+              icon="edit"
+              class="fas fa-edit fa-lg"
+              @click="editX(el.section, el.verbiage, el.id)"
+            />
+            <div :id="el.id + 'sv'" class="m-fadeOut">
+              <font-awesome-icon
+                icon="save"
+                class="far fa-save fa-lg"
+                @click="updateLseHandler(el.id)"
+              />
+            </div>
+            <v-card-title primary-title>{{ el.section }} </v-card-title>
+            <span
+              v-html="el.verbiage"
+              contenteditable="true"
+              :id="el.id"
+              @input="showSaveIcon(el.id)"
+            ></span>
+          </v-card>
 
           <NestedDraggable
             :list="el.subsections"
@@ -36,48 +43,9 @@
             @add-to-stack="addToStackHandler"
             :ce="ce"
             @show-editor="editX('subsequent')"
+            @update-lse="updateLseHandler('subsequent')"
+            group="leaseLanguage"
           />
-        </li>
-      </draggable>
-    </div>
-
-    <div v-else>
-      <draggable
-        class="dragArea"
-        chosenClass="chosen"
-        ghostClass="dropTarget"
-        animation="250"
-        bubbleScroll="true"
-        tag="ul"
-        handle=".handle"
-        :list="lse"
-        :group="{ name: 'clauses', pull: 'clone', put: false }"
-        @change="renumberHandler"
-      >
-        <li v-for="el in list" :key="el.section">
-          <font-awesome-icon
-            icon="grip-lines"
-            class="fas fa-grip-lines fa-lg handle"
-            @drop="addToStackHandler"
-          />
-          <font-awesome-icon
-            icon="edit"
-            class="fas fa-edit fa-lg"
-            @click="editX(el.section, el.verbiage, el.id)"
-          />
-          <span class="listSpan"> {{ el.section }}</span>
-          <span @click="getArr(el.id)" id="el.id" contenteditable="false">
-            {{ el.verbiage }}
-          </span>
-
-          <!-- <div v-if="el.subsections.length > 0"> -->
-          <NestedDraggable
-            :list="el.subsections"
-            @renumber-handler="renumberHandler"
-            :ce="false"
-            @show-editor="editX('subsequent')"
-          />
-          <!-- </div> -->
         </li>
       </draggable>
     </div>
@@ -88,7 +56,7 @@
 import draggable from 'vuedraggable'
 
 const uuidv1 = require('uuid/v1')
-var idLocked = null
+var sectionLocked = null
 var verbiageLocked = null
 var elIdLocked = null
 
@@ -117,32 +85,21 @@ export default {
     return {
       isActive: false,
       randomId: null,
-      lse: this.list
+      lse: this.list,
+      id: '',
+      content: ''
     }
   },
 
   methods: {
-    // var ind = this.lse.findIndex(x => x.id === elId)
-    // alert(ind + ' ' + elId)
-    // var matches = []
-    // var needle = elId // what to look for
+    showSaveIcon(id) {
+      // alert(id)
+      var el = document.getElementById(id + 'sv')
+      console.log(el)
+      el.className = '.m-fadeIn'
+      console.log(el)
+    },
 
-    // var arrTest = [
-    //   { id: 'a1', text: 'aas', subsections: [{ id: 'b1' }, { text: 'bbs' }] }
-    // ]
-    // needle = 'b1'
-
-    //   this.cList.forEach(function(e) {
-    //     matches = matches.concat(
-    //       e.subsections.filter(function(c) {
-    //         return c.id === needle
-    //       })
-    //     )
-    //   })
-    //   console.log(this.cList)
-    //   console.log(elId)
-    //   console.log(matches[0] || 'Not found')
-    // },
     genUUID() {
       var a = uuidv1()
       console.log(a)
@@ -157,9 +114,19 @@ export default {
     addToStackHandler() {
       this.$emit('add-to-stack')
     },
-    editX(id, verbiage, elId) {
-      if (id !== 'subsequent') {
-        idLocked = id
+    updateLseHandler(elId) {
+      // alert(elId)
+      if (elId !== 'subsequent') {
+        elIdLocked = elId
+      }
+
+      var el = document.getElementById(elIdLocked)
+      var content = el.innerText
+      this.$emit('update-lse', elIdLocked, content)
+    },
+    editX(section, verbiage, elId) {
+      if (section !== 'subsequent') {
+        sectionLocked = section
         verbiageLocked = verbiage
         elIdLocked = elId
       }
@@ -169,7 +136,7 @@ export default {
       // }
       // alert('idLocked ' + id)
 
-      this.$emit('show-editor', idLocked, verbiageLocked, elIdLocked)
+      this.$emit('show-editor', sectionLocked, verbiageLocked, elIdLocked)
       this.$emit('force-rerender')
     }
   }
@@ -194,9 +161,22 @@ li {
   background-color: rgba(222, 236, 241, 0.808);
 }
 .handle {
-  float: left;
 }
 .listSpan {
   margin-left: 20px;
+}
+.invisible {
+  visibility: hidden;
+  transition: visibility 1s;
+}
+.m-fadeOut {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 300ms, opacity 300ms;
+}
+.m-fadeIn {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s linear 0s, opacity 300ms;
 }
 </style>

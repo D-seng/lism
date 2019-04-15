@@ -27,19 +27,18 @@ router.get('/snippets/:id', async (req, res) => {
 })
 
 router.put('/snippets/:id', async (req, res) => {
+  console.log('router.put')
+  console.log(req.body)
   const snippet = await Snippet.findByIdAndUpdate(
     req.params.id,
     {
-      text: req.body.text,
-      tenant: req.body.tenant,
-      landlord: req.body.landlord,
-      property: req.body.property
+      text: req.body.text
     },
     { new: true }
   )
   if (!snippet) return res.status(404).send('Snippet not found')
-
-  // res.send('update a snippet')
+  const result = await snippet.save()
+  res.send(result)
 })
 
 router.post('/snippets', async (req, res) => {

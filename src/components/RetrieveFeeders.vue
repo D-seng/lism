@@ -1,5 +1,9 @@
 <template>
-  <v-select v-on:change="selectLease" :items="items" label="Lease"></v-select>
+  <v-select
+    v-on:change="selectFeeder"
+    :items="items"
+    label="Feeder Clauses"
+  ></v-select>
 </template>
 
 <script>
@@ -13,22 +17,20 @@ export default {
     }
   },
   methods: {
-    selectLease(a) {
+    selectFeeder(a) {
       var idIndex = this.items.indexOf(a)
       var id = this.itemIds[idIndex]
-      this.$emit('get-lease', id)
+      this.$emit('get-feeders', id)
     }
   },
   created() {
-    EventServiceAlt.getSnippets().then(response => {
-      var arrResp = response.data.snippets
+    EventServiceAlt.getFeeders().then(response => {
+      var arrResp = response.data.feeders
       arrResp.forEach(element => {
         console.log(element._id)
         this.itemIds.push(element._id)
 
-        this.items.push(
-          element.tenant + ' | ' + element.property + ' | ' + element._id
-        )
+        this.items.push(element._id)
       })
 
       // this.addToStack()
