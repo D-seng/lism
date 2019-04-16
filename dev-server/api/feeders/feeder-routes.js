@@ -8,7 +8,7 @@ const { Feeder } = require('../../model/feeder')
 //   res.send('post a feeder')
 // })
 
-router.get('/feeder', async (req, res) => {
+router.get('/feeders', async (req, res) => {
   await Feeder.find({}, (error, feeders) => {
     if (error) {
       return res.status(500).json()

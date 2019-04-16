@@ -31,5 +31,8 @@ export default {
 
   getFeeders() {
     return apiClient.get('/feeders')
+  },
+  getFeeder(id) {
+    return apiClient.get('/feeders/' + id)
   }
 }

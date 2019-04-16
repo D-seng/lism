@@ -10,7 +10,7 @@
         tag="ul"
         handle=".handle"
         :list="lse"
-        group="leaseLanguage"
+        :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
         @change="renumberHandler"
         @end="addToStackHandler"
       >
@@ -44,7 +44,7 @@
             :ce="ce"
             @show-editor="editX('subsequent')"
             @update-lse="updateLseHandler('subsequent')"
-            group="leaseLanguage"
+            :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
           />
         </li>
       </draggable>

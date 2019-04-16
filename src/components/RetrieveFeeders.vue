@@ -20,11 +20,13 @@ export default {
     selectFeeder(a) {
       var idIndex = this.items.indexOf(a)
       var id = this.itemIds[idIndex]
+      console.log(id)
       this.$emit('get-feeders', id)
     }
   },
   created() {
     EventServiceAlt.getFeeders().then(response => {
+      console.log('feeder')
       var arrResp = response.data.feeders
       arrResp.forEach(element => {
         console.log(element._id)
