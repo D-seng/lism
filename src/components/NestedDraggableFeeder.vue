@@ -1,0 +1,182 @@
+<template>
+  <div>
+    <div>
+      <draggable
+        class="dragArea"
+        chosenClass="chosen"
+        ghostClass="dropTarget"
+        animation="250"
+        bubbleScroll="true"
+        tag="ul"
+        handle=".handle"
+        :list="lse"
+        :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
+        @change="renumberHandler"
+        @end="addToStackHandler"
+      >
+        <li v-for="el in list" :key="el.section">
+          <v-card class="handle">
+            <font-awesome-icon
+              icon="edit"
+              class="fas fa-edit fa-lg"
+              @click="editX(el.section, el.verbiage, el.id)"
+            />
+            <div :id="el.id + 'sv'" class="m-fadeOut">
+              <font-awesome-icon
+                icon="save"
+                class="far fa-save fa-lg"
+                @click="updateLseHandler(el.id)"
+              />
+            </div>
+            <v-card-title primary-title>{{ el.section }} </v-card-title>
+            <span
+              v-html="el.verbiage"
+              contenteditable="true"
+              :id="el.id"
+              @input="showSaveIcon(el.id)"
+            ></span>
+          </v-card>
+
+          <NestedDraggable
+            :list="el.subsections"
+            @renumber-handler="renumberHandler"
+            @add-to-stack="addToStackHandler"
+            :ce="ce"
+            @show-editor="editX('subsequent')"
+            @update-lse="updateLseHandler('subsequent')"
+            :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
+          />
+        </li>
+      </draggable>
+    </div>
+  </div>
+</template>
+<script>
+// v-bind:class="{ active: isActive }"
+import draggable from 'vuedraggable'
+
+const uuidv1 = require('uuid/v1')
+var sectionLocked = null
+var verbiageLocked = null
+var elIdLocked = null
+
+export default {
+  name: 'NestedDraggable',
+  props: {
+    list: {
+      required: true,
+      type: Array
+    },
+    ce: {
+      required: true,
+      type: Boolean
+    }
+  },
+  components: {
+    draggable
+  },
+  computed: {
+    cList() {
+      return JSON.parse(JSON.stringify(this.list))
+      // return this.list
+    }
+  },
+  data() {
+    return {
+      isActive: false,
+      randomId: null,
+      lse: this.list,
+      id: '',
+      content: ''
+    }
+  },
+
+  methods: {
+    showSaveIcon(id) {
+      // alert(id)
+      var el = document.getElementById(id + 'sv')
+      console.log(el)
+      el.className = '.m-fadeIn'
+      console.log(el)
+    },
+
+    genUUID() {
+      var a = uuidv1()
+      console.log(a)
+    },
+    toggleActive() {
+      this.isActive = !this.isActive
+    },
+    renumberHandler() {
+      // alert('renumber-handler')
+      this.$emit('renumber-handler')
+    },
+    addToStackHandler() {
+      this.$emit('add-to-stack')
+    },
+    updateLseHandler(elId) {
+      // alert(elId)
+      if (elId !== 'subsequent') {
+        elIdLocked = elId
+      }
+
+      var el = document.getElementById(elIdLocked)
+      var content = el.innerText
+      this.$emit('update-lse', elIdLocked, content)
+    },
+    editX(section, verbiage, elId) {
+      if (section !== 'subsequent') {
+        sectionLocked = section
+        verbiageLocked = verbiage
+        elIdLocked = elId
+      }
+      // else {
+      //   id = idLocked
+      //   verbiage = verbiageLocked
+      // }
+      // alert('idLocked ' + id)
+
+      this.$emit('show-editor', sectionLocked, verbiageLocked, elIdLocked)
+      this.$emit('force-rerender')
+    }
+  }
+}
+</script>
+<style scoped>
+li {
+  list-style-type: none;
+  margin-top: 15px;
+}
+.bulleted {
+  list-style-type: disc;
+}
+.dragArea {
+  min-height: 20px;
+  border-left: 1px solid lightgray;
+}
+.chosen {
+  background-color: beige;
+}
+.dropTarget {
+  background-color: rgba(222, 236, 241, 0.808);
+}
+.handle {
+}
+.listSpan {
+  margin-left: 20px;
+}
+.invisible {
+  visibility: hidden;
+  transition: visibility 1s;
+}
+.m-fadeOut {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 300ms, opacity 300ms;
+}
+.m-fadeIn {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s linear 0s, opacity 300ms;
+}
+</style>
