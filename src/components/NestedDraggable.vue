@@ -6,11 +6,10 @@
         chosenClass="chosen"
         ghostClass="dropTarget"
         animation="250"
-        bubbleScroll="true"
         tag="ul"
         handle=".handle"
         :list="lse"
-        :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
+        :group="lseAndFeeder"
         @change="renumberHandler"
         @end="addToStackHandler"
       >

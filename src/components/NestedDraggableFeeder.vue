@@ -6,43 +6,17 @@
         chosenClass="chosen"
         ghostClass="dropTarget"
         animation="250"
-        bubbleScroll="true"
         tag="ul"
-        handle=".handle"
         :list="lse"
         :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
-        @change="renumberHandler"
-        @end="addToStackHandler"
       >
-        <li v-for="el in list" :key="el.section">
-          <v-card class="handle">
-            <font-awesome-icon
-              icon="edit"
-              class="fas fa-edit fa-lg"
-              @click="editX(el.section, el.verbiage, el.id)"
-            />
-            <div :id="el.id + 'sv'" class="m-fadeOut">
-              <font-awesome-icon
-                icon="save"
-                class="far fa-save fa-lg"
-                @click="updateLseHandler(el.id)"
-              />
-            </div>
-            <v-card-title primary-title>{{ el.section }} </v-card-title>
-            <span
-              v-html="el.verbiage"
-              contenteditable="true"
-              :id="el.id"
-              @input="showSaveIcon(el.id)"
-            ></span>
-          </v-card>
+        <li v-for="el in list" :key="el.id">
+          <h4>{{ el.intent }}</h4>
+          <span v-html="el.verbiage" contenteditable="true" :id="el.id"></span>
 
           <NestedDraggable
             :list="el.subsections"
             @renumber-handler="renumberHandler"
-            @add-to-stack="addToStackHandler"
-            :ce="ce"
-            @show-editor="editX('subsequent')"
             @update-lse="updateLseHandler('subsequent')"
             :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
           />
