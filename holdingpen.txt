@@ -38,3 +38,5 @@
         </li>
       </draggable>
     </div>
+
+     :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"

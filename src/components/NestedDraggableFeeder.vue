@@ -7,18 +7,15 @@
         ghostClass="dropTarget"
         animation="250"
         tag="ul"
-        :list="lse"
-        :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
+        :list2="feeder"
       >
-        <li v-for="el in list" :key="el.id">
-          <h4>{{ el.intent }}</h4>
-          <span v-html="el.verbiage" contenteditable="true" :id="el.id"></span>
+        <li v-for="el in list2" :key="el.section">
+          <span v-html="el.section" :id="el.id"></span>
+          <span v-html="el.verbiage" :id="el.id + 'v'"></span>
 
-          <NestedDraggable
-            :list="el.subsections"
-            @renumber-handler="renumberHandler"
+          <NestedDraggableFeeder
+            :list2="el.subsections"
             @update-lse="updateLseHandler('subsequent')"
-            :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
           />
         </li>
       </draggable>
@@ -35,15 +32,11 @@ var verbiageLocked = null
 var elIdLocked = null
 
 export default {
-  name: 'NestedDraggable',
+  name: 'NestedDraggableFeeder',
   props: {
-    list: {
+    list2: {
       required: true,
       type: Array
-    },
-    ce: {
-      required: true,
-      type: Boolean
     }
   },
   components: {
@@ -59,7 +52,7 @@ export default {
     return {
       isActive: false,
       randomId: null,
-      lse: this.list,
+      feeder: this.list2,
       id: '',
       content: ''
     }

@@ -9,7 +9,7 @@
         tag="ul"
         handle=".handle"
         :list="lse"
-        :group="lseAndFeeder"
+        group="lseAndFeeder"
         @change="renumberHandler"
         @end="addToStackHandler"
       >
@@ -43,7 +43,7 @@
             :ce="ce"
             @show-editor="editX('subsequent')"
             @update-lse="updateLseHandler('subsequent')"
-            :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
+            group="lseAndFeeder"
           />
         </li>
       </draggable>

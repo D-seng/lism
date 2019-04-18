@@ -5,12 +5,11 @@
         <v-flex xs6>
           <!-- <p>{{ list }}</p> -->
           <RetrieveFeeders @get-feeders="getFeeders"></RetrieveFeeders>
-          <NestedDraggable
-            :list="feeder"
-            @renumber-handler="renumberX(feeder)"
+          <h4>{{ intent }}</h4>
+          <NestedDraggableFeeder
+            :list2="feeder"
             :ce="false"
             @show-editor="edit"
-            :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
           />
           <!-- Need a different NestedDraggable for the feeder so that it can hav its
           own pull: 'clone' and put: 'false' -->
@@ -31,7 +30,7 @@
             :ce="true"
             @show-editor="edit"
             @update-lse="updateLse"
-            :group="{ name: 'lseAndFeeder' }"
+            group="lseAndFeeder"
           />
           <!-- <ul>
         <li v-for="(item, index) in list">{{ item }}</li>
@@ -70,6 +69,7 @@
 
 <script>
 import NestedDraggable from '@/components/NestedDraggable'
+import NestedDraggableFeeder from '@/components/NestedDraggableFeeder'
 import EventServiceAlt from '@/services/EventServiceAlt.js'
 import cloneDeep from 'lodash.clonedeep'
 import Editor from './Editor.vue'
@@ -84,6 +84,7 @@ export default {
 
   components: {
     NestedDraggable,
+    NestedDraggableFeeder,
     Editor,
     RetrieveLeases,
     RetrieveFeeders
@@ -91,6 +92,7 @@ export default {
   data() {
     return {
       feeder: [],
+      intent: '',
       lease: [],
       stepper: [],
       stepIndex: -1,
@@ -123,9 +125,11 @@ export default {
     },
     getFeeders(id) {
       EventServiceAlt.getFeeder(id).then(response => {
-        this.id_feeder = response.data._id
-        this.feeder = response.data.text
-        console.log(JSON.stringify(response.data))
+        this.idFeeder = response.data._id
+        this.feeder = response.data.verbiage
+        this.intent = response.data.intent
+        console.log(this.intent)
+        console.log(JSON.stringify(response.data.verbiage))
       })
     },
     updateLse(id, newContent) {
