@@ -9,9 +9,9 @@
         tag="ul"
         handle=".handle"
         :list="lse"
-        group="lseAndFeeder"
         @change="renumberHandler"
         @end="addToStackHandler"
+        group="lseAndFeeder"
       >
         <li v-for="el in list" :key="el.section">
           <v-card class="handle">
@@ -74,12 +74,7 @@ export default {
   components: {
     draggable
   },
-  computed: {
-    cList() {
-      return JSON.parse(JSON.stringify(this.list))
-      // return this.list
-    }
-  },
+  computed: {},
   data() {
     return {
       isActive: false,
@@ -107,7 +102,7 @@ export default {
       this.isActive = !this.isActive
     },
     renumberHandler() {
-      // alert('renumber-handler')
+      alert('renumber-handler')
       this.$emit('renumber-handler')
     },
     addToStackHandler() {

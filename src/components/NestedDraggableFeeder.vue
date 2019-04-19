@@ -8,15 +8,18 @@
         animation="250"
         tag="ul"
         :list2="feeder"
+        :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
       >
         <li v-for="el in list2" :key="el.section">
-          <span v-html="el.section" :id="el.id"></span>
-          <span v-html="el.verbiage" :id="el.id + 'v'"></span>
+          <v-card class="handle">
+            <span v-html="el.section" :id="el.id"></span>
+            <span v-html="el.verbiage" :id="el.id + 'v'"></span>
 
-          <NestedDraggableFeeder
-            :list2="el.subsections"
-            @update-lse="updateLseHandler('subsequent')"
-          />
+            <NestedDraggableFeeder
+              :list2="el.subsections"
+              @update-lse="updateLseHandler('subsequent')"
+            />
+          </v-card>
         </li>
       </draggable>
     </div>
@@ -42,12 +45,7 @@ export default {
   components: {
     draggable
   },
-  computed: {
-    cList() {
-      return JSON.parse(JSON.stringify(this.list))
-      // return this.list
-    }
-  },
+  computed: {},
   data() {
     return {
       isActive: false,

@@ -11,18 +11,12 @@
             :ce="false"
             @show-editor="edit"
           />
-          <!-- Need a different NestedDraggable for the feeder so that it can hav its
-          own pull: 'clone' and put: 'false' -->
-          <!-- <ul>
-        <li v-for="(item, index) in list">{{ item }}</li>
-      </ul> -->
         </v-flex>
         <v-flex xs6 :key="listKey">
           <RetrieveLeases @get-lease="getLease"></RetrieveLeases>
           <v-btn @click="undo">Undo</v-btn>
           <v-btn @click="redo">Redo</v-btn>
 
-          <!-- <p>{{ list }}</p> -->
           <NestedDraggable
             :list="lease"
             @renumber-handler="renumberX(lease)"
@@ -30,25 +24,14 @@
             :ce="true"
             @show-editor="edit"
             @update-lse="updateLse"
-            group="lseAndFeeder"
           />
-          <!-- <ul>
-        <li v-for="(item, index) in list">{{ item }}</li>
-      </ul> -->
         </v-flex>
       </v-layout>
     </v-container>
 
-    <!-- <div class="col-8">
-      <h3>Nested draggable tasks--</h3>
-      <NestedDraggable :tasks="menu" />
-    </div> -->
-
     <v-btn @click="stringify">stringify</v-btn> -->
     <v-btn @click="put">put</v-btn>
     <v-btn @click="post">post</v-btn>
-
-    <!-- <v-btn @click="schArrX()">update</v-btn> -->
 
     <p v-if="showDialog">
       showDialog is true
@@ -226,6 +209,7 @@ export default {
       return output
     },
     addToStack() {
+      debugger
       this.stepIndex += 1
       this.stepper.splice(this.stepIndex, 1, cloneDeep(this.lease))
       console.log(this.stepper[this.stepIndex])
