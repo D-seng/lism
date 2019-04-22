@@ -11,7 +11,8 @@
         :list="lse"
         @change="renumberHandler"
         @end="addToStackHandler"
-        group="lseAndFeeder"
+        @add="addHandler"
+        :group="{ name: 'lseAndFeeder', put: true }"
       >
         <li v-for="el in list" :key="el.section">
           <v-card class="handle">
@@ -44,6 +45,7 @@
             @show-editor="editX('subsequent')"
             @update-lse="updateLseHandler('subsequent')"
             group="lseAndFeeder"
+            @add-feeder="addHandlerX"
           />
         </li>
       </draggable>
@@ -61,6 +63,7 @@ var elIdLocked = null
 
 export default {
   name: 'NestedDraggable',
+  display: 'Clone',
   props: {
     list: {
       required: true,
@@ -93,7 +96,39 @@ export default {
       el.className = '.m-fadeIn'
       console.log(el)
     },
+    addHandlerX(evt) {
+      this.$emit('add-feeder', evt)
+    },
+    addHandler(evt) {
+      this.$emit('add-feeder', evt)
+      // alert('addHandler')
+      // console.log('evt.item')
+      // console.log(evt.item)
+      // debugger
+      // console.log('evt.newIndex')
+      // console.log(evt.newIndex)
 
+      // console.log('evt.clone')
+      // console.log(evt.clone)
+      // console.log('evt.to')
+      // console.log(evt.to)
+
+      // If yes, then
+      // If index > 0, then getElementById(child n - 1)
+      // If index === 0, then getElementById(child n + 1)
+      // If children.length === 0,
+      // Need to find out how to access parent-like node
+
+      //2. Retrieve section and convert to array index.
+      //3. Do the needed splice. Slip into subsections array where needed.
+      //If index === 0, then the position must be the first in entire list.
+
+      // console.log(el.parentElement)
+      // console.log(el.previousSibling)
+
+      // console.log(el.parent)
+      // this.renumberHandler()
+    },
     genUUID() {
       var a = uuidv1()
       console.log(a)
@@ -118,6 +153,7 @@ export default {
       var content = el.innerText
       this.$emit('update-lse', elIdLocked, content)
     },
+
     editX(section, verbiage, elId) {
       if (section !== 'subsequent') {
         sectionLocked = section

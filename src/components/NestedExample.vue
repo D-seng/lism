@@ -10,6 +10,7 @@
             :list2="feeder"
             :ce="false"
             @show-editor="edit"
+            @drag-data="dragData"
           />
         </v-flex>
         <v-flex xs6 :key="listKey">
@@ -24,6 +25,7 @@
             :ce="true"
             @show-editor="edit"
             @update-lse="updateLse"
+            @add-feeder="addFeeder"
           />
         </v-flex>
       </v-layout>
@@ -88,7 +90,8 @@ export default {
       listKey: 0,
       elId: '',
       lev: null,
-      newContent: ''
+      newContent: '',
+      cloneText: ''
     }
   },
   computed: {
@@ -97,6 +100,96 @@ export default {
     }
   },
   methods: {
+    dragData(evt) {
+      console.log('dragData')
+      console.log(evt.clone)
+      console.log(evt.clone.children[0].children[1].innerText)
+      this.cloneText = evt.clone.children[0].children[1].innerText
+      // alert('dragData')
+    },
+    assignSection(sec, mode) {
+      var pos
+      if (sec.length > 1) {
+        var arrSec = sec.split('.')
+        pos = 'this.lease[' + arrSec[0] + ']'
+        for (var k = 1; k < arrSec.length; k++) {
+          pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
+        }
+      } else {
+        pos = 'this.lease[' + sec + ']'
+      }
+      // console.log(pos)
+      // console.log(eval(pos))
+      // console.log(el.children)
+      // console.log(el.children[0].firstChild.firstChild.innerText)
+      console.log(eval(pos))
+      console.log(eval(pos).verbiage)
+      console.log(eval(pos).subsections[0])
+      switch (mode) {
+        case 'next':
+          break
+        case 'prev':
+          break
+        default:
+          eval(pos).subsections.push({
+            section: '111',
+            verbiage: this.cloneText,
+            subsections: []
+          })
+      }
+
+      // console.log(eval(pos).subsections[0].verbiage)
+      // console.log(this.lease)
+    },
+    addFeeder(evt) {
+      // alert('evt')
+      var el = evt.to
+      var testNode = 'el'
+      var testNodeEl
+      var sec
+      var mode
+      if (el.children.length > 1) {
+        // Splice it in?
+        if (evt.newIndex > 0) {
+          testNodeEl = el.children[evt.newIndex - 1]
+          mode = 'prev'
+          // testNode = testNode + '.parentNode'
+        } else {
+          testNodeEl = el.children[evt.newIndex + 1]
+          mode = 'next'
+          // testNode = testNode + '.childNode'
+        }
+      } else {
+        // debugger
+        do {
+          testNode = testNode + '.parentNode'
+          testNodeEl = eval(testNode)
+        } while (testNodeEl.nodeName != 'LI')
+        console.log(testNodeEl)
+        console.log(
+          testNodeEl.children[0].children[1].nextElementSibling.innerText
+        )
+        mode = 'subsection'
+        // REFACTOR: Make this function universally available.
+      }
+      debugger
+      sec = testNodeEl.children[0].children[1].nextElementSibling.innerText
+      this.assignSection(sec, mode)
+      this.renumberX(this.lease)
+
+      // eval(pos).subsections.push(
+      //   el.children[0].firstChild.children[0].innerText
+      // )
+      // eval(pos).subsections[0].verbiage =
+      //   el.children[0].firstChild.children[1].innerText
+
+      // console.log(eval(pos))
+
+      // var testEl = el.previousElementSibling
+      // Need to find out how to access parent-like node
+      // Maybe parent <li>
+    },
+
     getLease(id) {
       EventServiceAlt.getSnippet(id).then(response => {
         this.id = response.data._id
@@ -115,6 +208,7 @@ export default {
         console.log(JSON.stringify(response.data.verbiage))
       })
     },
+    addCloneEl() {},
     updateLse(id, newContent) {
       alert(newContent)
       this.newContent = newContent
@@ -209,7 +303,6 @@ export default {
       return output
     },
     addToStack() {
-      debugger
       this.stepIndex += 1
       this.stepper.splice(this.stepIndex, 1, cloneDeep(this.lease))
       console.log(this.stepper[this.stepIndex])

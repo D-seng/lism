@@ -7,6 +7,7 @@
         ghostClass="dropTarget"
         animation="250"
         tag="ul"
+        @start="setDataX"
         :list2="feeder"
         :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
       >
@@ -18,6 +19,7 @@
             <NestedDraggableFeeder
               :list2="el.subsections"
               @update-lse="updateLseHandler('subsequent')"
+              @drag-data="setDataX"
             />
           </v-card>
         </li>
@@ -36,6 +38,7 @@ var elIdLocked = null
 
 export default {
   name: 'NestedDraggableFeeder',
+  display: 'Clone',
   props: {
     list2: {
       required: true,
@@ -57,6 +60,13 @@ export default {
   },
 
   methods: {
+    setDataX(evt) {
+      // alert('setDataX')
+      console.log('setDataX')
+      // console.log(evt.clone)
+      // console.log(evt.clone.innerText)
+      this.$emit('drag-data', evt)
+    },
     showSaveIcon(id) {
       // alert(id)
       var el = document.getElementById(id + 'sv')
