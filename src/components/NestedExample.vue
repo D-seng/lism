@@ -108,6 +108,11 @@ export default {
       // alert('dragData')
     },
     assignSection(sec, mode) {
+      var newObj = {
+        section: '111',
+        verbiage: this.cloneText,
+        subsections: []
+      }
       var pos
       if (sec.length > 1) {
         var arrSec = sec.split('.')
@@ -115,31 +120,33 @@ export default {
         for (var k = 1; k < arrSec.length; k++) {
           pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
         }
+        //Get last occurrence of '[' and lop it and the remaindr of the string off.
+        var lastBracket = pos.lastIndexOf('[')
+        pos = pos.substring(0, lastBracket)
       } else {
         pos = 'this.lease[' + sec + ']'
       }
+      debugger
       // console.log(pos)
       // console.log(eval(pos))
       // console.log(el.children)
       // console.log(el.children[0].firstChild.firstChild.innerText)
-      console.log(eval(pos))
-      console.log(eval(pos).verbiage)
-      console.log(eval(pos).subsections[0])
+      console.log(pos)
+      // console.log(eval(pos).verbiage)
+      // console.log(eval(pos).subsections[0])
       switch (mode) {
         case 'next':
+          eval(pos + '.splice(arrSec[k],0, newObj)')
           break
         case 'prev':
+          eval(pos + '.splice(arrSec[k],0, newObj)')
           break
         default:
-          eval(pos).subsections.push({
-            section: '111',
-            verbiage: this.cloneText,
-            subsections: []
-          })
+          eval(pos).subsections.push(newObj)
       }
 
       // console.log(eval(pos).subsections[0].verbiage)
-      // console.log(this.lease)
+      console.log(this.lease)
     },
     addFeeder(evt) {
       // alert('evt')
@@ -149,14 +156,13 @@ export default {
       var sec
       var mode
       if (el.children.length > 1) {
-        // Splice it in?
-        if (evt.newIndex > 0) {
-          testNodeEl = el.children[evt.newIndex - 1]
-          mode = 'prev'
-          // testNode = testNode + '.parentNode'
-        } else {
+        if (evt.newIndex === 0) {
           testNodeEl = el.children[evt.newIndex + 1]
           mode = 'next'
+          // testNode = testNode + '.parentNode'
+        } else {
+          testNodeEl = el.children[evt.newIndex - 1]
+          mode = 'prev'
           // testNode = testNode + '.childNode'
         }
       } else {
@@ -172,7 +178,8 @@ export default {
         mode = 'subsection'
         // REFACTOR: Make this function universally available.
       }
-      debugger
+      // debugger
+      // Get the span holding the section number.
       sec = testNodeEl.children[0].children[1].nextElementSibling.innerText
       this.assignSection(sec, mode)
       this.renumberX(this.lease)
