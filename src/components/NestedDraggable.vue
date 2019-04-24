@@ -137,7 +137,7 @@ export default {
       this.isActive = !this.isActive
     },
     renumberHandler() {
-      alert('renumber-handler')
+      // alert('renumber-handler')
       this.$emit('renumber-handler')
     },
     addToStackHandler() {

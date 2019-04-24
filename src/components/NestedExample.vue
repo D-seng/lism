@@ -108,25 +108,27 @@ export default {
       // alert('dragData')
     },
     assignSection(sec, mode) {
+      // debugger
       var newObj = {
         section: '111',
         verbiage: this.cloneText,
         subsections: []
       }
       var pos
+      var arrSec = sec.split('.')
+      var k = 0
       if (sec.length > 1) {
-        var arrSec = sec.split('.')
         pos = 'this.lease[' + arrSec[0] + ']'
-        for (var k = 1; k < arrSec.length; k++) {
+        for (k = 1; k < arrSec.length; k++) {
           pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
         }
         //Get last occurrence of '[' and lop it and the remaindr of the string off.
         var lastBracket = pos.lastIndexOf('[')
         pos = pos.substring(0, lastBracket)
       } else {
-        pos = 'this.lease[' + sec + ']'
+        pos = 'this.lease'
       }
-      debugger
+      // debugger
       // console.log(pos)
       // console.log(eval(pos))
       // console.log(el.children)
@@ -155,13 +157,14 @@ export default {
       var testNodeEl
       var sec
       var mode
+      // debugger
       if (el.children.length > 1) {
         if (evt.newIndex === 0) {
-          testNodeEl = el.children[evt.newIndex + 1]
+          testNodeEl = el.children[evt.newIndex]
           mode = 'next'
           // testNode = testNode + '.parentNode'
         } else {
-          testNodeEl = el.children[evt.newIndex - 1]
+          testNodeEl = el.children[evt.newIndex + 1]
           mode = 'prev'
           // testNode = testNode + '.childNode'
         }
