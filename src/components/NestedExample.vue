@@ -91,7 +91,7 @@ export default {
       elId: '',
       lev: null,
       newContent: '',
-      cloneText: ''
+      cloneText: []
     }
   },
   computed: {
@@ -103,15 +103,20 @@ export default {
     dragData(evt) {
       console.log('dragData')
       console.log(evt.clone)
+      // Loop through evt.clone, looking for ULs and LIs.
+      for (var i = 0; i < evt.clone.children.length; i++) {
+        console.log(evt.clone.children[i])
+      }
+      debugger
       console.log(evt.clone.children[0].children[1].innerText)
-      this.cloneText = evt.clone.children[0].children[1].innerText
+      this.cloneText[0] = evt.clone.children[0].children[1].innerText
       // alert('dragData')
     },
     assignSection(sec, mode) {
       // debugger
       var newObj = {
         section: '111',
-        verbiage: this.cloneText,
+        verbiage: this.cloneText[0],
         subsections: []
       }
       var pos
@@ -129,13 +134,9 @@ export default {
         pos = 'this.lease'
       }
       // debugger
-      // console.log(pos)
-      // console.log(eval(pos))
-      // console.log(el.children)
-      // console.log(el.children[0].firstChild.firstChild.innerText)
+
       console.log(pos)
-      // console.log(eval(pos).verbiage)
-      // console.log(eval(pos).subsections[0])
+
       switch (mode) {
         case 'next':
           eval(pos + '.splice(arrSec[k],0, newObj)')
@@ -186,18 +187,6 @@ export default {
       sec = testNodeEl.children[0].children[1].nextElementSibling.innerText
       this.assignSection(sec, mode)
       this.renumberX(this.lease)
-
-      // eval(pos).subsections.push(
-      //   el.children[0].firstChild.children[0].innerText
-      // )
-      // eval(pos).subsections[0].verbiage =
-      //   el.children[0].firstChild.children[1].innerText
-
-      // console.log(eval(pos))
-
-      // var testEl = el.previousElementSibling
-      // Need to find out how to access parent-like node
-      // Maybe parent <li>
     },
 
     getLease(id) {
