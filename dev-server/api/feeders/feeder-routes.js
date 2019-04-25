@@ -43,7 +43,7 @@ router.put('/feeders/:id', async (req, res) => {
 
 router.post('/feeders', async (req, res) => {
   const feeder = new Feeder({
-    text: req.body.text,
+    verbiage: req.body.verbiage,
     intent: req.body.intent
   })
   const result = await feeder.save()

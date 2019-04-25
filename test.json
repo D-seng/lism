@@ -1,0 +1,63 @@
+{
+  "verbiage": [
+    {
+      "id": "f-21",
+      "verbiage": "blah blah verbiage------",
+      "section": "0",
+      "subsections": []
+    },
+    {
+      "id": "f-22",
+      "verbiage": "including market management fee",
+      "section": "1",
+      "subsections": []
+    },
+    {
+      "id": "f-23",
+      "verbiage": "",
+      "section": "2",
+      "subsections": [
+        {
+          "id": "f-24",
+          "verbiage": "subsection to yet more canned words",
+          "section": "1.1",
+          "subsections": [
+            {
+              "id": "f-34",
+              "verbiage": "subsection to yet more canned words",
+              "section": "1.1",
+              "subsections": [
+                {
+                  "id": "f-44",
+                  "verbiage": "subsection to yet more canned words",
+                  "section": "1.2",
+                  "subsections": []
+                }
+              ]
+            },
+            {
+              "id": "f-34",
+              "verbiage": "subsection to yet more canned words",
+              "section": "1.3",
+              "subsections": []
+            }
+          ]
+        },
+        {
+          "id": "f-25",
+          "verbiage": "another subsection to yet more canned words",
+          "section": "1.0.1",
+          "subsections": [
+            {
+              "id": "f-26",
+              "verbiage": "Subsection canned verbiage",
+              "section": "1.0.2.1",
+              "subsections": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "intent": "Full NNN. All operating expenses."
+}

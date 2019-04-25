@@ -91,7 +91,8 @@ export default {
       elId: '',
       lev: null,
       newContent: '',
-      cloneText: []
+      cloneText: [],
+      arrChildren: []
     }
   },
   computed: {
@@ -100,16 +101,32 @@ export default {
     }
   },
   methods: {
+    recurseCloneChildren(el) {
+      // Loop through a level's children; if it has an LI child, add
+      // the child to the array
+      for (var i = 0; i < el.children.length; i++) {
+        this.cloneText[i] = el.children[i].children[1].innerText
+        console.log(this.cloneText[i])
+        if (
+          el.children[i].nextElementSibling ||
+          el.children[i].previousElementSibling
+        ) {
+          console.log(el.children[i])
+          this.arrChildren.push(el.children[i])
+        }
+      }
+
+      this.recurseCloneChildren(el.children[i])
+    },
     dragData(evt) {
       console.log('dragData')
       console.log(evt.clone)
-      // Loop through evt.clone, looking for ULs and LIs.
-      for (var i = 0; i < evt.clone.children.length; i++) {
-        console.log(evt.clone.children[i])
-      }
       debugger
-      console.log(evt.clone.children[0].children[1].innerText)
-      this.cloneText[0] = evt.clone.children[0].children[1].innerText
+      // Recurse through evt.clone, looking for ULs and LIs.
+      this.recurseCloneChildren(evt.clone)
+
+      // console.log(evt.clone.children[0].children[1].innerText)
+
       // alert('dragData')
     },
     assignSection(sec, mode) {
@@ -199,8 +216,10 @@ export default {
       })
     },
     getFeeders(id) {
+      // debugger
       EventServiceAlt.getFeeder(id).then(response => {
         this.idFeeder = response.data._id
+        debugger
         this.feeder = response.data.verbiage
         this.intent = response.data.intent
         console.log(this.intent)

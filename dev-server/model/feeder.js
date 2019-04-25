@@ -1,13 +1,13 @@
 const mongoose = require('mongoose')
 
 const feederSchema = new mongoose.Schema({
-  text: {
+  verbiage: {
     type: Array,
     required: true
   },
   intent: {
     type: String,
-    required: false
+    required: true
   }
 })
 
