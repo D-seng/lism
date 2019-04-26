@@ -101,34 +101,46 @@ export default {
     }
   },
   methods: {
-    recurseCloneChildren(el) {
+    recurseCloneChildren(elChildren) {
+      this.arrChildren = []
       // Loop through a level's children; if it has an LI child, add
       // the child to the array
-      for (var i = 0; i < el.children.length; i++) {
-        this.cloneText[i] = el.children[i].children[1].innerText
-        console.log(this.cloneText[i])
-        if (
-          el.children[i].nextElementSibling ||
-          el.children[i].previousElementSibling
-        ) {
-          console.log(el.children[i])
-          this.arrChildren.push(el.children[i])
-        }
-      }
+      for (var i = 0; i < elChildren.length; i++) {
+        // this.cloneText[i] = elChildren[i].children[1].innerText
+        // console.log(this.cloneText[i])
+        // console.log(elChildren[i].children[1].innerText)
 
-      this.recurseCloneChildren(el.children[i])
+        // console.log(elChildren[i])
+        // if (
+        //   elChildren[i].nextElementSibling ||
+        //   elChildren[i].previousElementSibling
+        // ) {
+        console.log(elChildren[i])
+        this.arrChildren.push(elChildren[i])
+        // }
+      }
+      this.recurseCloneChildren(this.arrChildren)
     },
     dragData(evt) {
       console.log('dragData')
       console.log(evt.clone)
+      console.log(evt.clone.children)
       debugger
       // Recurse through evt.clone, looking for ULs and LIs.
-      this.recurseCloneChildren(evt.clone)
+      // DON'T RECURSE THE DOM. RECURSE THE FEEDER! THE LOGIC OF THE
+      // FEEDER IS FAR SIMPLER.
+      this.recurseCloneChildren(evt.clone.children)
 
       // console.log(evt.clone.children[0].children[1].innerText)
 
       // alert('dragData')
+
+      // Try appendChild instead? No. Need to add the dragged item
+      // to this.lease and let draggable handle the rest.
+
+      // this.appendNode(evt.clone)
     },
+    // appendNode(clone) {},
     assignSection(sec, mode) {
       // debugger
       var newObj = {
@@ -219,7 +231,7 @@ export default {
       // debugger
       EventServiceAlt.getFeeder(id).then(response => {
         this.idFeeder = response.data._id
-        debugger
+        // debugger
         this.feeder = response.data.verbiage
         this.intent = response.data.intent
         console.log(this.intent)

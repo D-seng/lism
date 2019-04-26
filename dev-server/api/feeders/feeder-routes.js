@@ -32,7 +32,7 @@ router.put('/feeders/:id', async (req, res) => {
   const feeder = await Feeder.findByIdAndUpdate(
     req.params.id,
     {
-      text: req.body.text
+      text: req.body.verbiage
     },
     { new: true }
   )
