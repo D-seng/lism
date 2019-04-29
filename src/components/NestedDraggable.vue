@@ -7,35 +7,34 @@
         ghostClass="dropTarget"
         animation="250"
         tag="ul"
-        handle=".handle"
         :list="lse"
         @change="renumberHandler"
         @end="addToStackHandler"
         @add="addHandler"
         :group="{ name: 'lseAndFeeder', put: true }"
       >
-        <li v-for="el in list" :key="el.section">
-          <v-card class="handle">
+        <li v-for="el in list" :key="el.section" :id="el.id">
+          <div>
             <font-awesome-icon
               icon="edit"
-              class="fas fa-edit fa-lg"
+              class="fas fa-edit fa-lg il"
               @click="editX(el.section, el.verbiage, el.id)"
             />
-            <div :id="el.id + 'sv'" class="m-fadeOut">
+            <!-- <div :id="el.id + 'sv'" class="m-fadeOut">
               <font-awesome-icon
                 icon="save"
                 class="far fa-save fa-lg"
                 @click="updateLseHandler(el.id)"
               />
-            </div>
-            <v-card-title primary-title>{{ el.section }} </v-card-title>
+            </div> -->
+            <p :id="'sec-' + el.id" primary-title>{{ el.section }}</p>
             <span
               v-html="el.verbiage"
               contenteditable="true"
               :id="el.id"
               @input="showSaveIcon(el.id)"
             ></span>
-          </v-card>
+          </div>
 
           <NestedDraggable
             :list="el.subsections"
@@ -190,11 +189,14 @@ li {
 .dropTarget {
   background-color: rgba(222, 236, 241, 0.808);
 }
-.handle {
-}
+
 .listSpan {
   margin-left: 20px;
 }
+.il {
+  display: inline;
+}
+
 .invisible {
   visibility: hidden;
   transition: visibility 1s;

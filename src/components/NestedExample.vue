@@ -92,7 +92,8 @@ export default {
       lev: null,
       newContent: '',
       cloneText: [],
-      arrChildren: []
+      arrChildren: [],
+      draggedFeederSec: ''
     }
   },
   computed: {
@@ -124,12 +125,19 @@ export default {
     dragData(evt) {
       console.log('dragData')
       console.log(evt.clone)
-      console.log(evt.clone.children)
-      debugger
+      console.log(evt.clone.children[0].children[0].innerText)
+      this.draggedFeederSec = evt.clone.children[0].children[0].innerText
+      // debugger
+      console.log('aa')
+      console.log(this.feeder[this.draggedFeederSec])
+      console.log('bb')
+      // this.cloneText[i] = elChildren[i].children[1].innerText
+      // console.log(evt.clone.children)
+      // debugger
       // Recurse through evt.clone, looking for ULs and LIs.
       // DON'T RECURSE THE DOM. RECURSE THE FEEDER! THE LOGIC OF THE
       // FEEDER IS FAR SIMPLER.
-      this.recurseCloneChildren(evt.clone.children)
+      // this.recurseCloneChildren(evt.clone.children)
 
       // console.log(evt.clone.children[0].children[1].innerText)
 
@@ -143,11 +151,14 @@ export default {
     // appendNode(clone) {},
     assignSection(sec, mode) {
       // debugger
-      var newObj = {
-        section: '111',
-        verbiage: this.cloneText[0],
-        subsections: []
-      }
+      // var newObj = {
+      //   section: '111',
+      //   verbiage: this.cloneText[0],
+      //   subsections: []
+      // }
+
+      var newObj = this.feeder[this.draggedFeederSec]
+
       var pos
       var arrSec = sec.split('.')
       var k = 0
@@ -183,11 +194,18 @@ export default {
     addFeeder(evt) {
       // alert('evt')
       var el = evt.to
+      var draggedItem = evt.item
       var testNode = 'el'
       var testNodeEl
+      var testForSec
       var sec
       var mode
+
       // debugger
+      console.log(draggedItem)
+      console.log(draggedItem.children[0].children[0].innerText)
+      console.log(el)
+
       if (el.children.length > 1) {
         if (evt.newIndex === 0) {
           testNodeEl = el.children[evt.newIndex]
@@ -204,16 +222,31 @@ export default {
           testNode = testNode + '.parentNode'
           testNodeEl = eval(testNode)
         } while (testNodeEl.nodeName != 'LI')
-        console.log(testNodeEl)
-        console.log(
-          testNodeEl.children[0].children[1].nextElementSibling.innerText
-        )
+
+        // Loop again until we get to an element id that starts
+        // with 'f-', which indicates we're at a feeder element, the
+        // first of which will be the section element.
+
         mode = 'subsection'
         // REFACTOR: Make this function universally available.
       }
       // debugger
+      // console.log('html collection dragged item')
+      // console.log(draggedItem)
+      // console.log(draggedItem.children)
+      // console.log(draggedItem.children.item(2))
+      // console.log(draggedItem.children.item(1))
+
       // Get the span holding the section number.
-      sec = testNodeEl.children[0].children[1].nextElementSibling.innerText
+      // var i = 0
+      // var liId = draggedItem.id
+      // var draggedSec = draggedItem.item('sec-' + draggedItem.id)
+      // var draggedSec = draggedItem.children[0].children[0].innerText
+      // debugger
+      console.log(testNodeEl)
+      sec = testNodeEl.children[0].children[1].innerText
+      this.draggedFeederSec = draggedItem.children[0].children[0].innerText
+
       this.assignSection(sec, mode)
       this.renumberX(this.lease)
     },

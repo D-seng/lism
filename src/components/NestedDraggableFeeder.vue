@@ -11,17 +11,17 @@
         :list2="feeder"
         :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
       >
-        <li v-for="el in list2" :key="el.section">
-          <v-card class="handle">
-            <span v-html="el.section" :id="el.id"></span>
-            <span v-html="el.verbiage" :id="el.id + 'v'"></span>
+        <li v-for="el in list2" :key="el.section" :id="el.id">
+          <div>
+            <p v-html="el.section" :id="'sec-' + el.id"></p>
+            <p v-html="el.verbiage" :id="'v-' + el.id"></p>
 
             <NestedDraggableFeeder
               :list2="el.subsections"
               @update-lse="updateLseHandler('subsequent')"
               @drag-data="setDataX"
             />
-          </v-card>
+          </div>
         </li>
       </draggable>
     </div>
@@ -131,15 +131,22 @@ li {
 }
 .chosen {
   background-color: beige;
+  height: 25px;
+  width: 200px;
+  color: gray;
+  font-style: italic;
 }
 .dropTarget {
   background-color: rgba(222, 236, 241, 0.808);
 }
-.handle {
-}
+
 .listSpan {
   margin-left: 20px;
 }
+.il {
+  display: inline;
+}
+
 .invisible {
   visibility: hidden;
   transition: visibility 1s;
