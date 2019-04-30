@@ -102,26 +102,6 @@ export default {
     }
   },
   methods: {
-    recurseCloneChildren(elChildren) {
-      this.arrChildren = []
-      // Loop through a level's children; if it has an LI child, add
-      // the child to the array
-      for (var i = 0; i < elChildren.length; i++) {
-        // this.cloneText[i] = elChildren[i].children[1].innerText
-        // console.log(this.cloneText[i])
-        // console.log(elChildren[i].children[1].innerText)
-
-        // console.log(elChildren[i])
-        // if (
-        //   elChildren[i].nextElementSibling ||
-        //   elChildren[i].previousElementSibling
-        // ) {
-        console.log(elChildren[i])
-        this.arrChildren.push(elChildren[i])
-        // }
-      }
-      this.recurseCloneChildren(this.arrChildren)
-    },
     dragData(evt) {
       console.log('dragData')
       console.log(evt.clone)
@@ -131,32 +111,9 @@ export default {
       console.log('aa')
       console.log(this.feeder[this.draggedFeederSec])
       console.log('bb')
-      // this.cloneText[i] = elChildren[i].children[1].innerText
-      // console.log(evt.clone.children)
-      // debugger
-      // Recurse through evt.clone, looking for ULs and LIs.
-      // DON'T RECURSE THE DOM. RECURSE THE FEEDER! THE LOGIC OF THE
-      // FEEDER IS FAR SIMPLER.
-      // this.recurseCloneChildren(evt.clone.children)
-
-      // console.log(evt.clone.children[0].children[1].innerText)
-
-      // alert('dragData')
-
-      // Try appendChild instead? No. Need to add the dragged item
-      // to this.lease and let draggable handle the rest.
-
-      // this.appendNode(evt.clone)
     },
-    // appendNode(clone) {},
-    assignSection(sec, mode) {
-      // debugger
-      // var newObj = {
-      //   section: '111',
-      //   verbiage: this.cloneText[0],
-      //   subsections: []
-      // }
 
+    assignSection(sec, mode) {
       var newObj = this.feeder[this.draggedFeederSec]
 
       var pos
@@ -188,7 +145,6 @@ export default {
           eval(pos).subsections.push(newObj)
       }
 
-      // console.log(eval(pos).subsections[0].verbiage)
       console.log(this.lease)
     },
     addFeeder(evt) {
@@ -197,7 +153,6 @@ export default {
       var draggedItem = evt.item
       var testNode = 'el'
       var testNodeEl
-      var testForSec
       var sec
       var mode
 
@@ -223,26 +178,10 @@ export default {
           testNodeEl = eval(testNode)
         } while (testNodeEl.nodeName != 'LI')
 
-        // Loop again until we get to an element id that starts
-        // with 'f-', which indicates we're at a feeder element, the
-        // first of which will be the section element.
-
         mode = 'subsection'
         // REFACTOR: Make this function universally available.
       }
-      // debugger
-      // console.log('html collection dragged item')
-      // console.log(draggedItem)
-      // console.log(draggedItem.children)
-      // console.log(draggedItem.children.item(2))
-      // console.log(draggedItem.children.item(1))
 
-      // Get the span holding the section number.
-      // var i = 0
-      // var liId = draggedItem.id
-      // var draggedSec = draggedItem.item('sec-' + draggedItem.id)
-      // var draggedSec = draggedItem.children[0].children[0].innerText
-      // debugger
       console.log(testNodeEl)
       sec = testNodeEl.children[0].children[1].innerText
       this.draggedFeederSec = draggedItem.children[0].children[0].innerText
@@ -261,17 +200,16 @@ export default {
       })
     },
     getFeeders(id) {
-      // debugger
       EventServiceAlt.getFeeder(id).then(response => {
         this.idFeeder = response.data._id
-        // debugger
+
         this.feeder = response.data.verbiage
         this.intent = response.data.intent
         console.log(this.intent)
         console.log(JSON.stringify(response.data.verbiage))
       })
     },
-    addCloneEl() {},
+
     updateLse(id, newContent) {
       alert(newContent)
       this.newContent = newContent
@@ -279,14 +217,12 @@ export default {
       this.schArr(this.lease, this.elId)
     },
     syncContent(newCont) {
-      // alert(newCont)
-
       this.newContent = newCont
       this.schArr(this.lease, this.elId)
     },
     schArr(arr, elId) {
       var pos
-      // debugger
+
       console.log(elId)
       var result = arr.filter(item => item.id === elId)
       if (result.length === 0) {
@@ -297,8 +233,6 @@ export default {
           }
         }
       } else {
-        //tinker with the if-else here to handle the section correctly.
-        // debugger
         var sec = result[0].section.toString()
         console.log(sec)
         if (sec.length > 1) {
@@ -310,14 +244,13 @@ export default {
         } else {
           pos = 'this.lease[' + sec + ']'
         }
-        console.log(pos)
-        // console.log(eval(pos))
+        // console.log(pos)
+
         var el = eval(pos)
         console.log(el)
 
         el.verbiage = this.newContent
-        // var elDom = document.getElementById(elId)
-        // elDom.innerText = this.newContent
+
         console.log(el)
       }
     },

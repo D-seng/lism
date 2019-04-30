@@ -3,7 +3,7 @@
     <div>
       <draggable
         class="dragArea"
-        chosenClass="chosen"
+        dragClasss="chosen"
         ghostClass="dropTarget"
         animation="250"
         tag="ul"
