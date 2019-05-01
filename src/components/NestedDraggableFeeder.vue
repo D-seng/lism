@@ -13,7 +13,7 @@
       >
         <li v-for="el in list2" :key="el.section" :id="el.id">
           <div>
-            <p v-html="el.section" :id="'sec-' + el.id"></p>
+            <p :id="'sec-' + el.id"><span></span>{{ el.section }}</p>
             <p v-html="el.verbiage" :id="'v-' + el.id"></p>
 
             <NestedDraggableFeeder

@@ -103,19 +103,15 @@ export default {
   },
   methods: {
     dragData(evt) {
-      console.log('dragData')
-      console.log(evt.clone)
-      console.log(evt.clone.children[0].children[0].innerText)
-      this.draggedFeederSec = evt.clone.children[0].children[0].innerText
+      // console.log('dragData')
+      // console.log(evt.clone)
+      // console.log(evt.clone.children[0].children[0].innerText)
       // debugger
-      console.log('aa')
-      console.log(this.feeder[this.draggedFeederSec])
-      console.log('bb')
+      this.draggedFeederSec = evt.clone.children[0].children[0].innerText
     },
-
     assignSection(sec, mode) {
+      debugger
       var newObj = this.feeder[this.draggedFeederSec]
-
       var pos
       var arrSec = sec.split('.')
       var k = 0
@@ -130,8 +126,7 @@ export default {
       } else {
         pos = 'this.lease'
       }
-      // debugger
-
+      debugger
       console.log(pos)
 
       switch (mode) {
@@ -150,24 +145,25 @@ export default {
     addFeeder(evt) {
       // alert('evt')
       var el = evt.to
-      var draggedItem = evt.item
       var testNode = 'el'
       var testNodeEl
       var sec
       var mode
 
-      // debugger
-      console.log(draggedItem)
-      console.log(draggedItem.children[0].children[0].innerText)
-      console.log(el)
+      debugger
+      console.log('evt.to')
+      console.log(evt.to)
+      this.draggedFeederSec = evt.clone.children[0].children[0].innerText
 
       if (el.children.length > 1) {
         if (evt.newIndex === 0) {
           testNodeEl = el.children[evt.newIndex]
+
           mode = 'next'
           // testNode = testNode + '.parentNode'
         } else {
-          testNodeEl = el.children[evt.newIndex + 1]
+          testNodeEl = el.parentNode
+
           mode = 'prev'
           // testNode = testNode + '.childNode'
         }
@@ -181,15 +177,14 @@ export default {
         mode = 'subsection'
         // REFACTOR: Make this function universally available.
       }
-
+      debugger
       console.log(testNodeEl)
-      sec = testNodeEl.children[0].children[1].innerText
-      this.draggedFeederSec = draggedItem.children[0].children[0].innerText
+      sec = testNodeEl.children[0].children[0].innerText
+      // this.draggedFeederSec = draggedItem.children[0].children[0].innerText
 
       this.assignSection(sec, mode)
       this.renumberX(this.lease)
     },
-
     getLease(id) {
       EventServiceAlt.getSnippet(id).then(response => {
         this.id = response.data._id
@@ -209,7 +204,6 @@ export default {
         console.log(JSON.stringify(response.data.verbiage))
       })
     },
-
     updateLse(id, newContent) {
       alert(newContent)
       this.newContent = newContent
@@ -221,8 +215,8 @@ export default {
       this.schArr(this.lease, this.elId)
     },
     schArr(arr, elId) {
+      debugger
       var pos
-
       console.log(elId)
       var result = arr.filter(item => item.id === elId)
       if (result.length === 0) {
@@ -327,6 +321,7 @@ export default {
       }
     },
     renumberX(reorder) {
+      alert('renumberX')
       var subsequent = false
       var prefix = ''
       this.renumber(reorder, subsequent, prefix)

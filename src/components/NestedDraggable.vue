@@ -11,15 +11,11 @@
         @change="renumberHandler"
         @end="addToStackHandler"
         @add="addHandler"
+        @input="fireInput"
         :group="{ name: 'lseAndFeeder', put: true }"
       >
         <li v-for="el in list" :key="el.section" :id="el.id">
           <div>
-            <font-awesome-icon
-              icon="edit"
-              class="fas fa-edit fa-lg il"
-              @click="editX(el.section, el.verbiage, el.id)"
-            />
             <!-- <div :id="el.id + 'sv'" class="m-fadeOut">
               <font-awesome-icon
                 icon="save"
@@ -27,13 +23,20 @@
                 @click="updateLseHandler(el.id)"
               />
             </div> -->
-            <p :id="'sec-' + el.id" primary-title>{{ el.section }}</p>
-            <span
+            <p :id="'sec-' + el.id">
+              <span
+                ><font-awesome-icon
+                  icon="edit"
+                  class="fas fa-edit fa-lg il"
+                  @click="editX(el.section, el.verbiage, el.id)"/></span
+              >{{ el.section }}
+            </p>
+            <p
               v-html="el.verbiage"
               contenteditable="true"
               :id="el.id"
               @input="showSaveIcon(el.id)"
-            ></span>
+            ></p>
           </div>
 
           <NestedDraggable
@@ -88,6 +91,9 @@ export default {
   },
 
   methods: {
+    fireInput() {
+      alert('input')
+    },
     showSaveIcon(id) {
       // alert(id)
       var el = document.getElementById(id + 'sv')
