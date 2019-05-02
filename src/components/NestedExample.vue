@@ -92,8 +92,7 @@ export default {
       lev: null,
       newContent: '',
       cloneText: [],
-      arrChildren: [],
-      draggedFeederSec: ''
+      arrChildren: []
     }
   },
   computed: {
@@ -148,21 +147,42 @@ export default {
       var testNode = 'el'
       var testNodeEl
       var sec
-      var mode
+      // var mod
+      // var droppedSec
 
+      // FIND WHERE THE DRAGGED ITEM WAS DROPPED.
+      // THEN SPLICE THIS.LEASE TO ACCOMMODATE IT.
       debugger
       console.log('evt.to')
       console.log(evt.to)
-      this.draggedFeederSec = evt.clone.children[0].children[0].innerText
+      if (evt.to.nodeName === 'UL') {
+      } else {
+      }
+      //   // for (var i = 0; i < evt.to.length; i++) {
+      //   //   if (evt.to[i].id === evt.item.id) {
+      //   //     droppedSec = i
+      //   //     break
+      //   //   }
+      //   }
+      //   if (droppedSec === 0) {
+      //     this.draggedFeederSec = 0
+      //   } else {
+      //     this.draggedFeederSec =
+      //       evt.clone.children[i].children[0].children[0].innerText
+      //   } else {
+      //     this.draggedFeederSec =
+      //       evt.clone.children[0].children[0].innerText
+      //   }
+      // }
 
-      if (el.children.length > 1) {
+      if (evt.to.children.length > 1) {
         if (evt.newIndex === 0) {
-          testNodeEl = el.children[evt.newIndex]
+          testNodeEl = evt.to.children[evt.newIndex]
 
           mode = 'next'
           // testNode = testNode + '.parentNode'
         } else {
-          testNodeEl = el.parentNode
+          testNodeEl = evt.to.parentNode
 
           mode = 'prev'
           // testNode = testNode + '.childNode'
