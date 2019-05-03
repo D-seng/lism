@@ -111,32 +111,34 @@ export default {
     assignSection(sec, mode) {
       debugger
       var newObj = this.feeder[this.draggedFeederSec]
-      var pos
-      var arrSec = sec.split('.')
-      var k = 0
-      if (sec.length > 1) {
-        pos = 'this.lease[' + arrSec[0] + ']'
-        for (k = 1; k < arrSec.length; k++) {
-          pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
-        }
-        //Get last occurrence of '[' and lop it and the remaindr of the string off.
-        var lastBracket = pos.lastIndexOf('[')
-        pos = pos.substring(0, lastBracket)
-      } else {
-        pos = 'this.lease'
-      }
-      debugger
-      console.log(pos)
 
-      switch (mode) {
-        case 'next':
-          eval(pos + '.splice(arrSec[k],0, newObj)')
-          break
-        case 'prev':
-          eval(pos + '.splice(arrSec[k],0, newObj)')
-          break
-        default:
-          eval(pos).subsections.push(newObj)
+      if (mode === 'root') {
+        this.lease.splice(sec, 0, newObj)
+      } else {
+        var pos
+        var arrSec = sec.split('.')
+        var k = 0
+        if (sec.length > 1) {
+          pos = 'this.lease[' + arrSec[0] + ']'
+          for (k = 1; k < arrSec.length; k++) {
+            pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
+          }
+          //Get last occurrence of '[' and lop it and the remaindr of the string off.
+          var lastBracket = pos.lastIndexOf('[')
+          pos = pos.substring(0, lastBracket)
+        }
+        debugger
+        console.log(pos)
+        switch (mode) {
+          case 'next':
+            eval(pos + '.splice(arrSec[k],0, newObj)')
+            break
+          case 'prev':
+            eval(pos + '.splice(arrSec[k],0, newObj)')
+            break
+          default:
+            eval(pos).subsections.push(newObj)
+        }
       }
 
       console.log(this.lease)
@@ -147,7 +149,7 @@ export default {
       var testNode = 'el'
       var testNodeEl
       var sec
-      // var mod
+      var mode
       // var droppedSec
 
       // FIND WHERE THE DRAGGED ITEM WAS DROPPED.
@@ -156,7 +158,32 @@ export default {
       console.log('evt.to')
       console.log(evt.to)
       if (evt.to.nodeName === 'UL') {
+        sec = evt.newIndex
+        mode = 'root'
       } else {
+        if (evt.to.children.length > 1) {
+          if (evt.newIndex === 0) {
+            testNodeEl = evt.to.children[evt.newIndex]
+            mode = 'firstSs'
+            // testNode = testNode + '.parentNode'
+          } else {
+            testNodeEl = evt.to.parentNode
+
+            mode = 'afterFirstSs'
+            // testNode = testNode + '.childNode'
+          }
+        } else {
+          // debugger
+          do {
+            testNode = testNode + '.parentNode'
+            testNodeEl = eval(testNode)
+          } while (testNodeEl.nodeName != 'LI')
+
+          mode = 'subsection'
+          // REFACTOR: Make this function universally available.
+        }
+        console.log(testNodeEl)
+        sec = testNodeEl.children[0].children[0].innerText
       }
       //   // for (var i = 0; i < evt.to.length; i++) {
       //   //   if (evt.to[i].id === evt.item.id) {
@@ -175,31 +202,8 @@ export default {
       //   }
       // }
 
-      if (evt.to.children.length > 1) {
-        if (evt.newIndex === 0) {
-          testNodeEl = evt.to.children[evt.newIndex]
-
-          mode = 'next'
-          // testNode = testNode + '.parentNode'
-        } else {
-          testNodeEl = evt.to.parentNode
-
-          mode = 'prev'
-          // testNode = testNode + '.childNode'
-        }
-      } else {
-        // debugger
-        do {
-          testNode = testNode + '.parentNode'
-          testNodeEl = eval(testNode)
-        } while (testNodeEl.nodeName != 'LI')
-
-        mode = 'subsection'
-        // REFACTOR: Make this function universally available.
-      }
       debugger
-      console.log(testNodeEl)
-      sec = testNodeEl.children[0].children[0].innerText
+
       // this.draggedFeederSec = draggedItem.children[0].children[0].innerText
 
       this.assignSection(sec, mode)
