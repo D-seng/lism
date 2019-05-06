@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>
+    <div :id="counter">
       <draggable
         class="dragArea"
         chosenClass="chosen"
@@ -48,6 +48,7 @@
             @update-lse="updateLseHandler('subsequent')"
             group="lseAndFeeder"
             @add-feeder="addHandlerX"
+            :counter="'subsequent-' + el.id"
           />
         </li>
       </draggable>
@@ -74,19 +75,24 @@ export default {
     ce: {
       required: true,
       type: Boolean
+    },
+    counter: {
+      required: true,
+      type: String
     }
   },
   components: {
     draggable
   },
-  computed: {},
+
   data() {
     return {
       isActive: false,
       randomId: null,
       lse: this.list,
       id: '',
-      content: ''
+      content: '',
+      idCounter: this.idCounter++
     }
   },
 
@@ -174,6 +180,9 @@ export default {
       this.$emit('show-editor', sectionLocked, verbiageLocked, elIdLocked)
       this.$emit('force-rerender')
     }
+  },
+  countDepth: function() {
+    return (this.idCounter += 1)
   }
 }
 </script>

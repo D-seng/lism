@@ -26,6 +26,7 @@
             @show-editor="edit"
             @update-lse="updateLse"
             @add-feeder="addFeeder"
+            :counter="this.start"
           />
         </v-flex>
       </v-layout>
@@ -92,7 +93,8 @@ export default {
       lev: null,
       newContent: '',
       cloneText: [],
-      arrChildren: []
+      arrChildren: [],
+      start: 'start'
     }
   },
   computed: {
@@ -130,11 +132,11 @@ export default {
         debugger
         console.log(pos)
         switch (mode) {
-          case 'next':
-            eval(pos + '.splice(arrSec[k],0, newObj)')
+          case 'notFirst':
+            eval(pos + '.splice(arrSec[k - 1],0, newObj)')
             break
-          case 'prev':
-            eval(pos + '.splice(arrSec[k],0, newObj)')
+          case 'firstOfMany':
+            eval(pos + '.splice(arrSec[k - 1],0, newObj)')
             break
           default:
             eval(pos).subsections.push(newObj)
@@ -145,62 +147,68 @@ export default {
     },
     addFeeder(evt) {
       // alert('evt')
-      var el = evt.to
-      var testNode = 'el'
-      var testNodeEl
+
+      var testNode = 'evt.item'
+      var subsectionEl
       var sec
       var mode
       // var droppedSec
 
       // FIND WHERE THE DRAGGED ITEM WAS DROPPED.
       // THEN SPLICE THIS.LEASE TO ACCOMMODATE IT.
-      debugger
-      console.log('evt.to')
-      console.log(evt.to)
-      if (evt.to.nodeName === 'UL') {
+      // debugger
+
+      // console.log('evt.item')
+      // console.log(evt.item)
+
+      // console.log('evt.item.parentNode')
+      // console.log(evt.item.parentNode)
+
+      console.log('evt.item.parentNode.children')
+      console.log(evt.item.parentNode.children)
+
+      console.log('evt.item.parentNode.parentNode')
+      console.log(evt.item.parentNode.parentNode)
+
+      // console.log('evt.clone')
+      // console.log(evt.clone)
+
+      // console.log('evt.clone.parentNode')
+      // console.log(evt.clone.parentNode)
+
+      // var secTest
+      // var notAlone = evt.to.nextElementSibling || evt.to.previousElementSibling
+
+      // debugger
+      if (evt.item.parentNode.parentNode.id === 'start') {
         sec = evt.newIndex
         mode = 'root'
       } else {
-        if (evt.to.children.length > 1) {
-          if (evt.newIndex === 0) {
-            testNodeEl = evt.to.children[evt.newIndex]
-            mode = 'firstSs'
-            // testNode = testNode + '.parentNode'
+        if (evt.item.parentNode.children[0] === evt.item) {
+          subsectionEl = evt.item.parentNode
+          if (evt.item.parentNode.children.length === 1) {
+            mode = 'firstOfOne'
           } else {
-            testNodeEl = evt.to.parentNode
-
-            mode = 'afterFirstSs'
-            // testNode = testNode + '.childNode'
+            mode = 'firstOfMany'
           }
         } else {
-          // debugger
+          var pNodes = ''
+          // THIS DOESN'T LOOK LIKE A PARENT RELATIONSHIP.
+          // A COMBINATION OF PARENT AND SIBLING.
+          // BECAUSE WE ALREADY HANDLED FIRST OF MANY, LOOK TO
+          // PREVIOUSELEMENTSIBLING AS AN ANCHOR.
           do {
-            testNode = testNode + '.parentNode'
-            testNodeEl = eval(testNode)
-          } while (testNodeEl.nodeName != 'LI')
+            pNodes = pNodes + '.parentNode'
+            subsectionEl = eval('evt.item' + pNodes)
+          } while (subsectionEl.nodeName != 'LI')
 
-          mode = 'subsection'
+          mode = 'notFirst'
           // REFACTOR: Make this function universally available.
+
+          console.log(subsectionEl)
+          sec = subsectionEl.children[0].children[0].innerText
         }
-        console.log(testNodeEl)
-        sec = testNodeEl.children[0].children[0].innerText
       }
-      //   // for (var i = 0; i < evt.to.length; i++) {
-      //   //   if (evt.to[i].id === evt.item.id) {
-      //   //     droppedSec = i
-      //   //     break
-      //   //   }
-      //   }
-      //   if (droppedSec === 0) {
-      //     this.draggedFeederSec = 0
-      //   } else {
-      //     this.draggedFeederSec =
-      //       evt.clone.children[i].children[0].children[0].innerText
-      //   } else {
-      //     this.draggedFeederSec =
-      //       evt.clone.children[0].children[0].innerText
-      //   }
-      // }
 
       debugger
 
@@ -353,6 +361,7 @@ export default {
       this.listKey += 1
     },
     renumber(arr, subsequent, prefix) {
+      debugger
       var arrNextLevel = []
       arr.forEach(function(item) {
         if (subsequent === false) {
