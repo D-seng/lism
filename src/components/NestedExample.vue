@@ -110,33 +110,57 @@ export default {
       // debugger
       this.draggedFeederSec = evt.clone.children[0].children[0].innerText
     },
-    assignSection(sec, mode) {
+    assignSection(sec, mode, evtItem) {
       debugger
-      var newObj = this.feeder[this.draggedFeederSec]
+      var pos
+      var lastBracket
+      var arrSec = []
+      var k
+      var evtItemSec = evtItem.children[0].children[0].innerText
+      //MAKE THIS ANALOGOUS TO PULLING THE LEASE SECTION.
+      // THEN REFACTOR INTO ONE FUNCTION.
+
+      if (evtItemSec.indexOf('.') === -1) {
+        this.feeder[evtItemSec]
+      } else {
+        k = 0
+
+        pos = 'this.feeder[' + arrSec[0] + ']'
+        for (k = 1; k < arrSec.length; k++) {
+          pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
+
+          //Get last occurrence of '[' and lop it and the remaindr of the string off.
+          // lastBracket = pos.lastIndexOf('[')
+          // pos = pos.substring(0, lastBracket)
+        }
+      }
+      var fObj = eval(pos)
+      console.log(fObj)
+
+      var newObj = {}
 
       if (mode === 'root') {
         this.lease.splice(sec, 0, newObj)
       } else {
-        var pos
-        var arrSec = sec.split('.')
-        var k = 0
-        if (sec.length > 1) {
-          pos = 'this.lease[' + arrSec[0] + ']'
-          for (k = 1; k < arrSec.length; k++) {
-            pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
-          }
+        arrSec = sec.split('.')
+        k = 0
+
+        pos = 'this.feeder[' + arrSec[0] + ']'
+        for (k = 1; k < arrSec.length; k++) {
+          pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
+
           //Get last occurrence of '[' and lop it and the remaindr of the string off.
-          var lastBracket = pos.lastIndexOf('[')
+          lastBracket = pos.lastIndexOf('[')
           pos = pos.substring(0, lastBracket)
         }
-        debugger
+        // debugger
         console.log(pos)
         switch (mode) {
           case 'notFirst':
             eval(pos + '.splice(arrSec[k - 1],0, newObj)')
             break
           case 'firstOfMany':
-            eval(pos + '.splice(arrSec[k - 1],0, newObj)')
+            eval(pos + '.splice(arrSec[k - 1] - 1,0, newObj)')
             break
           default:
             eval(pos).subsections.push(newObj)
@@ -185,36 +209,39 @@ export default {
         mode = 'root'
       } else {
         if (evt.item.parentNode.children[0] === evt.item) {
-          subsectionEl = evt.item.parentNode
           if (evt.item.parentNode.children.length === 1) {
             mode = 'firstOfOne'
+            subsectionEl = evt.item.parentNode
+            sec = subsectionEl.children[0].children[0].innerText
           } else {
             mode = 'firstOfMany'
+            subsectionEl = evt.item.nextElementSibling
+            sec = subsectionEl.children[0].children[0].innerText
           }
         } else {
-          var pNodes = ''
+          // var pNodes = ''
           // THIS DOESN'T LOOK LIKE A PARENT RELATIONSHIP.
           // A COMBINATION OF PARENT AND SIBLING.
           // BECAUSE WE ALREADY HANDLED FIRST OF MANY, LOOK TO
           // PREVIOUSELEMENTSIBLING AS AN ANCHOR.
-          do {
-            pNodes = pNodes + '.parentNode'
-            subsectionEl = eval('evt.item' + pNodes)
-          } while (subsectionEl.nodeName != 'LI')
+          // do {
+          // pNodes = pNodes + '.parentNode'
+          subsectionEl = evt.item.previousElementSibling
+          // } while (subsectionEl.nodeName != 'LI')
 
           mode = 'notFirst'
-          // REFACTOR: Make this function universally available.
-
-          console.log(subsectionEl)
           sec = subsectionEl.children[0].children[0].innerText
+          // REFACTOR: Make this function universally available.
         }
+        debugger
+        console.log(subsectionEl)
       }
 
       debugger
 
       // this.draggedFeederSec = draggedItem.children[0].children[0].innerText
-
-      this.assignSection(sec, mode)
+      console.log(evt.item)
+      this.assignSection(sec, mode, evt.item)
       this.renumberX(this.lease)
     },
     getLease(id) {
@@ -247,7 +274,7 @@ export default {
       this.schArr(this.lease, this.elId)
     },
     schArr(arr, elId) {
-      debugger
+      // debugger
       var pos
       console.log(elId)
       var result = arr.filter(item => item.id === elId)
@@ -353,7 +380,7 @@ export default {
       }
     },
     renumberX(reorder) {
-      alert('renumberX')
+      // alert('renumberX')
       var subsequent = false
       var prefix = ''
       this.renumber(reorder, subsequent, prefix)
@@ -361,7 +388,7 @@ export default {
       this.listKey += 1
     },
     renumber(arr, subsequent, prefix) {
-      debugger
+      // debugger
       var arrNextLevel = []
       arr.forEach(function(item) {
         if (subsequent === false) {
