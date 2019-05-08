@@ -111,7 +111,7 @@ export default {
       this.draggedFeederSec = evt.clone.children[0].children[0].innerText
     },
     assignSection(sec, mode, evtItem) {
-      debugger
+      // debugger
       var pos
       var lastBracket
       var arrSec = []
@@ -121,10 +121,10 @@ export default {
       // THEN REFACTOR INTO ONE FUNCTION.
 
       if (evtItemSec.indexOf('.') === -1) {
-        this.feeder[evtItemSec]
+        pos = this.feeder[evtItemSec]
       } else {
         k = 0
-
+        arrSec = evtItemSec.split('.')
         pos = 'this.feeder[' + arrSec[0] + ']'
         for (k = 1; k < arrSec.length; k++) {
           pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
@@ -134,10 +134,17 @@ export default {
           // pos = pos.substring(0, lastBracket)
         }
       }
+
+      // debugger
       var fObj = eval(pos)
       console.log(fObj)
 
-      var newObj = {}
+      var newObj = {
+        id: fObj.id,
+        section: fObj.section,
+        subsections: fObj.subsections,
+        verbiage: fObj.verbiage
+      }
 
       if (mode === 'root') {
         this.lease.splice(sec, 0, newObj)
@@ -145,15 +152,15 @@ export default {
         arrSec = sec.split('.')
         k = 0
 
-        pos = 'this.feeder[' + arrSec[0] + ']'
+        pos = 'this.lease[' + arrSec[0] + ']'
         for (k = 1; k < arrSec.length; k++) {
           pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
 
           //Get last occurrence of '[' and lop it and the remaindr of the string off.
-          lastBracket = pos.lastIndexOf('[')
-          pos = pos.substring(0, lastBracket)
         }
         // debugger
+        lastBracket = pos.lastIndexOf('[')
+        pos = pos.substring(0, lastBracket)
         console.log(pos)
         switch (mode) {
           case 'notFirst':
@@ -166,7 +173,7 @@ export default {
             eval(pos).subsections.push(newObj)
         }
       }
-
+      pos = null
       console.log(this.lease)
     },
     addFeeder(evt) {
@@ -193,6 +200,12 @@ export default {
 
       console.log('evt.item.parentNode.parentNode')
       console.log(evt.item.parentNode.parentNode)
+
+      debugger
+
+      console.log(evt.item)
+      evt.item = 'aaaa'
+      console.log(evt.item)
 
       // console.log('evt.clone')
       // console.log(evt.clone)
@@ -233,11 +246,11 @@ export default {
           sec = subsectionEl.children[0].children[0].innerText
           // REFACTOR: Make this function universally available.
         }
-        debugger
+        // debugger
         console.log(subsectionEl)
       }
 
-      debugger
+      // debugger
 
       // this.draggedFeederSec = draggedItem.children[0].children[0].innerText
       console.log(evt.item)
@@ -254,6 +267,7 @@ export default {
       })
     },
     getFeeders(id) {
+      // debugger
       EventServiceAlt.getFeeder(id).then(response => {
         this.idFeeder = response.data._id
 
@@ -261,6 +275,7 @@ export default {
         this.intent = response.data.intent
         console.log(this.intent)
         console.log(JSON.stringify(response.data.verbiage))
+        this.renumberX(this.feeder)
       })
     },
     updateLse(id, newContent) {
