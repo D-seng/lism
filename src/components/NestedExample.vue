@@ -204,8 +204,8 @@ export default {
       debugger
 
       console.log(evt.item)
-      evt.item = 'aaaa'
-      console.log(evt.item)
+      // evt.item = 'aaaa'
+      // console.log(evt.item)
 
       // console.log('evt.clone')
       // console.log(evt.clone)

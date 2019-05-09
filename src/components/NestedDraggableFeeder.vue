@@ -11,7 +11,12 @@
         :list2="feeder"
         :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
       >
-        <li v-for="el in list2" :key="el.section" :id="el.id">
+        <li
+          v-for="el in list2"
+          :key="el.section"
+          :id="el.id"
+          @dblclick="dblClickHandler"
+        >
           <div>
             <p :id="'sec-' + el.id"><span></span>{{ el.section }}</p>
             <p v-html="el.verbiage" :id="'v-' + el.id"></p>
@@ -60,6 +65,11 @@ export default {
   },
 
   methods: {
+    dblClickHandler(evt) {
+      evt.stopPropagation()
+      console.log('dblClickHandler')
+      console.log(evt.target)
+    },
     setDataX(evt) {
       // alert('setDataX')
       console.log('setDataX')
