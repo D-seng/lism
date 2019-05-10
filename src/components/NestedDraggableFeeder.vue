@@ -25,6 +25,7 @@
               :list2="el.subsections"
               @update-lse="updateLseHandler('subsequent')"
               @drag-data="setDataX"
+              @single-element="singleElementX"
             />
           </div>
         </li>
@@ -60,15 +61,30 @@ export default {
       randomId: null,
       feeder: this.list2,
       id: '',
-      content: ''
+      content: '',
+      evtTarget: null
     }
   },
 
   methods: {
+    singleElementX(eT) {
+      // debugger
+      this.$emit('single-element', eT)
+    },
     dblClickHandler(evt) {
       evt.stopPropagation()
       console.log('dblClickHandler')
+      console.log(evt)
       console.log(evt.target)
+
+      if (evt.target.id.substring(0, 4) != 'sec-') {
+        this.evtTarget = evt.target.previousElementSibling
+      } else {
+        this.evtTarget = evt.target
+      }
+      console.log(this.evtTarget.innerText)
+      // debugger
+      this.$emit('single-element', this.evtTarget)
     },
     setDataX(evt) {
       // alert('setDataX')
