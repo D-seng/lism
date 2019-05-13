@@ -3,13 +3,12 @@
     <div>
       <draggable
         class="dragArea"
-        dragClasss="chosen"
-        ghostClass="dropTarget"
         animation="250"
         tag="ul"
-        @start="setDataX"
         :list2="feeder"
         :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
+        @clone="cloneHandler"
+        setData="setData"
       >
         <li
           v-for="el in list2"
@@ -17,15 +16,16 @@
           :id="el.id"
           @dblclick="dblClickHandler"
         >
-          <div>
-            <p :id="'sec-' + el.id"><span></span>{{ el.section }}</p>
-            <p v-html="el.verbiage" :id="'v-' + el.id"></p>
-
+          <div style="block">
+            <div :id="'p-' + el.id">
+              <p :id="'sec-' + el.id"><span></span>{{ el.section }}</p>
+              <p v-html="el.verbiage" :id="'v-' + el.id"></p>
+            </div>
             <NestedDraggableFeeder
               :list2="el.subsections"
               @update-lse="updateLseHandler('subsequent')"
-              @drag-data="setDataX"
               @single-element="singleElementX"
+              :feederMaster="feederMaster"
             />
           </div>
         </li>
@@ -49,6 +49,10 @@ export default {
     list2: {
       required: true,
       type: Array
+    },
+    feederMaster: {
+      required: false,
+      type: Array
     }
   },
   components: {
@@ -62,37 +66,146 @@ export default {
       feeder: this.list2,
       id: '',
       content: '',
-      evtTarget: null
+      evTarget: null,
+      singleMode: false,
+      sectionToClone: null,
+      slicedFeeder: []
     }
   },
-
   methods: {
-    singleElementX(eT) {
+    sliceOffDblClickSubsections() {},
+    cloneHandler(evt) {
       // debugger
-      this.$emit('single-element', eT)
-    },
-    dblClickHandler(evt) {
-      evt.stopPropagation()
-      console.log('dblClickHandler')
-      console.log(evt)
-      console.log(evt.target)
+      var pos
+      var arrSec
+      var k
+      //RUN A SECTION FINDER, AS ON NESTEDEXAMPLE.VUE.
+      console.log('this.feederMaster')
+      console.log(this.feederMaster)
 
-      if (evt.target.id.substring(0, 4) != 'sec-') {
-        this.evtTarget = evt.target.previousElementSibling
-      } else {
-        this.evtTarget = evt.target
+      if (this.singleMode) {
+        if (this.sectionToClone.indexOf('.') === -1) {
+          pos = this.feederMaster[this.sectionToClone]
+        } else {
+          k = 0
+          arrSec = this.sectionToClone.split('.')
+          pos = 'this.feederMaster[' + arrSec[0] + ']'
+          for (k = 1; k < arrSec.length; k++) {
+            pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
+          }
+        }
+
+        // debugger
+        console.log(pos)
+        var fObj = eval(pos)
+        console.log(fObj)
+
+        var newObj = {
+          id: fObj.id,
+          section: fObj.section,
+          verbiage: fObj.verbiage
+        }
+        if (this.singleMode) {
+          newObj.subsections = []
+        } else {
+          newObj.subsections = fObj.subsections
+        }
+        // evt.item = this.evTarget
+        // evt.dragged = this.evTarget
+        // console.log('single mode evt.item')
+        // console.log(evt.item)
+        // evt.dragged = this.evTarget
+        // evt.draggedRect = this.evTarget
+        // evt.clone = this.evTarget
+        // evt.related = this.evTarget
       }
-      console.log(this.evtTarget.innerText)
+      console.log(evt.clone)
+      evt.clone = newObj
+      console.log('evt.clone')
+      console.log(evt.clone)
+    },
+    startHandler(evt) {
+      // alert(ev.item)
       // debugger
-      this.$emit('single-element', this.evtTarget)
+      // console.log('evt.item')
+      // console.log(evt.item)
+      // this.evTarget.className = 'dropTarget'
     },
-    setDataX(evt) {
-      // alert('setDataX')
-      console.log('setDataX')
-      // console.log(evt.clone)
-      // console.log(evt.clone.innerText)
-      this.$emit('drag-data', evt)
+    setData() {
+      alert('set data')
     },
+    singleElementX(ev) {
+      // debugger
+      this.$emit('single-element', ev)
+    },
+    dblClickHandler(ev) {
+      debugger
+      console.log(this.feeder)
+      console.log(this.feederMaster)
+      debugger
+      ev.stopPropagation()
+      this.singleMode = !this.singleMode
+
+      if (this.singleMode) {
+        ev.target.parentNode.style =
+          'background-color: rgba(180, 100, 100, 0.808)'
+        // elExtra.style = 'background-color: rgba(180, 100, 100, 0.808)'
+      } else {
+        ev.target.parentNode.style = 'background-color: none'
+        // elExtra.style = 'background-color: none'
+      }
+      debugger
+      var pos
+      var arrSec
+      var k
+
+      if (ev.target.id.substring(0, 4) != 'sec-') {
+        this.sectionToClone = ev.target.previousElementSibling.innerText
+      } else {
+        this.sectionToClone = ev.target.innerText
+      }
+
+      if (this.sectionToClone.indexOf('.') === -1) {
+        pos = this.feederMaster[this.sectionToClone]
+      } else {
+        k = 0
+        arrSec = this.sectionToClone.split('.')
+        pos = 'this.feeder[' + arrSec[0] + ']'
+        for (k = 1; k < arrSec.length; k++) {
+          pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
+        }
+      }
+      var posSS = pos + 'subsections[0]'
+      console.log(eval('this.feeder[2]'))
+
+      debugger
+      eval(pos)
+      // eval(posSS + '.splice(arrSec[k - 1] - 1, 0)')
+      console.log(this.feeder)
+
+      this.evTarget = ev.target
+      console.log(this.evTarget)
+      console.log('this.feederMaster')
+      console.log(this.feederMaster)
+
+      // debugger
+      // if (ev.target.id.substring(0, 4) != 'sec-') {
+      //   this.evTarget = ev.target.previousElementSibling
+      // } else {
+      //   this.evTarget = ev.target
+      // }
+      // ev.item = this.evTarget
+      // console.log(this.evTarget.innerText)
+      // debugger
+      this.$emit('single-element', ev)
+    },
+    // setDataX(evt) {
+    //   // alert('setDataX')
+    //   console.log('setDataX')
+    //   // console.log(evt.clone)
+    //   // console.log(evt.clone.innerText)
+    //   this.$emit('drag-data', evt)
+    // },
     showSaveIcon(id) {
       // alert(id)
       var el = document.getElementById(id + 'sv')
@@ -117,6 +230,7 @@ export default {
     },
     updateLseHandler(elId) {
       // alert(elId)
+      debugger
       if (elId !== 'subsequent') {
         elIdLocked = elId
       }

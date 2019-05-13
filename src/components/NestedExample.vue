@@ -8,9 +8,9 @@
           <h4>{{ intent }}</h4>
           <NestedDraggableFeeder
             :list2="feeder"
+            :feederMaster="feeder"
             :ce="false"
             @show-editor="edit"
-            @drag-data="dragData"
             @single-element="singleElement"
           />
         </v-flex>
@@ -26,7 +26,7 @@
             :ce="true"
             @show-editor="edit"
             @update-lse="updateLse"
-            @add-feeder="addFeeder"
+            @find-landing="findLanding"
             :counter="this.start"
           />
         </v-flex>
@@ -96,7 +96,8 @@ export default {
       cloneText: [],
       arrChildren: [],
       start: 'start',
-      evtT: null
+      sinsingleModegle: false,
+      evt: null
     }
   },
   computed: {
@@ -105,27 +106,29 @@ export default {
     }
   },
   methods: {
-    singleElement(evtT) {
-      alert(evtT.innerText)
-      this.evtT = evtT
+    singleElement(ev) {
+      // debugger
+      var elExtra
+      this.singleMode = !this.singleMode
+      console.log(this.singleMode)
+
+      console.log(ev.target)
+      console.log(ev.target)
 
       //change class to show selection
     },
-    dragData(evt) {
-      // console.log('dragData')
-      // console.log(evt.clone)
-      // console.log(evt.clone.children[0].children[0].innerText)
-      // debugger
-      this.draggedFeederSec = evt.clone.children[0].children[0].innerText
-    },
-    assignSection(sec, mode) {
+    // dragData(evt) {
+    //   // debugger
+    //   this.draggedFeederSec = evt.clone.children[0].children[0].innerText
+    // },
+    assignSection(sec, mode, evt) {
       // debugger
       var pos
       var lastBracket
       var arrSec = []
       var k
-      var evtItemSec = this.evtT.children[0].children[0].innerText
-      this.evtT = null
+      var evtItemSec = evt.item.children[0].children[0].children[0].innerText
+      this.single = false
       //MAKE THIS ANALOGOUS TO PULLING THE LEASE SECTION.
       // THEN REFACTOR INTO ONE FUNCTION.
 
@@ -137,10 +140,6 @@ export default {
         pos = 'this.feeder[' + arrSec[0] + ']'
         for (k = 1; k < arrSec.length; k++) {
           pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
-
-          //Get last occurrence of '[' and lop it and the remaindr of the string off.
-          // lastBracket = pos.lastIndexOf('[')
-          // pos = pos.substring(0, lastBracket)
         }
       }
 
@@ -151,8 +150,12 @@ export default {
       var newObj = {
         id: fObj.id,
         section: fObj.section,
-        subsections: fObj.subsections,
         verbiage: fObj.verbiage
+      }
+      if (this.singleItem) {
+        newObj.subsections = []
+      } else {
+        newObj.subsections = fObj.subsections
       }
 
       if (mode === 'root') {
@@ -167,7 +170,7 @@ export default {
 
           //Get last occurrence of '[' and lop it and the remaindr of the string off.
         }
-        // debugger
+        debugger
         lastBracket = pos.lastIndexOf('[')
         pos = pos.substring(0, lastBracket)
         console.log(pos)
@@ -185,78 +188,57 @@ export default {
       pos = null
       console.log(this.lease)
     },
-    addFeeder(evt) {
+    findLanding(evt) {
       //  IF statement to see if this.evtT has value.
       // If it does, then run through the below.
       // If it doesn't, then skip it and go straight to the assignSection call.
 
-      if (this.evtT != null) {
-        var subsectionEl
-        var sec
-        var mode
+      var subsectionEl
+      var sec
+      var mode
 
-        console.log('evt.item.parentNode.children')
-        console.log(evt.item.parentNode.children)
+      console.log('evt.item.parentNode.children')
+      console.log(evt.item.parentNode.children)
 
-        console.log('evt.item.parentNode.parentNode')
-        console.log(evt.item.parentNode.parentNode)
+      console.log('evt.item.parentNode.parentNode')
+      console.log(evt.item.parentNode.parentNode)
 
-        debugger
+      debugger
 
-        console.log(evt.item)
-        // evt.item = 'aaaa'
-        // console.log(evt.item)
+      console.log(evt.item)
 
-        // console.log('evt.clone')
-        // console.log(evt.clone)
-
-        // console.log('evt.clone.parentNode')
-        // console.log(evt.clone.parentNode)
-
-        // var secTest
-        // var notAlone = evt.to.nextElementSibling || evt.to.previousElementSibling
-
-        // debugger
-        if (evt.item.parentNode.parentNode.id === 'start') {
-          sec = evt.newIndex
-          mode = 'root'
-        } else {
-          if (evt.item.parentNode.children[0] === evt.item) {
-            if (evt.item.parentNode.children.length === 1) {
-              mode = 'firstOfOne'
-              subsectionEl = evt.item.parentNode
-              sec = subsectionEl.children[0].children[0].innerText
-            } else {
-              mode = 'firstOfMany'
-              subsectionEl = evt.item.nextElementSibling
-              sec = subsectionEl.children[0].children[0].innerText
-            }
-          } else {
-            // var pNodes = ''
-            // THIS DOESN'T LOOK LIKE A PARENT RELATIONSHIP.
-            // A COMBINATION OF PARENT AND SIBLING.
-            // BECAUSE WE ALREADY HANDLED FIRST OF MANY, LOOK TO
-            // PREVIOUSELEMENTSIBLING AS AN ANCHOR.
-            // do {
-            // pNodes = pNodes + '.parentNode'
-            subsectionEl = evt.item.previousElementSibling
-            // } while (subsectionEl.nodeName != 'LI')
-
-            mode = 'notFirst'
+      // debugger
+      if (evt.item.parentNode.parentNode.id === 'start') {
+        sec = evt.newIndex
+        mode = 'root'
+      } else {
+        if (evt.item.parentNode.children[0] === evt.item) {
+          if (evt.item.parentNode.children.length === 1) {
+            mode = 'firstOfOne'
+            subsectionEl = evt.item.parentNode
             sec = subsectionEl.children[0].children[0].innerText
-            // REFACTOR: Make this function universally available.
+          } else {
+            mode = 'firstOfMany'
+            subsectionEl = evt.item.nextElementSibling
+            sec = subsectionEl.children[0].children[0].innerText
           }
-          // debugger
-          console.log(subsectionEl)
+        } else {
+          subsectionEl = evt.item.previousElementSibling
+          // } while (subsectionEl.nodeName != 'LI')
+
+          mode = 'notFirst'
+          sec = subsectionEl.children[0].children[0].innerText
+          // REFACTOR: Make this function universally available.
         }
+        // debugger
+        console.log(subsectionEl)
 
         // debugger
 
         // this.draggedFeederSec = draggedItem.children[0].children[0].innerText
         console.log(evt.item)
-        this.evtT = evt.item
       }
-      this.assignSection(sec, mode)
+      this.assignSection(sec, mode, evt)
       this.renumberX(this.lease)
     },
     getLease(id) {
@@ -469,4 +451,8 @@ export default {
   }
 }
 </script>
-<style scoped></style>
+<style scoped>
+.selected {
+  background-color: rgba(180, 100, 100, 0.808);
+}
+</style>

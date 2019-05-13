@@ -47,7 +47,7 @@
             @show-editor="editX('subsequent')"
             @update-lse="updateLseHandler('subsequent')"
             group="lseAndFeeder"
-            @add-feeder="addHandlerX"
+            @find-landing="findLandingX"
             :counter="'subsequent-' + el.id"
           />
         </li>
@@ -107,11 +107,11 @@ export default {
       el.className = '.m-fadeIn'
       console.log(el)
     },
-    addHandlerX(evt) {
-      this.$emit('add-feeder', evt)
+    findLandingX(evt) {
+      this.$emit('find-landing', evt)
     },
     addHandler(evt) {
-      this.$emit('add-feeder', evt)
+      this.$emit('find-landing', evt)
       // alert('addHandler')
       // console.log('evt.item')
       // console.log(evt.item)
