@@ -85,7 +85,7 @@ export default {
 
       if (this.singleMode) {
         if (this.sectionToClone.indexOf('.') === -1) {
-          pos = this.feederMaster[this.sectionToClone]
+          pos = this.feeder[this.sectionToClone]
         } else {
           k = 0
           arrSec = this.sectionToClone.split('.')
@@ -142,7 +142,7 @@ export default {
       debugger
       console.log(this.feeder)
       console.log(this.feederMaster)
-      debugger
+      // debugger
       ev.stopPropagation()
       this.singleMode = !this.singleMode
 
@@ -166,17 +166,25 @@ export default {
       }
 
       if (this.sectionToClone.indexOf('.') === -1) {
-        pos = this.feederMaster[this.sectionToClone]
+        pos = this.feeder[this.sectionToClone]
       } else {
         k = 0
-        arrSec = this.sectionToClone.split('.')
-        pos = 'this.feeder[' + arrSec[0] + ']'
-        for (k = 1; k < arrSec.length; k++) {
-          pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
-        }
+        //Get number after the last '.' This is the nested feeder section.
+        debugger
+        var lastIndex = this.sectionToClone.lastIndexOf('.')
+        var secLength = this.sectionToClone.length - lastIndex - 1
+        debugger
+        var secClone = this.sectionToClone.substr(lastIndex + 1, secLength) - 1
+        // arrSec = this.sectionToClone.split('.')
+        pos = 'this.feeder[' + secClone + ']'
+        // for (k = 1; k < arrSec.length; k++) {
+        //   pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
+        // }
       }
+      debugger
       var posSS = pos + 'subsections[0]'
-      console.log(eval('this.feeder[2]'))
+      console.log(eval('this.feeder[secClone]'))
+      console.log(eval('this.feeder[secClone].subsections'))
 
       debugger
       eval(pos)
