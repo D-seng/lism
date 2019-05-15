@@ -7,9 +7,7 @@
         tag="ul"
         :list2="feeder"
         :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
-        @change="startHandler"
-        :key="displayKey"
-      >
+        @change="startHandler"     >
         <li
           v-for="el in list2"
           :key="el.section"
@@ -25,7 +23,7 @@
               :list2="el.subsections"
               @update-lse="updateLseHandler('subsequent')"
               @single-element="singleElementX"
-              :feederMaster="feederMaster"
+           
             />
           </div>
         </li>
@@ -148,61 +146,44 @@ export default {
       this.$emit('single-element', ev)
     },
     dblClickHandler(ev) {
-      console.log(this.feeder)
-      console.log(this.feederMaster)
-
       ev.stopPropagation()
-
-      var pos
-      var arrSec
       var k
+      var secClone
+      var lev1 = false
       this.singleMode = !this.singleMode
-
       if (this.singleMode) {
-        if (ev.target.id.substring(0, 4) != 'sec-') {
-          this.sectionToClone = ev.target.previousElementSibling.innerText
-        } else {
-          this.sectionToClone = ev.target.innerText
-        }
-
-        if (this.sectionToClone.indexOf('.') === -1) {
-          pos = this.feeder[this.sectionToClone]
-        } else {
-          k = 0
-
-          var lastIndex = this.sectionToClone.lastIndexOf('.')
-          var secLength = this.sectionToClone.length - lastIndex - 1
-
-          var secClone =
-            this.sectionToClone.substr(lastIndex + 1, secLength) - 1
-
-          pos = 'this.feeder[' + secClone + ']'
-        }
-        this.droppedSections = secClone
-
-        // this.evTarget = ev.target
-
-        ev.target.parentNode.style =
+         ev.target.parentNode.style =
           'background-color: rgba(180, 100, 100, 0.808)'
-        debugger
-        console.log('this.feeder')
-        console.log(this.feeder)
-        this.feederH = cloneDeep(this.feeder)
-        this.feeder[this.droppedSections].subsections = []
-        // elExtra.style = 'background-color: rgba(180, 100, 100, 0.808)'
+            if (ev.target.id.substring(0, 4) != 'sec-') {
+              this.sectionToClone = ev.target.previousElementSibling.innerText
+            } else {
+              this.sectionToClone = ev.target.innerText
+            }
+        if (this.sectionToClone.indexOf('.') === -1) {
+          lev1 = true
+           secClone = this.sectionToClone * 1
+            this.feederH = cloneDeep(this.list2)
+            this.list2[secClone].subsections = []
+            } else {
+              k = 0
+              var lastIndex = this.sectionToClone.lastIndexOf('.')
+              var secLength = this.sectionToClone.length - lastIndex - 1
+              secClone =
+                this.sectionToClone.substr(lastIndex + 1, secLength) - 1
+                this.feeder[this.droppedSections].subsections = []
+              this.feederH = cloneDeep(this.feeder)
+            }
+          this.droppedSections = secClone
       } else {
         ev.target.parentNode.style = 'background-color: none'
-        debugger
-        console.log('this.feederH')
-        console.log(this.feederH)
+      if (lev1) {
+          this.list2 = cloneDeep(this.feederH)
+      } else {
         this.feeder[this.droppedSections].subsections = cloneDeep(
-          this.feederH[this.droppedSections].subsections
-        )
-        console.log(this.feeder)
-        this.displayKey += 1
-        // elExtra.style = 'background-color: none'
+          this.feederH[this.droppedSections].subsections)
       }
-
+      }
+      
       this.$emit('single-element', ev)
     },
     // setDataX(evt) {

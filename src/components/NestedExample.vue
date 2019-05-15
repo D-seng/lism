@@ -8,7 +8,7 @@
           <h4>{{ intent }}</h4>
           <NestedDraggableFeeder
             :list2="feeder"
-            :feederMaster="feeder"
+         
             :ce="false"
             @show-editor="edit"
             @single-element="singleElement"
