@@ -7,8 +7,8 @@
         tag="ul"
         :list2="feeder"
         :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
-        @clone="cloneHandler"
-        setData="setData"
+        @change="startHandler"
+        :key="displayKey"
       >
         <li
           v-for="el in list2"
@@ -36,6 +36,7 @@
 <script>
 // v-bind:class="{ active: isActive }"
 import draggable from 'vuedraggable'
+import cloneDeep from 'lodash.clonedeep'
 
 const uuidv1 = require('uuid/v1')
 var sectionLocked = null
@@ -64,12 +65,16 @@ export default {
       isActive: false,
       randomId: null,
       feeder: this.list2,
+      feederM: this.feederMaster,
+      feederH: [],
       id: '',
       content: '',
       evTarget: null,
       singleMode: false,
       sectionToClone: null,
-      slicedFeeder: []
+      slicedFeeder: [],
+      droppedSections: null,
+      displayKey: 0
     }
   },
   methods: {
@@ -125,6 +130,10 @@ export default {
       console.log(evt.clone)
     },
     startHandler(evt) {
+      alert('startHandler')
+      if (this.singleMode) {
+      }
+
       // alert(ev.item)
       // debugger
       // console.log('evt.item')
@@ -139,72 +148,61 @@ export default {
       this.$emit('single-element', ev)
     },
     dblClickHandler(ev) {
-      debugger
       console.log(this.feeder)
       console.log(this.feederMaster)
-      // debugger
-      ev.stopPropagation()
-      this.singleMode = !this.singleMode
 
-      if (this.singleMode) {
-        ev.target.parentNode.style =
-          'background-color: rgba(180, 100, 100, 0.808)'
-        // elExtra.style = 'background-color: rgba(180, 100, 100, 0.808)'
-      } else {
-        ev.target.parentNode.style = 'background-color: none'
-        // elExtra.style = 'background-color: none'
-      }
-      debugger
+      ev.stopPropagation()
+
       var pos
       var arrSec
       var k
+      this.singleMode = !this.singleMode
 
-      if (ev.target.id.substring(0, 4) != 'sec-') {
-        this.sectionToClone = ev.target.previousElementSibling.innerText
+      if (this.singleMode) {
+        if (ev.target.id.substring(0, 4) != 'sec-') {
+          this.sectionToClone = ev.target.previousElementSibling.innerText
+        } else {
+          this.sectionToClone = ev.target.innerText
+        }
+
+        if (this.sectionToClone.indexOf('.') === -1) {
+          pos = this.feeder[this.sectionToClone]
+        } else {
+          k = 0
+
+          var lastIndex = this.sectionToClone.lastIndexOf('.')
+          var secLength = this.sectionToClone.length - lastIndex - 1
+
+          var secClone =
+            this.sectionToClone.substr(lastIndex + 1, secLength) - 1
+
+          pos = 'this.feeder[' + secClone + ']'
+        }
+        this.droppedSections = secClone
+
+        // this.evTarget = ev.target
+
+        ev.target.parentNode.style =
+          'background-color: rgba(180, 100, 100, 0.808)'
+        debugger
+        console.log('this.feeder')
+        console.log(this.feeder)
+        this.feederH = cloneDeep(this.feeder)
+        this.feeder[this.droppedSections].subsections = []
+        // elExtra.style = 'background-color: rgba(180, 100, 100, 0.808)'
       } else {
-        this.sectionToClone = ev.target.innerText
+        ev.target.parentNode.style = 'background-color: none'
+        debugger
+        console.log('this.feederH')
+        console.log(this.feederH)
+        this.feeder[this.droppedSections].subsections = cloneDeep(
+          this.feederH[this.droppedSections].subsections
+        )
+        console.log(this.feeder)
+        this.displayKey += 1
+        // elExtra.style = 'background-color: none'
       }
 
-      if (this.sectionToClone.indexOf('.') === -1) {
-        pos = this.feeder[this.sectionToClone]
-      } else {
-        k = 0
-        //Get number after the last '.' This is the nested feeder section.
-        debugger
-        var lastIndex = this.sectionToClone.lastIndexOf('.')
-        var secLength = this.sectionToClone.length - lastIndex - 1
-        debugger
-        var secClone = this.sectionToClone.substr(lastIndex + 1, secLength) - 1
-        // arrSec = this.sectionToClone.split('.')
-        pos = 'this.feeder[' + secClone + ']'
-        // for (k = 1; k < arrSec.length; k++) {
-        //   pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
-        // }
-      }
-      debugger
-      var posSS = pos + 'subsections[0]'
-      console.log(eval('this.feeder[secClone]'))
-      console.log(eval('this.feeder[secClone].subsections'))
-
-      debugger
-      eval(pos)
-      // eval(posSS + '.splice(arrSec[k - 1] - 1, 0)')
-      console.log(this.feeder)
-
-      this.evTarget = ev.target
-      console.log(this.evTarget)
-      console.log('this.feederMaster')
-      console.log(this.feederMaster)
-
-      // debugger
-      // if (ev.target.id.substring(0, 4) != 'sec-') {
-      //   this.evTarget = ev.target.previousElementSibling
-      // } else {
-      //   this.evTarget = ev.target
-      // }
-      // ev.item = this.evTarget
-      // console.log(this.evTarget.innerText)
-      // debugger
       this.$emit('single-element', ev)
     },
     // setDataX(evt) {
