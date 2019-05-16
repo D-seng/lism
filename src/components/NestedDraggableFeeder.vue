@@ -7,13 +7,13 @@
         tag="ul"
         :list1="feeder1"
         :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
-           >
+        :key="redrawKey"
+      >
         <li
-          v-for="el in list2"
+          v-for="el in feeder1"
           :key="el.section"
           :id="el.id"
           @dblclick="dblClickHandler"
-          
         >
           <div style="block">
             <div :id="'p-' + el.id">
@@ -21,10 +21,10 @@
               <p v-html="el.verbiage" :id="'v-' + el.id"></p>
             </div>
             <NestedDraggableFeeder
+              :list1="feeder1"
               :list2="el.subsections"
               @update-lse="updateLseHandler('subsequent')"
               @single-element="singleElementX"
-           
             />
           </div>
         </li>
@@ -58,16 +58,17 @@ export default {
   components: {
     draggable
   },
-  computed: {},
+
   data() {
     return {
       isActive: false,
       randomId: null,
       feeder1: this.list1,
       feeder2: this.list2,
-      feederH: [],
+      feederHold: [],
       id: '',
       content: '',
+      redrawKey: 0,
       evTarget: null,
       singleMode: false,
       sectionToClone: null,
@@ -76,6 +77,9 @@ export default {
       displayKey: 0,
       lev1: false
     }
+  },
+  computed: {
+    updatedList() {}
   },
   methods: {
     sliceOffDblClickSubsections() {},
@@ -151,42 +155,44 @@ export default {
       ev.stopPropagation()
       var k
       var secClone
-   
+
       this.singleMode = !this.singleMode
       if (this.singleMode) {
-         ev.target.parentNode.style =
+        ev.target.parentNode.style =
           'background-color: rgba(180, 100, 100, 0.808)'
-            if (ev.target.id.substring(0, 4) != 'sec-') {
-              this.sectionToClone = ev.target.previousElementSibling.innerText
-            } else {
-              this.sectionToClone = ev.target.innerText
-            }
+        if (ev.target.id.substring(0, 4) != 'sec-') {
+          this.sectionToClone = ev.target.previousElementSibling.innerText
+        } else {
+          this.sectionToClone = ev.target.innerText
+        }
         if (this.sectionToClone.indexOf('.') === -1) {
           this.lev1 = true
-           secClone = this.sectionToClone * 1
-            this.feederH = cloneDeep(this.list2)
-            this.feeder1[secClone].subsections = []
-            } else {
-              k = 0
-              var lastIndex = this.sectionToClone.lastIndexOf('.')
-              var secLength = this.sectionToClone.length - lastIndex - 1
-              secClone =
-                this.sectionToClone.substr(lastIndex + 1, secLength) - 1
-                this.feeder[this.droppedSections].subsections = []
-              this.feederH = cloneDeep(this.feeder)
-            }
-          this.droppedSections = secClone
+          secClone = this.sectionToClone * 1
+          this.feederHold = cloneDeep(this.list1)
+          this.list1[secClone].subsections = []
+        } else {
+          k = 0
+          var lastIndex = this.sectionToClone.lastIndexOf('.')
+          var secLength = this.sectionToClone.length - lastIndex - 1
+          secClone = this.sectionToClone.substr(lastIndex + 1, secLength) - 1
+          this.feeder[this.droppedSections].subsections = []
+          this.feederHold = cloneDeep(this.feeder)
+        }
+        this.droppedSections = secClone
       } else {
         ev.target.parentNode.style = 'background-color: none'
-      if (this.lev1) {
-          this.list2 = cloneDeep(this.feederH)
+
+        if (this.lev1) {
+          this.feeder1 = cloneDeep(this.feederHold)
           this.lev1 = false
-      } else {
-        this.feeder[this.droppedSections].subsections = cloneDeep(
-          this.feederH[this.droppedSections].subsections)
+        } else {
+          this.feeder[this.droppedSections].subsections = cloneDeep(
+            this.feederHold[this.droppedSections].subsections
+          )
+        }
       }
-      }
-      
+      this.redrawKey += 1
+      console.log(this.redrawKey)
       this.$emit('single-element', ev)
     },
     // setDataX(evt) {
@@ -220,7 +226,7 @@ export default {
     },
     updateLseHandler(elId) {
       // alert(elId)
-      debugger
+      // debugger
       if (elId !== 'subsequent') {
         elIdLocked = elId
       }

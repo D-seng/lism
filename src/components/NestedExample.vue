@@ -26,6 +26,7 @@
             @show-editor="edit"
             @update-lse="updateLse"
             @find-landing="findLanding"
+            :counter="this.counter"
           />
         </v-flex>
       </v-layout>
@@ -94,8 +95,8 @@ export default {
       cloneText: [],
       arrChildren: [],
       start: 'start',
-      sinsingleModegle: false,
-      evt: null
+      evt: null,
+      counter: '1a'
     }
   },
   computed: {
