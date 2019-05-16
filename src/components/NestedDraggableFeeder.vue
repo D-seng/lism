@@ -5,14 +5,15 @@
         class="dragArea"
         animation="250"
         tag="ul"
-        :list2="feeder"
+        :list1="feeder1"
         :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
-        @change="startHandler"     >
+           >
         <li
           v-for="el in list2"
           :key="el.section"
           :id="el.id"
           @dblclick="dblClickHandler"
+          
         >
           <div style="block">
             <div :id="'p-' + el.id">
@@ -45,11 +46,11 @@ export default {
   name: 'NestedDraggableFeeder',
   display: 'Clone',
   props: {
-    list2: {
-      required: true,
+    list1: {
+      required: false,
       type: Array
     },
-    feederMaster: {
+    list2: {
       required: false,
       type: Array
     }
@@ -62,8 +63,8 @@ export default {
     return {
       isActive: false,
       randomId: null,
-      feeder: this.list2,
-      feederM: this.feederMaster,
+      feeder1: this.list1,
+      feeder2: this.list2,
       feederH: [],
       id: '',
       content: '',
@@ -72,7 +73,8 @@ export default {
       sectionToClone: null,
       slicedFeeder: [],
       droppedSections: null,
-      displayKey: 0
+      displayKey: 0,
+      lev1: false
     }
   },
   methods: {
@@ -149,7 +151,7 @@ export default {
       ev.stopPropagation()
       var k
       var secClone
-      var lev1 = false
+   
       this.singleMode = !this.singleMode
       if (this.singleMode) {
          ev.target.parentNode.style =
@@ -160,10 +162,10 @@ export default {
               this.sectionToClone = ev.target.innerText
             }
         if (this.sectionToClone.indexOf('.') === -1) {
-          lev1 = true
+          this.lev1 = true
            secClone = this.sectionToClone * 1
             this.feederH = cloneDeep(this.list2)
-            this.list2[secClone].subsections = []
+            this.feeder1[secClone].subsections = []
             } else {
               k = 0
               var lastIndex = this.sectionToClone.lastIndexOf('.')
@@ -176,8 +178,9 @@ export default {
           this.droppedSections = secClone
       } else {
         ev.target.parentNode.style = 'background-color: none'
-      if (lev1) {
+      if (this.lev1) {
           this.list2 = cloneDeep(this.feederH)
+          this.lev1 = false
       } else {
         this.feeder[this.droppedSections].subsections = cloneDeep(
           this.feederH[this.droppedSections].subsections)

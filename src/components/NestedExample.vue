@@ -7,9 +7,8 @@
           <RetrieveFeeders @get-feeders="getFeeders"></RetrieveFeeders>
           <h4>{{ intent }}</h4>
           <NestedDraggableFeeder
-            :list2="feeder"
-         
-            :ce="false"
+            :list1="feeder"
+            :list2="bFeeder"
             @show-editor="edit"
             @single-element="singleElement"
           />
@@ -27,7 +26,6 @@
             @show-editor="edit"
             @update-lse="updateLse"
             @find-landing="findLanding"
-            :counter="this.start"
           />
         </v-flex>
       </v-layout>
@@ -101,8 +99,8 @@ export default {
     }
   },
   computed: {
-    bLease() {
-      return this.lease
+    bFeeder() {
+      return this.feeder
     }
   },
   methods: {
@@ -170,7 +168,7 @@ export default {
 
           //Get last occurrence of '[' and lop it and the remaindr of the string off.
         }
-        debugger
+        //debugger
         lastBracket = pos.lastIndexOf('[')
         pos = pos.substring(0, lastBracket)
         console.log(pos)
@@ -203,7 +201,7 @@ export default {
       console.log('evt.item.parentNode.parentNode')
       console.log(evt.item.parentNode.parentNode)
 
-      debugger
+      //debugger
 
       console.log(evt.item)
 
