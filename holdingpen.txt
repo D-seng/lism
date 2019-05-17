@@ -40,3 +40,46 @@
     </div>
 
      :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
+
+     cloneHandler(evt) {
+      // debugger
+      var pos
+      var arrSec
+      var k
+      //RUN A SECTION FINDER, AS ON NESTEDEXAMPLE.VUE.
+      console.log('this.feederMaster')
+      console.log(this.feederMaster)
+
+      if (this.singleMode) {
+        if (this.sectionToClone.indexOf('.') === -1) {
+          pos = this.feeder[this.sectionToClone]
+        } else {
+          k = 0
+          arrSec = this.sectionToClone.split('.')
+          pos = 'this.feederMaster[' + arrSec[0] + ']'
+          for (k = 1; k < arrSec.length; k++) {
+            pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
+          }
+        }
+
+        // debugger
+        console.log(pos)
+        var fObj = eval(pos)
+        console.log(fObj)
+
+        var newObj = {
+          id: fObj.id,
+          section: fObj.section,
+          verbiage: fObj.verbiage
+        }
+        if (this.singleMode) {
+          newObj.subsections = []
+        } else {
+          newObj.subsections = fObj.subsections
+        }
+      }
+      console.log(evt.clone)
+      evt.clone = newObj
+      console.log('evt.clone')
+      console.log(evt.clone)
+    },

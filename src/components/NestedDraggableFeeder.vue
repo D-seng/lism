@@ -10,7 +10,7 @@
         :key="redrawKey"
       >
         <li
-          v-for="el in feeder1"
+          v-for="el in liveList"
           :key="el.section"
           :id="el.id"
           @dblclick="dblClickHandler"
@@ -21,8 +21,7 @@
               <p v-html="el.verbiage" :id="'v-' + el.id"></p>
             </div>
             <NestedDraggableFeeder
-              :list1="feeder1"
-              :list2="el.subsections"
+              :list1="el.subsections"
               @update-lse="updateLseHandler('subsequent')"
               @single-element="singleElementX"
             />
@@ -49,10 +48,6 @@ export default {
     list1: {
       required: false,
       type: Array
-    },
-    list2: {
-      required: false,
-      type: Array
     }
   },
   components: {
@@ -75,75 +70,78 @@ export default {
       slicedFeeder: [],
       droppedSections: null,
       displayKey: 0,
-      lev1: false
+      lev1: false,
+      alteredList1: []
     }
   },
   computed: {
-    updatedList() {}
+    liveList() {
+      if (this.singleMode) {
+        return this.alteredList1
+      } else {
+        return this.list1
+      }
+    }
   },
   methods: {
-    sliceOffDblClickSubsections() {},
-    cloneHandler(evt) {
+    styleNode(ev) {
+      if (this.singleMode) {
+        ev.target.parentNode.style =
+          'background-color: rgba(180, 100, 100, 0.808)'
+      } else {
+        ev.target.parentNode.style = 'background-color: none'
+      }
+    },
+    retrieveSecToClone(ev) {
+      if (ev.target.id.substring(0, 4) != 'sec-') {
+        return ev.target.previousElementSibling.innerText
+      } else {
+        return ev.target.innerText
+      }
+    },
+    dblClickHandler(ev) {
+      alert('dblClickHandler')
+      ev.stopPropagation()
       // debugger
-      var pos
-      var arrSec
-      var k
-      //RUN A SECTION FINDER, AS ON NESTEDEXAMPLE.VUE.
-      console.log('this.feederMaster')
-      console.log(this.feederMaster)
+
+      this.singleMode = !this.singleMode
+
+      this.styleNode(ev)
 
       if (this.singleMode) {
+        this.sectionToClone = this.retrieveSecToClone(ev)
         if (this.sectionToClone.indexOf('.') === -1) {
-          pos = this.feeder[this.sectionToClone]
+          this.lev1 = true
+          // this.feederHold = cloneDeep(this.list1)
+          var cList = cloneDeep(this.list1)
+          cList[this.sectionToClone * 1].subsections = []
+          this.alteredList1 = cList
         } else {
-          k = 0
-          arrSec = this.sectionToClone.split('.')
-          pos = 'this.feederMaster[' + arrSec[0] + ']'
-          for (k = 1; k < arrSec.length; k++) {
-            pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
-          }
+          var lastIndex = this.sectionToClone.lastIndexOf('.')
+          var secLength = this.sectionToClone.length - lastIndex - 1
+          this.droppedSections =
+            this.sectionToClone.substr(lastIndex + 1, secLength) - 1
+          this.alteredList1 = this.alteredList1[
+            this.droppedSections
+          ].subsections = []
         }
 
-        // debugger
-        console.log(pos)
-        var fObj = eval(pos)
-        console.log(fObj)
-
-        var newObj = {
-          id: fObj.id,
-          section: fObj.section,
-          verbiage: fObj.verbiage
-        }
-        if (this.singleMode) {
-          newObj.subsections = []
-        } else {
-          newObj.subsections = fObj.subsections
-        }
-        // evt.item = this.evTarget
-        // evt.dragged = this.evTarget
-        // console.log('single mode evt.item')
-        // console.log(evt.item)
-        // evt.dragged = this.evTarget
-        // evt.draggedRect = this.evTarget
-        // evt.clone = this.evTarget
-        // evt.related = this.evTarget
+        // this.droppedSections = secClone
+        // } else {
+        //   if (this.lev1) {
+        //     this.feeder1 = cloneDeep(this.feederHold)
+        //     this.lev1 = false
+        //   } else {
+        //     this.feeder[this.droppedSections].subsections = cloneDeep(
+        //       this.feederHold[this.droppedSections].subsections
+        //     )
+        //   }
       }
-      console.log(evt.clone)
-      evt.clone = newObj
-      console.log('evt.clone')
-      console.log(evt.clone)
+      // this.redrawKey += 1
+      // console.log(this.redrawKey)
+      this.$emit('single-element', ev)
     },
-    startHandler(evt) {
-      alert('startHandler')
-      if (this.singleMode) {
-      }
 
-      // alert(ev.item)
-      // debugger
-      // console.log('evt.item')
-      // console.log(evt.item)
-      // this.evTarget.className = 'dropTarget'
-    },
     setData() {
       alert('set data')
     },
@@ -151,50 +149,7 @@ export default {
       // debugger
       this.$emit('single-element', ev)
     },
-    dblClickHandler(ev) {
-      ev.stopPropagation()
-      var k
-      var secClone
 
-      this.singleMode = !this.singleMode
-      if (this.singleMode) {
-        ev.target.parentNode.style =
-          'background-color: rgba(180, 100, 100, 0.808)'
-        if (ev.target.id.substring(0, 4) != 'sec-') {
-          this.sectionToClone = ev.target.previousElementSibling.innerText
-        } else {
-          this.sectionToClone = ev.target.innerText
-        }
-        if (this.sectionToClone.indexOf('.') === -1) {
-          this.lev1 = true
-          secClone = this.sectionToClone * 1
-          this.feederHold = cloneDeep(this.list1)
-          this.list1[secClone].subsections = []
-        } else {
-          k = 0
-          var lastIndex = this.sectionToClone.lastIndexOf('.')
-          var secLength = this.sectionToClone.length - lastIndex - 1
-          secClone = this.sectionToClone.substr(lastIndex + 1, secLength) - 1
-          this.feeder[this.droppedSections].subsections = []
-          this.feederHold = cloneDeep(this.feeder)
-        }
-        this.droppedSections = secClone
-      } else {
-        ev.target.parentNode.style = 'background-color: none'
-
-        if (this.lev1) {
-          this.feeder1 = cloneDeep(this.feederHold)
-          this.lev1 = false
-        } else {
-          this.feeder[this.droppedSections].subsections = cloneDeep(
-            this.feederHold[this.droppedSections].subsections
-          )
-        }
-      }
-      this.redrawKey += 1
-      console.log(this.redrawKey)
-      this.$emit('single-element', ev)
-    },
     // setDataX(evt) {
     //   // alert('setDataX')
     //   console.log('setDataX')
@@ -253,6 +208,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 li {
   list-style-type: none;
