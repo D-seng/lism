@@ -5,9 +5,9 @@
         class="dragArea"
         animation="250"
         tag="ul"
-        :list1="feeder1"
+        :value="feeder"
         :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
-        :key="redrawKey"
+        @end="endHandler"
       >
         <li
           v-for="el in liveList"
@@ -24,6 +24,7 @@
               :list1="el.subsections"
               @update-lse="updateLseHandler('subsequent')"
               @single-element="singleElementX"
+              :reset="renderKey"
             />
           </div>
         </li>
@@ -32,7 +33,6 @@
   </div>
 </template>
 <script>
-// v-bind:class="{ active: isActive }"
 import draggable from 'vuedraggable'
 import cloneDeep from 'lodash.clonedeep'
 
@@ -54,36 +54,54 @@ export default {
     draggable
   },
 
+  // TO KEEP ORIGINAL COPY OF THE LIST, TRY SIMPLE STATE MANAGEMENT FROM SCRATCH.
+  // THE SEPARATE VUE INSTANCE MAY BE ENOUGHT. MAY NOT NEED VUEX.
+  // OR SIMPLY TRY USING A CONST, WHICH WON'T MUTATE. OR DOES VUEDRAGGABLE
+  // WHEN IT RE-RENDERS A LIST, ALSO RESET THE CONST IN THE VUE COMPONENT?
+  // MAYBE JUST STORE THE LIST ON APP.VUE.
   data() {
     return {
-      isActive: false,
-      randomId: null,
-      feeder1: this.list1,
-      feeder2: this.list2,
-      feederHold: [],
       id: '',
-      content: '',
       redrawKey: 0,
       evTarget: null,
       singleMode: false,
       sectionToClone: null,
-      slicedFeeder: [],
       droppedSections: null,
-      displayKey: 0,
       lev1: false,
-      alteredList1: []
+      alteredList1: [],
+      feeder: this.list1,
+      renderKey: 0,
+      repop: false,
+      lastList: [],
+      listObj
     }
   },
   computed: {
     liveList() {
+      // debugger
       if (this.singleMode) {
         return this.alteredList1
       } else {
-        return this.list1
+        if (this.repop) {
+          return this.lastList
+        } else {
+          return this.list1
+        }
       }
     }
   },
   methods: {
+    endHandler() {
+      // alert('endHandler')
+      // this.singleMode = !this.singleMode
+      console.log('this.list1')
+      console.log(this.list1)
+      console.log('this.lastLst')
+      console.log(this.lastList)
+
+      this.renderKey += 1
+    },
+
     styleNode(ev) {
       if (this.singleMode) {
         ev.target.parentNode.style =
@@ -100,7 +118,6 @@ export default {
       }
     },
     dblClickHandler(ev) {
-      alert('dblClickHandler')
       ev.stopPropagation()
       // debugger
 
@@ -117,14 +134,22 @@ export default {
           cList[this.sectionToClone * 1].subsections = []
           this.alteredList1 = cList
         } else {
+          // debugger
           var lastIndex = this.sectionToClone.lastIndexOf('.')
           var secLength = this.sectionToClone.length - lastIndex - 1
+
           this.droppedSections =
-            this.sectionToClone.substr(lastIndex + 1, secLength) - 1
-          this.alteredList1 = this.alteredList1[
-            this.droppedSections
-          ].subsections = []
+            this.sectionToClone.substr(lastIndex + 1, secLength) * 1 - 1
+          var tList = cloneDeep(this.list1)
+          this.lastList = cloneDeep(this.list1)
+          this.repop = true
+
+          tList[this.droppedSections].subsections = []
+
+          this.alteredList1 = cloneDeep(tList)
         }
+        console.log('listObj')
+        console.log(listObj.listOrig)
 
         // this.droppedSections = secClone
         // } else {

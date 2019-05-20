@@ -19,6 +19,10 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 // Vue.component('modal', {
 //   template: '#modal-template'
 // })
+const persistentList = {
+  pList: []
+}
+
 Vue.use(Vuetify)
 Vue.use(VueFilter)
 
@@ -28,7 +32,8 @@ new Vue({
   router,
   store,
   data: {
-    selectedSection: null
+    selectedSection: null,
+    persistentList
   },
   methods: {
     onShowModal() {
