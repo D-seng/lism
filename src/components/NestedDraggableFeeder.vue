@@ -40,6 +40,8 @@ const uuidv1 = require('uuid/v1')
 var sectionLocked = null
 var verbiageLocked = null
 var elIdLocked = null
+var currStorage = window.localStorage
+currStorage.setItem('myItem', 'Hello world')
 
 export default {
   name: 'NestedDraggableFeeder',
@@ -73,7 +75,11 @@ export default {
       renderKey: 0,
       repop: false,
       lastList: [],
-      listObj
+      locallist: localStorage.setItem('persistList', this.list1)
+
+      //https://www.tutorialsplane.com/vue-js-local-storage/
+      // Run the local storage on the create (or similar) event in the
+      // Vue life cycle.
     }
   },
   computed: {
@@ -91,6 +97,9 @@ export default {
     }
   },
   methods: {
+    mySetFunction: function() {
+      localStorage.setItem('myItem', this.list1)
+    },
     endHandler() {
       // alert('endHandler')
       // this.singleMode = !this.singleMode
@@ -148,8 +157,6 @@ export default {
 
           this.alteredList1 = cloneDeep(tList)
         }
-        console.log('listObj')
-        console.log(listObj.listOrig)
 
         // this.droppedSections = secClone
         // } else {
@@ -164,6 +171,8 @@ export default {
       }
       // this.redrawKey += 1
       // console.log(this.redrawKey)
+      console.log('locallist')
+      console.log(currStorage.getItem('this.locallist'))
       this.$emit('single-element', ev)
     },
 
