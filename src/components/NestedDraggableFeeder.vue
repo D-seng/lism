@@ -7,7 +7,6 @@
         tag="ul"
         :value="feeder"
         :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
-        @end="endHandler"
       >
         <li
           v-for="el in liveList"
@@ -24,6 +23,7 @@
               :list1="el.subsections"
               @update-lse="updateLseHandler('subsequent')"
               @single-element="singleElementX"
+              @force-renumber="forceRenumberX"
               :reset="renderKey"
             />
           </div>
@@ -40,8 +40,9 @@ const uuidv1 = require('uuid/v1')
 var sectionLocked = null
 var verbiageLocked = null
 var elIdLocked = null
-var currStorage = window.localStorage
-currStorage.setItem('myItem', 'Hello world')
+
+// var currStorage = window.localStorage
+// currStorage.setItem('myItem', 'Hello world')
 
 export default {
   name: 'NestedDraggableFeeder',
@@ -75,7 +76,7 @@ export default {
       renderKey: 0,
       repop: false,
       lastList: [],
-      locallist: localStorage.setItem('persistList', this.list1)
+      lsTest: 'ls test'
 
       //https://www.tutorialsplane.com/vue-js-local-storage/
       // Run the local storage on the create (or similar) event in the
@@ -97,18 +98,22 @@ export default {
     }
   },
   methods: {
+    cloneHandler(evt) {
+      console.log('evt.clone')
+      console.log(evt.clone)
+    },
     mySetFunction: function() {
       localStorage.setItem('myItem', this.list1)
     },
     endHandler() {
+      // this.$emit('force-renumber')
       // alert('endHandler')
       // this.singleMode = !this.singleMode
-      console.log('this.list1')
-      console.log(this.list1)
-      console.log('this.lastLst')
-      console.log(this.lastList)
-
-      this.renderKey += 1
+      // console.log('this.list1')
+      // console.log(this.list1)
+      // console.log('this.lastLst')
+      // console.log(this.lastList)
+      // this.renderKey += 1
     },
 
     styleNode(ev) {
@@ -128,6 +133,8 @@ export default {
     },
     dblClickHandler(ev) {
       ev.stopPropagation()
+
+      ev.clone = 'aaa'
       // debugger
 
       this.singleMode = !this.singleMode
@@ -168,11 +175,14 @@ export default {
         //       this.feederHold[this.droppedSections].subsections
         //     )
         //   }
+      } else {
+        debugger
+        this.$emit('force-renumber')
       }
       // this.redrawKey += 1
       // console.log(this.redrawKey)
-      console.log('locallist')
-      console.log(currStorage.getItem('this.locallist'))
+      console.log('store.state.list')
+      console.log(this.$store.state.list)
       this.$emit('single-element', ev)
     },
 
@@ -183,7 +193,7 @@ export default {
       // debugger
       this.$emit('single-element', ev)
     },
-
+    forceRenumberX() {},
     // setDataX(evt) {
     //   // alert('setDataX')
     //   console.log('setDataX')
@@ -239,7 +249,8 @@ export default {
       this.$emit('show-editor', sectionLocked, verbiageLocked, elIdLocked)
       this.$emit('force-rerender')
     }
-  }
+  },
+  mounted() {}
 }
 </script>
 

@@ -10,6 +10,8 @@
             :list1="feeder"
             @show-editor="edit"
             @single-element="singleElement"
+            @force-renumber="forceRenumber"
+            :key="listKey"
           />
         </v-flex>
         <v-flex xs6 :key="listKey">
@@ -248,6 +250,7 @@ export default {
         this.addToStack()
       })
     },
+
     getFeeders(id) {
       // debugger
       EventServiceAlt.getFeeder(id).then(response => {
@@ -257,6 +260,7 @@ export default {
         this.intent = response.data.intent
         console.log(this.intent)
         console.log(JSON.stringify(response.data.verbiage))
+        this.$store.commit('SET_LIST', this.feeder)
         this.renumberX(this.feeder)
       })
     },
@@ -376,8 +380,17 @@ export default {
         }
       }
     },
+    forceRenumber() {
+      // alert('forceRenumb')
+      debugger
+      console.log('this.feeder')
+      console.log(this.feeder)
+      this.renumberX(this.feeder)
+    },
+
     renumberX(reorder) {
       // alert('renumberX')
+
       var subsequent = false
       var prefix = ''
       this.renumber(reorder, subsequent, prefix)
