@@ -14,5 +14,9 @@ export default new Vuex.Store({
       state.list = value
     }
   },
-  actions: {}
+  actions: {
+    storeList({ state, commit }, value) {
+      commit('SET_LIST', value)
+    }
+  }
 })

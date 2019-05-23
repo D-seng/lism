@@ -11,7 +11,6 @@
             @show-editor="edit"
             @single-element="singleElement"
             @force-renumber="forceRenumber"
-            :key="listKey"
           />
         </v-flex>
         <v-flex xs6 :key="listKey">
@@ -382,10 +381,10 @@ export default {
     },
     forceRenumber() {
       // alert('forceRenumb')
-      debugger
+
       console.log('this.feeder')
       console.log(this.feeder)
-      this.renumberX(this.feeder)
+      this.renumberX(this.$store.state.list)
     },
 
     renumberX(reorder) {

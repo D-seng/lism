@@ -24,7 +24,6 @@
               @update-lse="updateLseHandler('subsequent')"
               @single-element="singleElementX"
               @force-renumber="forceRenumberX"
-              :reset="renderKey"
             />
           </div>
         </li>
@@ -165,6 +164,7 @@ export default {
           this.alteredList1 = cloneDeep(tList)
         }
 
+        this.$store.dispatch('storeList', this.list1)
         // this.droppedSections = secClone
         // } else {
         //   if (this.lev1) {
@@ -176,7 +176,6 @@ export default {
         //     )
         //   }
       } else {
-        debugger
         this.$emit('force-renumber')
       }
       // this.redrawKey += 1
@@ -193,13 +192,16 @@ export default {
       // debugger
       this.$emit('single-element', ev)
     },
-    forceRenumberX() {},
+    forceRenumberX() {
+      this.$emit('force-renumber')
+    },
     // setDataX(evt) {
     //   // alert('setDataX')
     //   console.log('setDataX')
     //   // console.log(evt.clone)
     //   // console.log(evt.clone.innerText)
     //   this.$emit('drag-data', evt)
+
     // },
     showSaveIcon(id) {
       // alert(id)
