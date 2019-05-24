@@ -191,7 +191,7 @@ export default {
       //  IF statement to see if this.evtT has value.
       // If it does, then run through the below.
       // If it doesn't, then skip it and go straight to the assignSection call.
-
+      // debugger
       var subsectionEl
       var sec
       var mode

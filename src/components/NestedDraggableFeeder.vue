@@ -24,6 +24,7 @@
               @update-lse="updateLseHandler('subsequent')"
               @single-element="singleElementX"
               @force-renumber="forceRenumberX"
+              :key="renderKey"
             />
           </div>
         </li>
@@ -67,7 +68,7 @@ export default {
       redrawKey: 0,
       evTarget: null,
       singleMode: false,
-      sectionToClone: null,
+      subjectSection: null,
       droppedSections: null,
       lev1: false,
       alteredList1: [],
@@ -104,16 +105,7 @@ export default {
     mySetFunction: function() {
       localStorage.setItem('myItem', this.list1)
     },
-    endHandler() {
-      // this.$emit('force-renumber')
-      // alert('endHandler')
-      // this.singleMode = !this.singleMode
-      // console.log('this.list1')
-      // console.log(this.list1)
-      // console.log('this.lastLst')
-      // console.log(this.lastList)
-      // this.renderKey += 1
-    },
+    endHandler() {},
 
     styleNode(ev) {
       if (this.singleMode) {
@@ -123,7 +115,7 @@ export default {
         ev.target.parentNode.style = 'background-color: none'
       }
     },
-    retrieveSecToClone(ev) {
+    retrieveSubjectSection(ev) {
       if (ev.target.id.substring(0, 4) != 'sec-') {
         return ev.target.previousElementSibling.innerText
       } else {
@@ -132,54 +124,39 @@ export default {
     },
     dblClickHandler(ev) {
       ev.stopPropagation()
-
-      ev.clone = 'aaa'
-      // debugger
-
       this.singleMode = !this.singleMode
-
       this.styleNode(ev)
 
       if (this.singleMode) {
-        this.sectionToClone = this.retrieveSecToClone(ev)
-        if (this.sectionToClone.indexOf('.') === -1) {
+        this.subjectSection = this.retrieveSubjectSection(ev)
+        this.$store.dispatch('storeList', this.list1)
+
+        if (this.subjectSection.indexOf('.') === -1) {
           this.lev1 = true
-          // this.feederHold = cloneDeep(this.list1)
           var cList = cloneDeep(this.list1)
-          cList[this.sectionToClone * 1].subsections = []
+          cList[this.subjectSection * 1].subsections = []
           this.alteredList1 = cList
         } else {
-          // debugger
-          var lastIndex = this.sectionToClone.lastIndexOf('.')
-          var secLength = this.sectionToClone.length - lastIndex - 1
+          // Refactor alert: Everything in this else block.
+          var lastIndex = this.subjectSection.lastIndexOf('.')
+          var secLength = this.subjectSection.length - lastIndex - 1
 
           this.droppedSections =
-            this.sectionToClone.substr(lastIndex + 1, secLength) * 1 - 1
+            this.subjectSection.substr(lastIndex + 1, secLength) * 1 - 1
           var tList = cloneDeep(this.list1)
           this.lastList = cloneDeep(this.list1)
           this.repop = true
-
           tList[this.droppedSections].subsections = []
-
           this.alteredList1 = cloneDeep(tList)
         }
+        this.renderKey += 1
 
-        this.$store.dispatch('storeList', this.list1)
-        // this.droppedSections = secClone
-        // } else {
-        //   if (this.lev1) {
-        //     this.feeder1 = cloneDeep(this.feederHold)
-        //     this.lev1 = false
-        //   } else {
-        //     this.feeder[this.droppedSections].subsections = cloneDeep(
-        //       this.feederHold[this.droppedSections].subsections
-        //     )
-        //   }
+        //Need to put truncated list into an object for cloning.
+        console.log('this.alteredList1')
+        console.log(this.alteredList1)
       } else {
         this.$emit('force-renumber')
       }
-      // this.redrawKey += 1
-      // console.log(this.redrawKey)
       console.log('store.state.list')
       console.log(this.$store.state.list)
       this.$emit('single-element', ev)
