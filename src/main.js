@@ -5,7 +5,12 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faGripLines, faEdit, faSave } from '@fortawesome/free-solid-svg-icons'
+import {
+  faGripLines,
+  faEdit,
+  faSave,
+  faMinus
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import Vuetify from 'vuetify'
@@ -13,6 +18,7 @@ import Vuetify from 'vuetify'
 library.add(faEdit)
 library.add(faGripLines)
 library.add(faSave)
+library.add(faMinus)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

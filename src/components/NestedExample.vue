@@ -13,21 +13,22 @@
             @force-renumber="forceRenumber"
           />
         </v-flex>
-        <v-flex xs6 :key="listKey">
+        <v-flex xs6 :key="listKey" id="top">
           <RetrieveLeases @get-lease="getLease"></RetrieveLeases>
           <v-btn @click="undo">Undo</v-btn>
           <v-btn @click="redo">Redo</v-btn>
-
-          <NestedDraggable
-            :list="lease"
-            @renumber-handler="renumberX(lease)"
-            @add-to-stack="addToStack"
-            :ce="true"
-            @show-editor="edit"
-            @update-lse="updateLse"
-            @find-landing="findLanding"
-            :counter="this.counter"
-          />
+          <div id="top">
+            <NestedDraggable
+              :list="lease"
+              @renumber-handler="renumberX(lease)"
+              @add-to-stack="addToStack"
+              :ce="true"
+              @show-editor="edit"
+              @update-lse="updateLse"
+              @find-landing="findLanding"
+              :counter="this.counter"
+            />
+          </div>
         </v-flex>
       </v-layout>
     </v-container>
@@ -61,6 +62,7 @@ import cloneDeep from 'lodash.clonedeep'
 import Editor from './Editor.vue'
 import RetrieveLeases from './RetrieveLeases.vue'
 import RetrieveFeeders from './RetrieveFeeders.vue'
+const uuidv4 = require('uuid/v4')
 
 var k = 0
 export default {
@@ -96,8 +98,11 @@ export default {
       arrChildren: [],
       start: 'start',
       evt: null,
-      counter: '1a'
+      insertAfter: false,
+      counter: '1a',
+      saveWithIds: false
     }
+    //
   },
   computed: {
     bFeeder() {
@@ -107,54 +112,40 @@ export default {
   methods: {
     singleElement(ev) {
       // debugger
-      var elExtra
       this.singleMode = !this.singleMode
-      console.log(this.singleMode)
-
-      console.log(ev.target)
-      console.log(ev.target)
 
       //change class to show selection
     },
-    // dragData(evt) {
-    //   // debugger
-    //   this.draggedFeederSec = evt.clone.children[0].children[0].innerText
-    // },
     assignSection(sec, mode, evt) {
       // debugger
       var pos
       var lastBracket
       var arrSec = []
       var k
-      var evtItemSec = evt.item.children[0].children[0].children[0].innerText
-      this.single = false
-      //MAKE THIS ANALOGOUS TO PULLING THE LEASE SECTION.
-      // THEN REFACTOR INTO ONE FUNCTION.
+      var newObj
 
-      if (evtItemSec.indexOf('.') === -1) {
-        pos = this.feeder[evtItemSec]
+      if (this.$store.state.vxClone) {
+        newObj = this.$store.state.vxClone
       } else {
-        k = 0
-        arrSec = evtItemSec.split('.')
-        pos = 'this.feeder[' + arrSec[0] + ']'
-        for (k = 1; k < arrSec.length; k++) {
-          pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
+        var evtItemSec = evt.item.children[0].children[0].children[0].innerText
+        if (evtItemSec.indexOf('.') === -1) {
+          pos = this.feeder[evtItemSec]
+        } else {
+          k = 0
+          arrSec = evtItemSec.split('.')
+          pos = 'this.feeder[' + arrSec[0] + ']'
+          for (k = 1; k < arrSec.length; k++) {
+            pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
+          }
         }
-      }
+        var fObj = eval(pos)
 
-      // debugger
-      var fObj = eval(pos)
-      console.log(fObj)
-
-      var newObj = {
-        id: fObj.id,
-        section: fObj.section,
-        verbiage: fObj.verbiage
-      }
-      if (this.singleItem) {
-        newObj.subsections = []
-      } else {
-        newObj.subsections = fObj.subsections
+        newObj = {
+          id: fObj.id,
+          section: fObj.section,
+          verbiage: fObj.verbiage,
+          subsections: fObj.subsections
+        }
       }
 
       if (mode === 'root') {
@@ -169,15 +160,25 @@ export default {
 
           //Get last occurrence of '[' and lop it and the remaindr of the string off.
         }
-        //debugger
-        lastBracket = pos.lastIndexOf('[')
-        pos = pos.substring(0, lastBracket)
-        console.log(pos)
+        // debugger
+
         switch (mode) {
           case 'notFirst':
-            eval(pos + '.splice(arrSec[k - 1],0, newObj)')
+            lastBracket = pos.lastIndexOf('[')
+            pos = pos.substring(0, lastBracket)
+            console.log(pos)
+            if (this.insertAfter) {
+              eval(pos + '.splice(arrSec[k - 1],0, newObj)')
+              this.insertAfter = false
+            } else {
+              eval(pos + '.splice(arrSec[k - 1] - 1,0, newObj)')
+            }
+
             break
           case 'firstOfMany':
+            lastBracket = pos.lastIndexOf('[')
+            pos = pos.substring(0, lastBracket)
+            console.log(pos)
             eval(pos + '.splice(arrSec[k - 1] - 1,0, newObj)')
             break
           default:
@@ -185,58 +186,51 @@ export default {
         }
       }
       pos = null
-      console.log(this.lease)
+      // console.log(this.lease)
     },
     findLanding(evt) {
-      //  IF statement to see if this.evtT has value.
-      // If it does, then run through the below.
-      // If it doesn't, then skip it and go straight to the assignSection call.
-      // debugger
       var subsectionEl
       var sec
       var mode
-
-      console.log('evt.item.parentNode.children')
-      console.log(evt.item.parentNode.children)
-
-      console.log('evt.item.parentNode.parentNode')
-      console.log(evt.item.parentNode.parentNode)
-
-      //debugger
-
-      console.log(evt.item)
-
       // debugger
-      if (evt.item.parentNode.parentNode.id === 'start') {
+
+      console.log(this.$store.state.vxClone)
+      console.log('evt.to.parentNode')
+      console.log(evt.to.parentNode)
+      // debugger
+      // console.log('evt.to.children[0].children[0].children[0].innerText')
+      // console.log(evt.to.children[0].children[0].children[0].innerText)
+      // debugger
+      if (evt.to.parentNode.parentNode.parentNode.id === 'top') {
         sec = evt.newIndex
         mode = 'root'
       } else {
-        if (evt.item.parentNode.children[0] === evt.item) {
-          if (evt.item.parentNode.children.length === 1) {
+        subsectionEl = evt.to.children[evt.newIndex]
+        if (evt.newIndex === 0) {
+          if (evt.to.children.length === 0) {
             mode = 'firstOfOne'
-            subsectionEl = evt.item.parentNode
-            sec = subsectionEl.children[0].children[0].innerText
+            subsectionEl =
+              evt.to.parentNode.parentNode.parentNode.children[0].children[
+                evt.newIndex
+              ]
+            sec = subsectionEl.innerText
           } else {
             mode = 'firstOfMany'
-            subsectionEl = evt.item.nextElementSibling
             sec = subsectionEl.children[0].children[0].innerText
           }
         } else {
-          subsectionEl = evt.item.previousElementSibling
-          // } while (subsectionEl.nodeName != 'LI')
-
           mode = 'notFirst'
-          sec = subsectionEl.children[0].children[0].innerText
-          // REFACTOR: Make this function universally available.
+          if (evt.to.children[evt.newIndex]) {
+            sec = subsectionEl.children[0].children[0].innerText
+          } else {
+            subsectionEl = evt.to.children[evt.newIndex - 1]
+            sec = subsectionEl.children[0].children[0].innerText
+            this.insertAfter = true
+          }
         }
-        // debugger
-        console.log(subsectionEl)
-
-        // debugger
-
-        // this.draggedFeederSec = draggedItem.children[0].children[0].innerText
-        console.log(evt.item)
       }
+      // debugger
+      // sec = '0.1'
       this.assignSection(sec, mode, evt)
       this.renumberX(this.lease)
     },
@@ -259,9 +253,20 @@ export default {
         this.intent = response.data.intent
         console.log(this.intent)
         console.log(JSON.stringify(response.data.verbiage))
+        this.renumberX(this.feeder, false)
+        // debugger
+        // this.activateAllElements(this.feeder)
+
         this.$store.commit('SET_LIST', this.feeder)
-        this.renumberX(this.feeder)
+
+        // this.renumberX(this.feeder)
       })
+    },
+    addUniqueIds(list) {
+      list.forEach(item => {
+        console.log(item)
+      })
+      debugger
     },
     updateLse(id, newContent) {
       alert(newContent)
@@ -274,7 +279,7 @@ export default {
       this.schArr(this.lease, this.elId)
     },
     schArr(arr, elId) {
-      // debugger
+      debugger
       var pos
       console.log(elId)
       var result = arr.filter(item => item.id === elId)
@@ -316,22 +321,14 @@ export default {
     },
 
     stringify() {
-      console.log(JSON.stringify(this.feeder, null, 2))
-      console.log(JSON.stringify(this.lease, null, 2))
+      // console.log(JSON.stringify(this.feeder, null, 2))
+      // console.log(JSON.stringify(this.lease, null, 2))
     },
 
     post() {
       console.log(JSON.stringify(this.bLease))
     },
     put() {
-      console.log('put-nested example.vue')
-      // var snippet = JSON.stringify(this.lease, null, 2)
-      // snippet = JSON.parse(snippet)
-      // var lse = {
-      //   text = snippet,
-      // }
-
-      // console.log(this.lease)
       EventServiceAlt.putSnippet(this.lease, this.id).then(response => {
         console.log(response.data)
         //   console.log(response.status)
@@ -352,6 +349,7 @@ export default {
       return output
     },
     addToStack() {
+      // debugger
       this.stepIndex += 1
       this.stepper.splice(this.stepIndex, 1, cloneDeep(this.lease))
       console.log(this.stepper[this.stepIndex])
@@ -387,19 +385,47 @@ export default {
       this.renumberX(this.$store.state.list)
     },
 
-    renumberX(reorder) {
+    activateAllElements(arr) {
+      arr.forEach(function(item) {
+        item.active = true
+      })
+    },
+    renumberX(reorder, hide) {
       // alert('renumberX')
-
+      // debugger
       var subsequent = false
       var prefix = ''
-      this.renumber(reorder, subsequent, prefix)
+      this.renumber(reorder, subsequent, prefix, hide)
       this.editorKey += 1
       this.listKey += 1
     },
-    renumber(arr, subsequent, prefix) {
+
+    renumber(arr, subsequent, prefix, hide) {
       // debugger
       var arrNextLevel = []
+      //  ADD UNIQUE IDS HERE.
+      // CHECK EACH EXISTING ID AND SEE IF IT'S A 128-BIT UUID
+
+      // var elId = this.genUUID()
+      // debugger
+      let swid
+      var newId
+
+      // console.log(typeof a)
+
+      // var result = 'sss'.match(patt)
+      var patt = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
       arr.forEach(function(item) {
+        // debugger
+        if (hide) {
+          item.hidden = true
+        }
+        if (item.id.toString().match(patt) === null) {
+          newId = uuidv4()
+          item.id = newId
+          swid = true
+        }
+
         if (subsequent === false) {
           item.section = arr.indexOf(item)
         } else {
@@ -420,6 +446,7 @@ export default {
       }
 
       this.reorder = arr
+      this.saveWithIds = swid
     }
   },
   beforeCreate() {

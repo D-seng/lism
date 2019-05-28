@@ -4,6 +4,7 @@ import Home from './components/Home.vue'
 import Settings from './views/Settings.vue'
 import Editor from './components/Editor.vue'
 import Leases from './components/Leases.vue'
+import CloneExample from './components/CloneExample.vue'
 import NestedExample from './components/NestedExample.vue'
 Vue.use(Router)
 
@@ -35,6 +36,11 @@ export default new Router({
       path: '/nested',
       name: 'nested',
       component: NestedExample
+    },
+    {
+      path: '/cloneExample',
+      name: 'cloneExample',
+      component: CloneExample
     }
   ]
 })

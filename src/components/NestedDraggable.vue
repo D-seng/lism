@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div :id="counter">
+    <div>
       <draggable
         class="dragArea"
         chosenClass="chosen"
@@ -14,7 +14,12 @@
         @input="fireInput"
         :group="{ name: 'lseAndFeeder', put: true }"
       >
-        <li v-for="el in list" :key="el.section" :id="el.id">
+        <li
+          v-for="el in list"
+          :key="el.section"
+          :id="el.id"
+          @dblclick="dblClickHandler"
+        >
           <div>
             <!-- <div :id="el.id + 'sv'" class="m-fadeOut">
               <font-awesome-icon
@@ -92,13 +97,27 @@ export default {
       lse: this.list,
       id: '',
       content: '',
-      idCounter: this.idCounter++
+      idCounter: this.idCounter++,
+      singleMode: false
     }
   },
 
   methods: {
     fireInput() {
       alert('input')
+    },
+    styleNode(ev) {
+      if (this.singleMode) {
+        ev.target.parentNode.style =
+          'background-color: rgba(180, 100, 100, 0.808)'
+      } else {
+        ev.target.parentNode.style = 'background-color: none'
+      }
+    },
+    dblClickHandler(ev) {
+      ev.stopPropagation()
+      this.singleMode = !this.singleMode
+      this.styleNode(ev)
     },
     showSaveIcon(id) {
       // alert(id)
@@ -108,9 +127,11 @@ export default {
       console.log(el)
     },
     findLandingX(evt) {
+      // debugger
       this.$emit('find-landing', evt)
     },
     addHandler(evt) {
+      // debugger
       this.$emit('find-landing', evt)
       // alert('addHandler')
       // console.log('evt.item')
@@ -143,15 +164,18 @@ export default {
     genUUID() {
       var a = uuidv1()
       console.log(a)
+      return uuidv1
     },
     toggleActive() {
       this.isActive = !this.isActive
     },
     renumberHandler() {
+      // debugger
       // alert('renumber-handler')
       this.$emit('renumber-handler')
     },
     addToStackHandler() {
+      // debugger
       this.$emit('add-to-stack')
     },
     updateLseHandler(elId) {
