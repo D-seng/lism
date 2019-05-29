@@ -137,7 +137,6 @@ export default {
     mySetFunction: function() {
       localStorage.setItem('myItem', this.list1)
     },
-
     endHandler(ev) {
       // debugger
       console.log('ev.item')
@@ -244,14 +243,6 @@ export default {
     forceRenumberX() {
       this.$emit('force-renumber')
     },
-    // setDataX(evt) {
-    //   // alert('setDataX')
-    //   console.log('setDataX')
-    //   // console.log(evt.clone)
-    //   // console.log(evt.clone.innerText)
-    //   this.$emit('drag-data', evt)
-
-    // },
     showSaveIcon(id) {
       // alert(id)
       var el = document.getElementById(id + 'sv')

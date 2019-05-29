@@ -117,7 +117,7 @@ export default {
       //change class to show selection
     },
     assignSection(sec, mode, evt) {
-      // debugger
+      debugger
       var pos
       var lastBracket
       var arrSec = []
@@ -189,6 +189,7 @@ export default {
       // console.log(this.lease)
     },
     findLanding(evt) {
+      debugger
       var subsectionEl
       var sec
       var mode
@@ -229,7 +230,7 @@ export default {
           }
         }
       }
-      // debugger
+      debugger
       // sec = '0.1'
       this.assignSection(sec, mode, evt)
       this.renumberX(this.lease)
