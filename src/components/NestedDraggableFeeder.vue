@@ -119,13 +119,25 @@ export default {
       // console.log(evt.clone)
       // alert('choose')
       // debugger
-      var vxClone = {
-        id: evt.clone.id,
-        verbiage: evt.item.children[0].children[0].children[1].innerText,
-        section: evt.item.children[0].children[0].children[0].innerText,
-        subsections: []
-      }
 
+      // CREATE NEW CLONE ONLY IF IN SINGLE MODE
+      //REFACTOR ALERT: PULL THE SEARCH UP FOR THE LI INTO A FUNCTION
+      var el
+      do {
+        el = el.parentNode
+      } while (el.nodeName != 'LI')
+      // debugger
+
+      var indexOfId = this.inSingleMode.indexOf(el.id)
+
+      if (indexOfId != -1) {
+        var vxClone = {
+          id: evt.clone.id,
+          verbiage: evt.item.children[0].children[0].children[1].innerText,
+          section: evt.item.children[0].children[0].children[0].innerText,
+          subsections: []
+        }
+      }
       // use dispatch here.
       // this.$store.dispatch('storeList', this.alteredList1)
       this.$store.dispatch('setNewClone', vxClone)
@@ -141,9 +153,16 @@ export default {
       // debugger
       console.log('ev.item')
       console.log(ev.item)
-
+      debugger
+      console.log('ev')
+      console.log(ev)
       console.log('ev.clone')
       console.log(ev.clone)
+      debugger
+      this.stop()
+    },
+    stop() {
+      console.log('stop')
     },
     checkSingleMode(id) {
       return this.singleMode.find(id)

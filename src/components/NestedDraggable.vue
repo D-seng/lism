@@ -128,6 +128,7 @@ export default {
     },
     findLandingX(evt) {
       // debugger
+
       this.$emit('find-landing', evt)
     },
     addHandler(evt) {
@@ -172,6 +173,7 @@ export default {
     renumberHandler() {
       // debugger
       // alert('renumber-handler')
+
       this.$emit('renumber-handler')
     },
     addToStackHandler() {

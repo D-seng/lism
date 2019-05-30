@@ -189,7 +189,7 @@ export default {
       // console.log(this.lease)
     },
     findLanding(evt) {
-      debugger
+      // debugger
       var subsectionEl
       var sec
       var mode
