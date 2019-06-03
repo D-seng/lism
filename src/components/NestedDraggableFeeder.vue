@@ -7,7 +7,7 @@
         tag="ul"
         :list="feeder"
         @end="endHandler"
-        @start="startHandler"
+        :clone="cloneHandler"
         :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
       >
         <li
@@ -114,35 +114,48 @@ export default {
       })
       this.renderKey += 1
     },
-    startHandler(evt) {
+    cloneHandler(evt) {
+      // alert('start')
       // console.log('evt.clone')
       // console.log(evt.clone)
       // alert('choose')
       // debugger
 
       // CREATE NEW CLONE ONLY IF IN SINGLE MODE
-      //REFACTOR ALERT: PULL THE SEARCH UP FOR THE LI INTO A FUNCTION
-      var el
-      do {
-        el = el.parentNode
-      } while (el.nodeName != 'LI')
+      //REFACTOR ALERT: PUt THE SEARCH FOR THE LI INTO A SEPARATE FUNCTION
       // debugger
+      // var el = evt.target
+      var elInSingleMode = this.inSingleMode.indexOf(evt.id) != -1
 
-      var indexOfId = this.inSingleMode.indexOf(el.id)
-
-      if (indexOfId != -1) {
+      // debugger
+      // for (var i = 0; i < el.children.length; i++) {
+      //   if (this.inSingleMode.indexOf(el.children[i].id)) {
+      //     elInSingleMode = true
+      //     break
+      //   }
+      // }
+      // debugger
+      if (elInSingleMode) {
+        // var vxClone = {
+        //   id: evt.id,
+        //   verbiage: evt.item.children[0].children[0].children[1].innerText,
+        //   section: evt.item.children[0].children[0].children[0].innerText,
+        //   subsections: []
+        // }
         var vxClone = {
-          id: evt.clone.id,
-          verbiage: evt.item.children[0].children[0].children[1].innerText,
-          section: evt.item.children[0].children[0].children[0].innerText,
+          id: evt.id,
+          verbiage: 'test text',
+          section: '9.9.9',
           subsections: []
         }
+        console.log('evt.clone')
+        console.log(evt.clone)
+        this.$store.dispatch('setNewClone', vxClone)
+        return vxClone
       }
       // use dispatch here.
       // this.$store.dispatch('storeList', this.alteredList1)
-      this.$store.dispatch('setNewClone', vxClone)
-      console.log('evt.clone')
-      console.log(evt.clone)
+
       // evt.innerText = 'new innerText'
       // evt.dataTransfer.setData('text/plain', 'aaa')
     },
@@ -222,6 +235,7 @@ export default {
       ev.stopPropagation()
       var el = ev.target
 
+      // debugger
       do {
         el = el.parentNode
       } while (el.nodeName != 'LI')
@@ -246,13 +260,13 @@ export default {
         this.$emit('single-element', ev)
       }
 
-      debugger
-      var vxClone = {
-        id: el.id,
-        verbiage: el.children[0].children[0].children[1].innerText,
-        section: el.children[0].children[0].children[0].innerText,
-        subsections: []
-      }
+      // debugger
+      // var vxClone = {
+      //   id: el.id,
+      //   verbiage: el.children[0].children[0].children[1].innerText,
+      //   section: el.children[0].children[0].children[0].innerText,
+      //   subsections: []
+      // }
     },
 
     singleElementX() {
