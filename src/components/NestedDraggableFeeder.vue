@@ -9,6 +9,7 @@
         @end="endHandler"
         :clone="cloneHandler"
         :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
+        :setData="setDataHandler"
       >
         <li
           v-for="el in liveList"
@@ -105,6 +106,19 @@ export default {
     }
   },
   methods: {
+    startHandler(evt) {
+      console.log('startHandler')
+      console.log(evt.dataTransfer)
+      evt.dataTransfer.setData('text/plain', evt.target.id)
+    },
+    setDataHandler(dataTransfer, dragEl) {
+      console.log('dragEl')
+      console.log(dragEl)
+      console.log('dataTransfer')
+      console.log(dataTransfer)
+      dataTransfer.clearData
+      // dataTransfer.setData('text/plain', 'test content')
+    },
     fold(el) {
       // debugger
 
@@ -144,8 +158,8 @@ export default {
         // }
         var vxClone = {
           id: evt.id,
-          verbiage: 'test text',
-          section: '9.9.9',
+          verbiage: evt.verbiage,
+          section: evt.section,
           subsections: []
         }
         console.log('evt.clone')

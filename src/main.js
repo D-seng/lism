@@ -37,6 +37,7 @@ Vue.config.productionTip = false
 new Vue({
   router,
   store,
+  strict: false,
   data: {
     selectedSection: null,
     persistentList

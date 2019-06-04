@@ -5,6 +5,7 @@ import nestedDraggableFeeder from './components/NestedDraggableFeeder.vue'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  strict: false,
   state: {
     user: { id: 'abc123', name: 'Adam Jahr' },
     list: [],

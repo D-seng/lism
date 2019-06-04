@@ -230,7 +230,7 @@ export default {
           }
         }
       }
-      debugger
+      // debugger
       // sec = '0.1'
       this.assignSection(sec, mode, evt)
       this.renumberX(this.lease)
