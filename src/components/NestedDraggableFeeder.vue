@@ -16,6 +16,7 @@
           :key="el.section"
           :id="el.id"
           @dblclick="dblClickHandler"
+          @dragstart="clearLowTierDrag"
         >
           <div style="block" :class="{ hidden: el.hidden }">
             <div>
@@ -106,18 +107,37 @@ export default {
     }
   },
   methods: {
-    startHandler(evt) {
+    startHandler(dataTransfer, dragEl) {
+      alert('startHandler')
       console.log('startHandler')
+      debugger
+
+      console.log(dataTransfer)
+      // console.log(evt.dataTransfer)
+      // evt.dataTransfer.setData('text/plain', evt.target.id)
+    },
+    clearLowTierDrag(evt) {
+      // evt.stopPropagation()
+      // alert('clearlt')
+      // debugger
+      var dataEl = document.getElementById('empty')
+      console.log('evt.dataTransfer')
       console.log(evt.dataTransfer)
-      evt.dataTransfer.setData('text/plain', evt.target.id)
+      evt.dataTransfer.setDragImage(dataEl, 0, 0)
+      console.log(evt.dataTransfer)
+      // evt.dataTransfer.setData('Text', 'jake')
     },
     setDataHandler(dataTransfer, dragEl) {
       console.log('dragEl')
       console.log(dragEl)
       console.log('dataTransfer')
       console.log(dataTransfer)
-      dataTransfer.clearData
-      // dataTransfer.setData('text/plain', 'test content')
+      // dataTransfer.clearData
+      // dragEl.classList.add('placeholder')
+      // window.dragEl = dragEl
+      // dataTransfer.setDragImage(dragEl, 0, 0)
+      var dataEl = document.getElementById('empty')
+      dataTransfer.setDragImage(dataEl, 0, 0)
     },
     fold(el) {
       // debugger
@@ -129,33 +149,8 @@ export default {
       this.renderKey += 1
     },
     cloneHandler(evt) {
-      // alert('start')
-      // console.log('evt.clone')
-      // console.log(evt.clone)
-      // alert('choose')
-      // debugger
-
-      // CREATE NEW CLONE ONLY IF IN SINGLE MODE
-      //REFACTOR ALERT: PUt THE SEARCH FOR THE LI INTO A SEPARATE FUNCTION
-      // debugger
-      // var el = evt.target
       var elInSingleMode = this.inSingleMode.indexOf(evt.id) != -1
-
-      // debugger
-      // for (var i = 0; i < el.children.length; i++) {
-      //   if (this.inSingleMode.indexOf(el.children[i].id)) {
-      //     elInSingleMode = true
-      //     break
-      //   }
-      // }
-      // debugger
       if (elInSingleMode) {
-        // var vxClone = {
-        //   id: evt.id,
-        //   verbiage: evt.item.children[0].children[0].children[1].innerText,
-        //   section: evt.item.children[0].children[0].children[0].innerText,
-        //   subsections: []
-        // }
         var vxClone = {
           id: evt.id,
           verbiage: evt.verbiage,
@@ -167,11 +162,6 @@ export default {
         this.$store.dispatch('setNewClone', vxClone)
         return vxClone
       }
-      // use dispatch here.
-      // this.$store.dispatch('storeList', this.alteredList1)
-
-      // evt.innerText = 'new innerText'
-      // evt.dataTransfer.setData('text/plain', 'aaa')
     },
     mySetFunction: function() {
       localStorage.setItem('myItem', this.list1)
@@ -389,5 +379,23 @@ li {
   visibility: visible;
   opacity: 1;
   transition: visibility 0s linear 0s, opacity 300ms;
+}
+.sortable-ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
+
+.placeholder {
+  width: 150px;
+  height: 50px;
+  background: #000;
+  color: #000;
+}
+
+.retain {
+  width: 100%;
+  height: auto;
+  background: #fff;
+  color: #000;
 }
 </style>

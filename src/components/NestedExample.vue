@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div id="empty">ABCDEFGHIJKLMNOP</div>
     <v-container grid-list-md text-xs-left>
       <v-layout row wrap>
         <v-flex xs6>
