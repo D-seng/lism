@@ -10,13 +10,14 @@
         :clone="cloneHandler"
         :group="{ name: 'lseAndFeeder', pull: 'clone', put: false }"
         :setData="setDataHandler"
+        ghostClass="ghost"
       >
         <li
           v-for="el in liveList"
           :key="el.section"
           :id="el.id"
           @dblclick="dblClickHandler"
-          @dragstart="clearLowTierDrag"
+          @dragstart="dragStartHandler"
         >
           <div style="block" :class="{ hidden: el.hidden }">
             <div>
@@ -119,7 +120,7 @@ export default {
     clearLowTierDrag(evt) {
       // evt.stopPropagation()
       // alert('clearlt')
-      // debugger
+      debugger
       var dataEl = document.getElementById('empty')
       console.log('evt.dataTransfer')
       console.log(evt.dataTransfer)
@@ -127,11 +128,40 @@ export default {
       console.log(evt.dataTransfer)
       // evt.dataTransfer.setData('Text', 'jake')
     },
+    dragStartHandler(evt) {
+      // /debugger
+      console.log('evt')
+      console.log(evt)
+      console.log('evt.target')
+      console.log(evt)
+      // When dragging in single mode, use a this.styleNode approach for all nodes in list
+      // except for the one selected.
+      // evt.target.classList.add('placeholder')
+    },
+    setDataHandlerX(dataTransfer, dragEl) {
+      debugger
+      console.log('dragEl')
+      console.log(dragEl)
+      console.log('dataTransfer')
+      console.log(dataTransfer)
+      console.log('DragImage')
+      console.log(dataTransfer)
+
+      // dataTransfer.clearData
+      // dragEl.classList.add('placeholder')
+      // window.dragEl = dragEl
+      // dataTransfer.setDragImage(dragEl, 0, 0)
+      var dataEl = document.getElementById('empty')
+      dataTransfer.setDragImage(dataEl, 0, 0)
+    },
     setDataHandler(dataTransfer, dragEl) {
       console.log('dragEl')
       console.log(dragEl)
       console.log('dataTransfer')
       console.log(dataTransfer)
+      console.log('DragImage')
+      console.log(dataTransfer)
+
       // dataTransfer.clearData
       // dragEl.classList.add('placeholder')
       // window.dragEl = dragEl
@@ -362,7 +392,9 @@ li {
 .collapser {
   margin-left: -8px;
 }
-
+.ghost {
+  background-color: orange;
+}
 .hidden {
   display: none;
 }
