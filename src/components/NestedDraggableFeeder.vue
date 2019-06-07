@@ -75,6 +75,7 @@ export default {
       redrawKey: 0,
       evTarget: null,
       inSingleMode: [],
+      inSingleModeA: [],
       subjectSection: null,
       droppedSections: null,
       lev1: false,
@@ -265,6 +266,17 @@ export default {
       console.log(this.alteredList1)
       this.$emit('force-renumber')
     },
+    buildSingleModeArray(subsections) {
+      debugger
+      subsections.forEach(item => {
+        // item.section is for testing only.
+        this.inSingleModeA.push(item.id)
+        if (item.subsections.length > 0) {
+          this.buildSingleModeArray(item.subsections)
+        }
+      })
+      debugger
+    },
     dblClickHandler(ev) {
       ev.stopPropagation()
       var el = ev.target
@@ -273,16 +285,41 @@ export default {
       do {
         el = el.parentNode
       } while (el.nodeName != 'LI')
-      // debugger
-
-      var indexOfId = this.inSingleMode.indexOf(el.id)
+      debugger
+      var inList = false
+      var indexOfId
+      // var indexOfId = this.inSingleMode.indexOf(el.id)
+      for (var i; i < this.inSingleMode.length; i++) {
+        if (this.inSingleMode[i][0] == el.id) {
+          inList = true
+          indexOfId = i
+        }
+      }
       var single
-      if (indexOfId === -1) {
-        this.inSingleMode.push(el.id)
+      if (inList === false) {
+        console.log('this.liveList')
+        console.log(this.liveList)
+
+        // Filter by item.id and get list item.
+        //Check for subsections.
+        debugger
+        var result = this.liveList.filter(item => item.id === el.id)
+        debugger
+        if (result[0].subsections.length > 0) {
+          this.buildSingleModeArray(result[0].subsections)
+        }
+        // rejigger the indexOf searches to look for first item in nested arrays.
+        this.inSingleMode.push([el.id, this.inSingleModeA])
+        console.log(this.inSingleModeA)
+
+        debugger
         single = true
         this.styleNode(el, true)
       } else {
         // debugger
+
+        // PICK UP HERE..
+
         this.inSingleMode.splice(indexOfId, 1)
         // el = document.getElementById(elId[0])
         single = false
