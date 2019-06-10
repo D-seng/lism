@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import nestedDraggableFeeder from './components/NestedDraggableFeeder.vue'
 
 Vue.use(Vuex)
 
@@ -9,7 +8,8 @@ export default new Vuex.Store({
   state: {
     user: { id: 'abc123', name: 'Adam Jahr' },
     list: [],
-    vxClone: null
+    vxClone: null,
+    inSingleMode: []
   },
   mutations: {
     SET_LIST(state, value) {

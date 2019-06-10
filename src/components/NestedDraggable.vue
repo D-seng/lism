@@ -21,27 +21,29 @@
           @dblclick="dblClickHandler"
         >
           <div>
-            <!-- <div :id="el.id + 'sv'" class="m-fadeOut">
+            <div>
+              <!-- <div :id="el.id + 'sv'" class="m-fadeOut">
               <font-awesome-icon
                 icon="save"
                 class="far fa-save fa-lg"
                 @click="updateLseHandler(el.id)"
               />
             </div> -->
-            <p :id="'sec-' + el.id">
-              <span
-                ><font-awesome-icon
-                  icon="edit"
-                  class="fas fa-edit fa-lg il"
-                  @click="editX(el.section, el.verbiage, el.id)"/></span
-              >{{ el.section }}
-            </p>
-            <p
-              v-html="el.verbiage"
-              contenteditable="true"
-              :id="el.id"
-              @input="showSaveIcon(el.id)"
-            ></p>
+              <p :id="'sec-' + el.id">
+                <span
+                  ><font-awesome-icon
+                    icon="edit"
+                    class="fas fa-edit fa-lg il"
+                    @click="editX(el.section, el.verbiage, el.id)"/></span
+                >{{ el.section }}
+              </p>
+              <p
+                v-html="el.verbiage"
+                contenteditable="true"
+                :id="el.id"
+                @input="showSaveIcon(el.id)"
+              ></p>
+            </div>
           </div>
 
           <NestedDraggable
@@ -63,6 +65,7 @@
 <script>
 // v-bind:class="{ active: isActive }"
 import draggable from 'vuedraggable'
+import clickAndDragServices from '@/services/ClickAndDragServices.js'
 
 const uuidv1 = require('uuid/v1')
 var sectionLocked = null
@@ -115,9 +118,8 @@ export default {
       }
     },
     dblClickHandler(ev) {
-      ev.stopPropagation()
-      this.singleMode = !this.singleMode
-      this.styleNode(ev)
+      debugger
+      clickAndDragServices.dblClickHandler(ev, this.list)
     },
     showSaveIcon(id) {
       // alert(id)

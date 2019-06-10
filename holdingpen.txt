@@ -83,3 +83,40 @@
       console.log('evt.clone')
       console.log(evt.clone)
     },
+
+
+    // collapse(ev) {
+    //   // NEED TO PICK OUT WHICH PARTS OF THIS
+    //   // ALLOW FOR DRAGGING SINGLE ELEMENT
+    //   // SHOULD NEED TO SET vxClone.
+    //   this.subjectSection = this.retrieveSubjectSection(ev)
+
+    //   if (this.subjectSection.indexOf('.') === -1) {
+    //     this.lev1 = true
+    //     var cList = cloneDeep(this.list1)
+    //     cList[this.subjectSection * 1].subsections = []
+    //     this.alteredList1 = cList
+    //     console.log('this.alteredList1')
+    //     console.log(this.alteredList1)
+    //   } else {
+    //     // Refactor alert: Everything in this else block.
+    //     var lastIndex = this.subjectSection.lastIndexOf('.')
+    //     var secLength = this.subjectSection.length - lastIndex - 1
+
+    //     this.droppedSections =
+    //       this.subjectSection.substr(lastIndex + 1, secLength) * 1 - 1
+    //     var tList = cloneDeep(this.list1)
+    //     this.lastList = cloneDeep(this.list1)
+    //     this.repop = true
+    //     tList[this.droppedSections].subsections = []
+    //     this.alteredList1 = cloneDeep(tList)
+    //   }
+
+    //   this.$store.dispatch('storeList', this.alteredList1)
+    //   this.renderKey += 1
+
+    //   //Need to put truncated list into an object for cloning.
+    //   console.log('this.alteredList1')
+    //   console.log(this.alteredList1)
+    //   this.$emit('force-renumber')
+    // },

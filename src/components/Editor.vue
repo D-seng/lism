@@ -12,6 +12,9 @@
         v-model="content.text"
         :editor-toolbar="customToolbar"
       ></VueEditor>
+      <p>
+        <input type="submit" value="Submit" />
+      </p>
     </form>
 
     <!-- <v-btn @click="onSubmit">Submit</v-btn> -->
@@ -51,6 +54,9 @@ export default {
     }
   },
   methods: {
+    onSubmit() {
+      this.$emit('sync-content', this.content.text)
+    },
     testKeyPresses() {
       // console.log(this.content.text)
       this.$emit('sync-content', this.content.text)

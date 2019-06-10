@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div id="empty">ABCDEFGHIJKLMNOP</div>
     <v-container grid-list-md text-xs-left>
       <v-layout row wrap>
         <v-flex xs6>
@@ -10,7 +9,6 @@
           <NestedDraggableFeeder
             :list1="feeder"
             @show-editor="edit"
-            @single-element="singleElement"
             @force-renumber="forceRenumber"
           />
         </v-flex>
@@ -111,12 +109,12 @@ export default {
     }
   },
   methods: {
-    singleElement(ev) {
-      // debugger
-      this.singleMode = !this.singleMode
+    // singleElement(ev) {
+    //   // debugger
+    //   this.singleMode = !this.singleMode
 
-      //change class to show selection
-    },
+    //   //change class to show selection
+    // },
     assignSection(sec, mode, evt) {
       debugger
       var pos
@@ -281,7 +279,7 @@ export default {
       this.schArr(this.lease, this.elId)
     },
     schArr(arr, elId) {
-      debugger
+      // debugger
       var pos
       console.log(elId)
       var result = arr.filter(item => item.id === elId)
