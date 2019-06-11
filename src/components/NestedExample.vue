@@ -116,7 +116,7 @@ export default {
     //   //change class to show selection
     // },
     assignSection(sec, mode, evt) {
-      debugger
+      // debugger
       var pos
       var lastBracket
       var arrSec = []
@@ -200,19 +200,24 @@ export default {
       // debugger
       // console.log('evt.to.children[0].children[0].children[0].innerText')
       // console.log(evt.to.children[0].children[0].children[0].innerText)
-      // debugger
+      debugger
       if (evt.to.parentNode.parentNode.parentNode.id === 'top') {
         sec = evt.newIndex
         mode = 'root'
       } else {
-        subsectionEl = evt.to.children[evt.newIndex]
+        subsectionEl = evt.to
+
+        do {
+          subsectionEl = subsectionEl.parentNode
+        } while (subsectionEl.nodeName != 'LI')
+
         if (evt.newIndex === 0) {
           if (evt.to.children.length === 0) {
             mode = 'firstOfOne'
-            subsectionEl =
-              evt.to.parentNode.parentNode.parentNode.children[0].children[
-                evt.newIndex
-              ]
+
+            // subsectionEl =
+            //   evt.to.parentNode.parentNode.parentNode.children[0].children[0]
+            //     .children[evt.newIndex]
             sec = subsectionEl.innerText
           } else {
             mode = 'firstOfMany'
@@ -417,9 +422,9 @@ export default {
       var patt = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
       arr.forEach(function(item) {
         // debugger
-        if (hide) {
-          item.hidden = true
-        }
+        // if (hide) {
+        //   item.hidden = true
+        // }
         if (item.id.toString().match(patt) === null) {
           newId = uuidv4()
           item.id = newId

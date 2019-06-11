@@ -88,11 +88,13 @@ export default {
       // debugger
       var el
       var arr
-      arr = result[0][1]
-      arr.forEach(item => {
-        el = document.getElementById(item)
-        el.style = 'display: block'
-      })
+      if (typeof result[0][1] != 'undefined') {
+        arr = result[0][1]
+        arr.forEach(item => {
+          el = document.getElementById(item)
+          el.style = 'display: block'
+        })
+      }
     }
   },
   cloneHandler(evt) {
