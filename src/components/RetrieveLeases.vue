@@ -20,6 +20,7 @@ export default {
     }
   },
   created() {
+    // debugger
     EventServiceAlt.getSnippets().then(response => {
       var arrResp = response.data.snippets
       arrResp.forEach(element => {
