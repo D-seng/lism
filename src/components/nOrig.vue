@@ -6,7 +6,7 @@
     </li>
   </draggable>
 </template>
-<script>
+<script type="module">
 import draggable from '@/vuedraggable'
 export default {
   props: {

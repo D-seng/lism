@@ -2,7 +2,7 @@
   <v-select v-on:change="selectLease" :items="items" label="Lease"></v-select>
 </template>
 
-<script>
+<script type="module">
 import EventServiceAlt from '@/services/EventServiceAlt.js'
 
 export default {

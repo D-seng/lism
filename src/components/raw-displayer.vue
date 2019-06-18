@@ -4,7 +4,7 @@
     <pre>{{ valueString }}</pre>
   </div>
 </template>
-<script>
+<script type="module">
 const props = {
   name: 'raw-displayer',
   title: {

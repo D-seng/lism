@@ -1,6 +1,6 @@
 <template> </template>
 
-<script>
+<script type="module">
 export default {
   components: {}
 }

@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script>
+<script type="module">
 import { VueEditor } from 'vue2-editor'
 
 export default {

@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script>
+<script type="module">
 import Popup from './Popup'
 export default {
   components: {

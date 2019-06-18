@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<script>
+<script type="module">
 import draggable from 'vuedraggable'
 let idGlobal = 8
 export default {

@@ -43,7 +43,7 @@
     </div>
   </div>
 </template>
-<script>
+<script type="module">
 import draggable from 'vuedraggable'
 import clickAndDragServices from '@/services/ClickAndDragServices.js'
 

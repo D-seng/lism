@@ -53,7 +53,7 @@
   </div>
 </template>
 
-<script>
+<script type="module">
 import NestedDraggable from '@/components/NestedDraggable'
 import NestedDraggableFeeder from '@/components/NestedDraggableFeeder'
 import EventServiceAlt from '@/services/EventServiceAlt.js'
@@ -101,7 +101,6 @@ export default {
       counter: '1a',
       saveWithIds: false
     }
-    //
   },
   computed: {
     bFeeder() {
@@ -147,7 +146,6 @@ export default {
           verbiage: fObj.verbiage,
           subsections: fObj.subsections
         }
-
         // TO MAKE THIS WORK, NEED TO RENUMBER LEASE
         // WHEN IT'S INITIALLY RENDERED, TO MAKE SURE THE SECTIONS
         // ARE CORRECT. DON'T RELY ON THE SECTIONS IN THE DB.
@@ -159,8 +157,8 @@ export default {
         k = 0
         // debugger
         pos = 'this.lease[' + arrSec[0] + ']'
-        for (k = 1; k < arrSec.length; k++) {
-          pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
+        for (k = 0; k < arrSec.length; k++) {
+          pos = pos + '.subsections[' + arrSec[k] + ']'
         }
         //Get last occurrence of '['.
         // Lop it and the remaindr of the string off.
@@ -177,8 +175,9 @@ export default {
             }
             break
           case 'firstOfMany':
-            eval(posTrunc + '.splice(arrSec[k - 1] - 1,0, newObj)')
-            console.log(eval(posTrunc + '.splice(arrSec[k - 1] - 1,0, newObj)'))
+            // eval(pos + '.splice(arrSec[k - 1],0, newObj)')
+            eval(posTrunc + '.unshift(newObj)')
+            // console.log(eval(posTrunc + '.splice(arrSec[k - 1] - 1,0, newObj)'))
             break
           case 'firstOfOne':
             // eval(pos + '.splice(arrSec[k - 1] - 1,0, newObj)')
@@ -256,7 +255,6 @@ export default {
       })
       // debugger
     },
-
     getFeeders(id) {
       // debugger
       EventServiceAlt.getFeeder(id).then(response => {

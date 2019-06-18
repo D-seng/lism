@@ -62,7 +62,7 @@
     </div>
   </div>
 </template>
-<script>
+<script type="module">
 // v-bind:class="{ active: isActive }"
 import draggable from 'vuedraggable'
 import clickAndDragServices from '@/services/ClickAndDragServices.js'
