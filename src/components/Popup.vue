@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script>
+<script type="module">
 // import Editor from '../views/Editor.vue'
 export default {
   props: {

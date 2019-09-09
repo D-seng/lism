@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div id="empty">ABCDEFGHIJKLMNOP</div>
     <v-container grid-list-md text-xs-left>
       <v-layout row wrap>
         <v-flex xs6>
@@ -10,7 +9,6 @@
           <NestedDraggableFeeder
             :list1="feeder"
             @show-editor="edit"
-            @single-element="singleElement"
             @force-renumber="forceRenumber"
           />
         </v-flex>
@@ -55,7 +53,7 @@
   </div>
 </template>
 
-<script>
+<script type="module">
 import NestedDraggable from '@/components/NestedDraggable'
 import NestedDraggableFeeder from '@/components/NestedDraggableFeeder'
 import EventServiceAlt from '@/services/EventServiceAlt.js'
@@ -103,7 +101,6 @@ export default {
       counter: '1a',
       saveWithIds: false
     }
-    //
   },
   computed: {
     bFeeder() {
@@ -111,14 +108,14 @@ export default {
     }
   },
   methods: {
-    singleElement(ev) {
-      // debugger
-      this.singleMode = !this.singleMode
+    // singleElement(ev) {
+    //   // debugger
+    //   this.singleMode = !this.singleMode
 
-      //change class to show selection
-    },
+    //   //change class to show selection
+    // },
     assignSection(sec, mode, evt) {
-      debugger
+      //
       var pos
       var lastBracket
       var arrSec = []
@@ -128,6 +125,7 @@ export default {
       if (this.$store.state.vxClone) {
         newObj = this.$store.state.vxClone
       } else {
+        // Use LI searcher here
         var evtItemSec = evt.item.children[0].children[0].children[0].innerText
         if (evtItemSec.indexOf('.') === -1) {
           pos = this.feeder[evtItemSec]
@@ -136,9 +134,10 @@ export default {
           arrSec = evtItemSec.split('.')
           pos = 'this.feeder[' + arrSec[0] + ']'
           for (k = 1; k < arrSec.length; k++) {
-            pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
+            pos = pos + '.subsections[' + arrSec[k] + ']'
           }
         }
+        // debugger
         var fObj = eval(pos)
 
         newObj = {
@@ -147,43 +146,46 @@ export default {
           verbiage: fObj.verbiage,
           subsections: fObj.subsections
         }
+        // TO MAKE THIS WORK, NEED TO RENUMBER LEASE
+        // WHEN IT'S INITIALLY RENDERED, TO MAKE SURE THE SECTIONS
+        // ARE CORRECT. DON'T RELY ON THE SECTIONS IN THE DB.
       }
-
       if (mode === 'root') {
         this.lease.splice(sec, 0, newObj)
       } else {
         arrSec = sec.split('.')
         k = 0
-
-        pos = 'this.lease[' + arrSec[0] + ']'
-        for (k = 1; k < arrSec.length; k++) {
-          pos = pos + '.subsections[' + (arrSec[k] - 1) + ']'
-
-          //Get last occurrence of '[' and lop it and the remaindr of the string off.
-        }
         // debugger
+        pos = 'this.lease[' + arrSec[0] + ']'
+        for (k = 0; k < arrSec.length; k++) {
+          pos = pos + '.subsections[' + arrSec[k] + ']'
+        }
+        //Get last occurrence of '['.
+        // Lop it and the remaindr of the string off.
+        lastBracket = pos.lastIndexOf('[')
+        var posTrunc = pos.substring(0, lastBracket)
 
         switch (mode) {
           case 'notFirst':
-            lastBracket = pos.lastIndexOf('[')
-            pos = pos.substring(0, lastBracket)
-            console.log(pos)
             if (this.insertAfter) {
-              eval(pos + '.splice(arrSec[k - 1],0, newObj)')
+              eval(posTrunc + '.splice(arrSec[k - 1],0, newObj)')
               this.insertAfter = false
             } else {
-              eval(pos + '.splice(arrSec[k - 1] - 1,0, newObj)')
+              eval(posTrunc + '.splice(arrSec[k - 1] - 1,0, newObj)')
             }
-
             break
           case 'firstOfMany':
-            lastBracket = pos.lastIndexOf('[')
-            pos = pos.substring(0, lastBracket)
-            console.log(pos)
-            eval(pos + '.splice(arrSec[k - 1] - 1,0, newObj)')
+            // eval(pos + '.splice(arrSec[k - 1],0, newObj)')
+            eval(posTrunc + '.unshift(newObj)')
+            // console.log(eval(posTrunc + '.splice(arrSec[k - 1] - 1,0, newObj)'))
             break
-          default:
-            eval(pos).subsections.push(newObj)
+          case 'firstOfOne':
+            // eval(pos + '.splice(arrSec[k - 1] - 1,0, newObj)')
+            // console.log(this.lease[2].subsections[0].subsections[0])
+            console.log(this.lease[1].subsections[0].subsections[0])
+            console.log(eval(pos))
+
+            eval(pos + '.subsections[0] = newObj')
         }
       }
       pos = null
@@ -203,32 +205,38 @@ export default {
       // console.log('evt.to.children[0].children[0].children[0].innerText')
       // console.log(evt.to.children[0].children[0].children[0].innerText)
       // debugger
+
       if (evt.to.parentNode.parentNode.parentNode.id === 'top') {
         sec = evt.newIndex
         mode = 'root'
       } else {
-        subsectionEl = evt.to.children[evt.newIndex]
+        subsectionEl = evt.to
+
+        do {
+          subsectionEl = subsectionEl.parentNode
+        } while (subsectionEl.nodeName != 'LI')
+
         if (evt.newIndex === 0) {
           if (evt.to.children.length === 0) {
             mode = 'firstOfOne'
-            subsectionEl =
-              evt.to.parentNode.parentNode.parentNode.children[0].children[
-                evt.newIndex
-              ]
-            sec = subsectionEl.innerText
+
+            // subsectionEl =
+            //   evt.to.parentNode.parentNode.parentNode.children[0].children[0]
+            //     .children[evt.newIndex]
+            sec = subsectionEl.children[0].children[0].children[0].innerText
           } else {
             mode = 'firstOfMany'
-            sec = subsectionEl.children[0].children[0].innerText
+            sec = subsectionEl.children[0].children[0].children[0].innerText
           }
         } else {
           mode = 'notFirst'
-          if (evt.to.children[evt.newIndex]) {
-            sec = subsectionEl.children[0].children[0].innerText
-          } else {
-            subsectionEl = evt.to.children[evt.newIndex - 1]
-            sec = subsectionEl.children[0].children[0].innerText
-            this.insertAfter = true
-          }
+          // if (evt.to.children[evt.newIndex]) {
+          //   sec = subsectionEl.children[0].children[0].children[0].innerText
+          // } else {
+          subsectionEl = evt.to.children[evt.newIndex - 1]
+          sec = subsectionEl.children[0].children[0].children[0].innerText
+          this.insertAfter = true
+          // }
         }
       }
       // debugger
@@ -243,9 +251,10 @@ export default {
         console.log(JSON.stringify(response.data))
 
         this.addToStack()
+        this.renumberX(this.lease)
       })
+      // debugger
     },
-
     getFeeders(id) {
       // debugger
       EventServiceAlt.getFeeder(id).then(response => {
@@ -281,7 +290,7 @@ export default {
       this.schArr(this.lease, this.elId)
     },
     schArr(arr, elId) {
-      debugger
+      // debugger
       var pos
       console.log(elId)
       var result = arr.filter(item => item.id === elId)
@@ -392,17 +401,17 @@ export default {
         item.active = true
       })
     },
-    renumberX(reorder, hide) {
+    renumberX(arrToReorder) {
       // alert('renumberX')
       // debugger
       var subsequent = false
       var prefix = ''
-      this.renumber(reorder, subsequent, prefix, hide)
+      this.renumber(arrToReorder, subsequent, prefix)
       this.editorKey += 1
       this.listKey += 1
     },
 
-    renumber(arr, subsequent, prefix, hide) {
+    renumber(arrToReorder, subsequent, prefix) {
       // debugger
       var arrNextLevel = []
       //  ADD UNIQUE IDS HERE.
@@ -417,11 +426,11 @@ export default {
 
       // var result = 'sss'.match(patt)
       var patt = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-      arr.forEach(function(item) {
+      arrToReorder.forEach(function(item) {
         // debugger
-        if (hide) {
-          item.hidden = true
-        }
+        // if (hide) {
+        //   item.hidden = true
+        // }
         if (item.id.toString().match(patt) === null) {
           newId = uuidv4()
           item.id = newId
@@ -429,9 +438,9 @@ export default {
         }
 
         if (subsequent === false) {
-          item.section = arr.indexOf(item)
+          item.section = arrToReorder.indexOf(item)
         } else {
-          item.section = prefix + '' + (arr.indexOf(item) + 1) + ''
+          item.section = prefix + '' + (arrToReorder.indexOf(item) + 1) + ''
         }
 
         if (item.subsections.length > 0) {
@@ -447,7 +456,7 @@ export default {
         this.renumber(arrNextLevelCopy[i][1], subsequent, prefix)
       }
 
-      this.reorder = arr
+      this.reorder = arrToReorder
       this.saveWithIds = swid
     }
   },

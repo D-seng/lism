@@ -6,7 +6,7 @@
   ></v-select>
 </template>
 
-<script>
+<script type="module">
 import EventServiceAlt from '@/services/EventServiceAlt.js'
 
 export default {

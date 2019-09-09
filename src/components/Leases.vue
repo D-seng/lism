@@ -199,7 +199,7 @@
   </div>
 </template>
 
-<script>
+<script type="module">
 import EventService from '@/services/EventService.js'
 import draggable from 'vuedraggable'
 

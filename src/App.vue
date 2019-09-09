@@ -7,7 +7,7 @@
   </v-app>
 </template>
 
-<script>
+<script type="module">
 import NavBar from './components/NavBar'
 
 export default {
