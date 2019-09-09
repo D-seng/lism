@@ -269,6 +269,10 @@ export default {
       ev.stopPropagation()
       var el = ev.target
 
+// Build an array of element ids that corresponde with subsection
+// elements (s/b LIs). Store them (probably in vuex) for retrieval
+// and use when making subsection nodes invisible when dragging
+// single items. 
       // debugger
       do {
         el = el.parentNode
