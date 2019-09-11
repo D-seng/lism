@@ -1,21 +1,28 @@
 <template>
   <div>
-    <v-container grid-list-md text-xs-left>
-      <v-layout row wrap>
-        <v-flex xs6>
+    <div class="page-grid">
+      <!-- <v-layout row wrap>
+        <v-flex xs6> -->
           <!-- <p>{{ list }}</p> -->
+          <div class="reundo">
+              <button @click="undo">Undo</button>
+              <button @click="redo">Redo</button>
+          </div>
+          <div class="feeder">
           <RetrieveFeeders @get-feeders="getFeeders"></RetrieveFeeders>
-          <h4>{{ intent }}</h4>
-          <NestedDraggableFeeder
-            :list1="feeder"
-            @show-editor="edit"
-            @force-renumber="forceRenumber"
-          />
-        </v-flex>
-        <v-flex xs6 :key="listKey" id="top">
+            <h4>{{ intent }}</h4>
+            <NestedDraggableFeeder
+              :list1="feeder"
+              @show-editor="edit"
+              @force-renumber="forceRenumber"
+            />
+          </div>
+        <!-- </v-flex>
+        <v-flex xs6 :key="listKey" id="top"> -->
+   
+          <div class="lease">
           <RetrieveLeases @get-lease="getLease"></RetrieveLeases>
-          <v-btn @click="undo">Undo</v-btn>
-          <v-btn @click="redo">Redo</v-btn>
+        
           <div id="top">
             <NestedDraggable
               :list="lease"
@@ -27,15 +34,18 @@
               @find-landing="findLanding"
               :counter="this.counter"
             />
+            </div>
           </div>
-        </v-flex>
-      </v-layout>
-    </v-container>
+     
+        <!-- </v-flex>
+    </v-layout> -->
 
-    <v-btn @click="stringify">stringify</v-btn> -->
-    <v-btn @click="put">put</v-btn>
-    <v-btn @click="post">post</v-btn>
-
+    <div class="testbtns">
+      <v-btn @click="stringify">stringify</v-btn>
+      <v-btn @click="put">put</v-btn>
+      <v-btn @click="post">post</v-btn>
+    </div>
+  <div class="editor">
     <p v-if="showDialog">
       showDialog is true
       <Editor
@@ -48,7 +58,7 @@
       ></Editor>
     </p>
     <p v-else>showDialog is false</p>
-
+  </div>
     <!-- <rawDisplayer class="col-0" :value="list" title="List" /> -->
   </div>
 </template>
@@ -489,7 +499,7 @@ export default {
     //   console.log('created')
     // })
     // axios
-    //   .get('')
+    //   .get('')Wrong
     //   .then(response => {
     //     this.lease = response.data
     //   })
@@ -502,5 +512,25 @@ export default {
 <style scoped>
 .selected {
   background-color: rgba(180, 100, 100, 0.808);
+}
+
+.page-grid {
+  display: grid;
+  grid-template-areas: "reundo reundo"
+                        "feeder lease"
+                        "testbtns editor"
+}
+
+.feeder {
+  grid-area: feeder;
+}
+.lease {
+  grid-area: lease;
+}
+.editor {
+  grid-area: editor;
+}
+.testbtns {
+  grid-area: testbtns;
 }
 </style>
